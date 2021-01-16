@@ -109,7 +109,10 @@ public class EntityManager {
 			new EntityInfo(EntityPoisonNeedle.class, "PoisonNeedle", mod_AetherMp.idEntityPoisonNeedle, "NEUTRAL"),
 			new EntityInfo(EntityPoisonNeedle.class, mod_AetherMp.idEntityPoisonNeedle, 64, 20),
 			new EntityInfo(EntitySlider.class, "Slider", mod_AetherMp.idEntitySentry, "NEUTRAL"),
-			new EntityInfo(EntitySlider.class, mod_AetherMp.idEntitySlider, 512, 2)
+			new EntityInfo(EntitySlider.class, mod_AetherMp.idEntitySlider, 512, 2),
+			new EntityInfo(EntityPhyg.class, "Phyg", mod_AetherMp.idEntityPhyg, "FRIENDLY", ""),
+			new EntityInfo(EntityFlyingCow.class, "Flyingcow", mod_AetherMp.idEntityFlyingCow, "FRIENDLY", "")
+					
 	};
 	
 	public static final Map<String, CreatureType> mapping;

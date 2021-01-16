@@ -103,7 +103,9 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityMiniCloud = 109,
 	idEntityFiroBall = 110,
 	idEntityPoisonNeedle = 111,
-	idEntitySlider = 112;
+	idEntitySlider = 112,
+	idEntityPhyg = 113,
+	idEntityFlyingCow = 114;
 	
 	public static class PackageAccess {
 		
@@ -142,7 +144,6 @@ public class mod_AetherMp extends BaseModMp {
 			public static boolean getInWater(net.minecraft.src.Entity entity) {
 				return entity.inWater;
 			}
-			
 			public static Random getRand(net.minecraft.src.Entity entity) {
 				return entity.rand;
 			}
@@ -170,6 +171,19 @@ public class mod_AetherMp extends BaseModMp {
 			public static boolean getIsJumping(net.minecraft.src.EntityLiving entityliving) {
 				return entityliving.isJumping;
 			}
+			
+			public static void setFallDistance(net.minecraft.src.EntityLiving entityliving, float f) {
+				entityliving.fallDistance = f;
+			}
+			
+			public static float getMoveForward(net.minecraft.src.EntityLiving entityliving) {
+				return entityliving.moveForward;
+			}
+			
+			public static float getMoveStrafing(net.minecraft.src.EntityLiving entityliving) {
+				return entityliving.moveStrafing;
+			}
+			
 		}
 		
 		public static class Item {

@@ -13,10 +13,12 @@ import net.mine_diver.aethermp.entities.EntityDungeonMob;
 import net.mine_diver.aethermp.entities.EntityFiroBall;
 import net.mine_diver.aethermp.entities.EntityFlamingArrow;
 import net.mine_diver.aethermp.entities.EntityFloatingBlock;
+import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityLightningKnife;
 import net.mine_diver.aethermp.entities.EntityMimic;
 import net.mine_diver.aethermp.entities.EntityMiniCloud;
 import net.mine_diver.aethermp.entities.EntityNotchWave;
+import net.mine_diver.aethermp.entities.EntityPhyg;
 import net.mine_diver.aethermp.entities.EntityPoisonNeedle;
 import net.mine_diver.aethermp.entities.EntityProjectileBase;
 import net.mine_diver.aethermp.entities.EntitySentry;
@@ -50,6 +52,10 @@ public class CraftEntityAether extends CraftEntity {
 					if (entity instanceof EntityAetherAnimal) {
 						if (entity instanceof EntitySheepuff)
 							return new CraftSheepuff(server, (EntitySheepuff) entity);
+						if (entity instanceof EntityPhyg)
+							return new CraftPhyg(server, (EntityPhyg) entity);
+						if (entity instanceof EntityFlyingCow)
+							return new CraftFlyingCow(server, (EntityFlyingCow) entity);
 					}
 				}
 			} else if (entity instanceof EntityFlying) {

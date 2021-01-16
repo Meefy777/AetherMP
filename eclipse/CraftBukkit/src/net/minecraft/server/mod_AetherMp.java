@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.mine_diver.aethermp.Core;
+import net.mine_diver.aethermp.entities.EntityPhyg;
 
 public class mod_AetherMp extends BaseModMp {
 
@@ -49,6 +50,37 @@ public class mod_AetherMp extends BaseModMp {
 		if (firstTick) {
 			CORE.postInit(this, game);
 			firstTick = false;
+		}
+	}
+
+	@Override
+	public void HandlePacket(Packet230ModLoader packet, EntityPlayer player) {
+		switch(packet.packetType) {
+			case 69: {
+				if (player.vehicle instanceof EntityLiving) {
+					EntityLiving mount = (EntityLiving) player.vehicle;
+					mount.motX = packet.dataFloat[0];
+					mount.motY = packet.dataFloat[1];
+					mount.motZ = packet.dataFloat[2];
+					mount.locX = packet.dataFloat[3];
+					mount.locY = packet.dataFloat[4];
+					mount.locZ = packet.dataFloat[5];
+					mount.yaw = packet.dataFloat[6];
+					mount.pitch = packet.dataFloat[7];
+					
+					player.motX = packet.dataFloat[0];
+					player.motY = packet.dataFloat[1];
+					player.motZ = packet.dataFloat[2];
+					player.locX = packet.dataFloat[3];
+					player.locY = packet.dataFloat[4];
+					player.locZ = packet.dataFloat[5];
+					player.yaw = packet.dataFloat[6];
+					player.pitch = packet.dataFloat[7];
+				}
+				
+				
+				break;
+			}
 		}
 	}
 	
@@ -101,10 +133,14 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityFiroBall = 110,
 	idEntityPoisonNeedle = 111,
 	idEntitySlider = 112,
+	idEntityPhyg = 113,
+	idEntityFlyingCow = 114,
 	
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
 	raritySheepuff = 10,
+	rarityPhyg = 10,
+	rarityFlyingCow = 10,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,
