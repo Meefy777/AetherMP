@@ -4,4 +4,10 @@ import org.bukkit.entity.Animals;
 
 public interface FlyingCow extends Animals {
 
+	boolean getSaddled();
+	
+	void setSaddled(boolean flag);
+	
+	boolean hasJumped();
+	
 }

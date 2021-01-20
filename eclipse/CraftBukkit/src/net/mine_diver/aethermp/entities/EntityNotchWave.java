@@ -18,7 +18,6 @@ import net.minecraft.server.Vec3D;
 import net.minecraft.server.World;
 
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class EntityNotchWave extends Entity implements ISpawnable {

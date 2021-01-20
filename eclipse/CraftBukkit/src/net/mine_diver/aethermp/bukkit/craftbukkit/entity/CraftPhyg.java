@@ -14,4 +14,19 @@ public class CraftPhyg extends AbstractAetherAnimal implements Phyg {
 	public String toString() {
 		return "CraftPhyg";
 	}
+
+	@Override
+	public boolean getSaddled() {
+		return ((EntityPhyg)getHandle()).getSaddled();
+	}
+
+	@Override
+	public void setSaddled(boolean flag) {
+		((EntityPhyg)getHandle()).setSaddled(flag);
+	}
+
+	@Override
+	public boolean hasJumped() {
+		return ((EntityPhyg)getHandle()).hasJumped;
+	}
 }

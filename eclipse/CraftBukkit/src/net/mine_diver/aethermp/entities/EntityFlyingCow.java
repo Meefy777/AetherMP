@@ -5,6 +5,12 @@
 
 package net.mine_diver.aethermp.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.event.entity.EntityDeathEvent;
+
 import net.mine_diver.aethermp.items.ItemManager;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
@@ -55,8 +61,6 @@ public class EntityFlyingCow extends EntityAetherAnimal
     public void b(NBTTagCompound nbttagcompound)
     {
         super.b(nbttagcompound);
-        //nbttagcompound.a("Jumps", (short)jumps);
-        //nbttagcompound.a("Remaining", (short)jrem);
         nbttagcompound.a("getSaddled", getSaddled());
     }
 
@@ -64,9 +68,6 @@ public class EntityFlyingCow extends EntityAetherAnimal
     public void a(NBTTagCompound nbttagcompound)
     {
         super.a(nbttagcompound);
-        //jumps = nbttagcompound.d("Jumps");
-        //jrem = nbttagcompound.d("Remaining");
-        //getSaddled = nbttagcompound.m("getSaddled");
         setSaddled(nbttagcompound.m("getSaddled"));
         if(getSaddled)
         {
@@ -104,7 +105,6 @@ public class EntityFlyingCow extends EntityAetherAnimal
         {
             wingAngle *= 0.8F;
             aimingForFold = 0.1F;
-            jpress = false;
             jrem = jumps;
         } else
         {
@@ -181,13 +181,14 @@ public class EntityFlyingCow extends EntityAetherAnimal
     }
     
     protected void dropFewItems(EntityHuman human) {
-        if(ItemManager.equippedSkyrootSword(human))
-        {
-            b(Item.LEATHER.id, 4);
-        } else
-        {
-            b(Item.LEATHER.id, 2);
-        }
+        List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
+        int count = 2 * (human != null && ItemManager.equippedSkyrootSword(human) ? 2 : 1);
+        loot.add(new org.bukkit.inventory.ItemStack(Item.LEATHER.id, count));
+        CraftEntity entity = (CraftEntity)this.getBukkitEntity();
+        EntityDeathEvent event = new EntityDeathEvent(entity, loot);
+        this.world.getServer().getPluginManager().callEvent(event);
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops())
+            b(stack.getTypeId(), stack.getAmount());
     }
     
     public boolean getSaddled;
@@ -196,6 +197,6 @@ public class EntityFlyingCow extends EntityAetherAnimal
     private float aimingForFold;
     public int jumps;
     public int jrem;
-    private boolean jpress;
     private int ticks;
+    public boolean hasJumped = true;
 }

@@ -252,6 +252,16 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	}
 	
 	@Override
+	public void doLoreTick() {
+		if (!canReceiveLore && loreTick < 20 * mod_AetherMp.secondsBetweenLoreBooks) {
+			loreTick++;
+		} else {
+			loreTick = 0;
+			canReceiveLore = true;
+		}
+	}
+	
+	@Override
 	public void doAccessoriesPhysics() {
 		if(player.inventory.armor[3] != null && player.inventory.armor[3].id == ItemManager.PhoenixHelm.id && player.inventory.armor[2] != null && player.inventory.armor[2].id == ItemManager.PhoenixBody.id && player.inventory.armor[1] != null && player.inventory.armor[1].id == ItemManager.PhoenixLegs.id && player.inventory.armor[0] != null && player.inventory.armor[0].id == ItemManager.PhoenixBoots.id && inv.slots[6] != null && inv.slots[6].id == ItemManager.PhoenixGlove.id) {
             PackageAccess.Entity.setIsImmuneToFire(player, true);
@@ -415,5 +425,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
     public World poisonWorld;
     public int poisonTime;
     public long clock;
+    public boolean canReceiveLore = false;
+    public int loreTick = 0;
     public IAetherBoss currentBoss;
 }

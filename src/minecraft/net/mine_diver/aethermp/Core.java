@@ -5,11 +5,13 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import sun.misc.Unsafe;
 import net.mine_diver.aethermp.item.ItemManager;
 import net.mine_diver.aethermp.block.BlockManager;
 import net.mine_diver.aethermp.entity.EntityManager;
+import net.mine_diver.aethermp.entity.EntityMoaMp;
 import net.mine_diver.aethermp.gui.GuiManager;
 import net.mine_diver.aethermp.network.NetClientHandlerAether;
 import net.mine_diver.aethermp.network.PacketManager;
@@ -27,6 +29,7 @@ import net.minecraft.src.AetherItems;
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.BaseModMp;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityMoa;
 import net.minecraft.src.EntityOtherPlayerMP;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityPlayerSP;
@@ -38,14 +41,17 @@ import net.minecraft.src.GuiScreen;
 import net.minecraft.src.InventoryAether;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
+import net.minecraft.src.MoaColour;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.PlayerAPI;
 import net.minecraft.src.PlayerBaseAether;
 import net.minecraft.src.Render;
+import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.StatBase;
 import net.minecraft.src.StatFileWriter;
+import net.minecraft.src.Tessellator;
 import net.minecraft.src.mod_Aether;
 import net.minecraft.src.mod_AetherMp;
 
@@ -113,6 +119,10 @@ public class Core {
 	public boolean onTickInGame(Minecraft minecraft, BaseMod aetherInstance) {
 		EntityPlayerSP player = minecraft.thePlayer;
 		if (player.worldObj.multiplayerWorld) {
+			if(player.isRiding() && player.ridingEntity instanceof EntityMoa) {
+				renderJumps();
+			}
+			
 			if (mod_Aether.getCurrentDimension() == 3)
                 AchievementHandler.handleAchievement(AetherAchievements.enterAether, true);
 			if (!(minecraft.ingameGUI instanceof GuiIngameAetherMp))
@@ -166,6 +176,54 @@ public class Core {
 		} else
 			aetherInstance.KeyboardEvent(event);
 	}
+	
+	private void renderJumps()
+    {
+        Minecraft mc = ModLoader.getMinecraftInstance();
+        if(!(mc.thePlayer.ridingEntity instanceof EntityMoa))
+        {
+            return;
+        }
+        if(mc.playerController.shouldDrawHUD() && mc.inGameHasFocus)
+        {
+            ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+            EntityMoaMp moa = (EntityMoaMp)mc.thePlayer.ridingEntity;
+            int width = scaledresolution.getScaledWidth();
+            int height = scaledresolution.getScaledHeight();
+            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/aether/gui/jumps.png"));
+            GL11.glEnable(3042 /*GL_BLEND*/);
+            GL11.glBlendFunc(775, 769);
+            GL11.glColor3f(1.0F, 1.0F, 1.0F);
+            GL11.glDisable(3042 /*GL_BLEND*/);
+            for(int jump = 0; jump < MoaColour.getColour(moa.getColor()).jumps; jump++)
+            {
+                int yPos = height - 44;
+                int xPos = width / 2 + 1 + 9 * (jump + 1);
+                if(jump < moa.jrem)
+                {
+                    drawTexturedModalRect(xPos, yPos, 0, 0, 9, 11);
+                } else
+                {
+                    drawTexturedModalRect(xPos, yPos, 10, 0, 9, 11);
+                }
+            }
+
+        }
+        GL11.glDisable(3042 /*GL_BLEND*/);
+    }
+	
+    public void drawTexturedModalRect(int i, int j, int k, int l, int i1, int j1)
+    {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(i + 0, j + j1, -90F, (float)(k + 0) * f, (float)(l + j1) * f1);
+        tessellator.addVertexWithUV(i + i1, j + j1, -90F, (float)(k + i1) * f, (float)(l + j1) * f1);
+        tessellator.addVertexWithUV(i + i1, j + 0, -90F, (float)(k + i1) * f, (float)(l + 0) * f1);
+        tessellator.addVertexWithUV(i + 0, j + 0, -90F, (float)(k + 0) * f, (float)(l + 0) * f1);
+        tessellator.draw();
+    }
 	
 	public GuiScreen handleGui(int ID) {
 		return GuiManager.handleGui(ID);

@@ -5,9 +5,12 @@
 
 package net.mine_diver.aethermp.entities;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.mine_diver.aethermp.blocks.BlockManager;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.event.entity.EntityDeathEvent;
+
 import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.util.Achievements;
@@ -62,10 +65,6 @@ public class EntityPhyg extends EntityAetherAnimal
     public void b(NBTTagCompound nbttagcompound)
     {
         super.b(nbttagcompound);
-        //nbttagcompound.a("Jumps", (short)jumps);
-        //nbttagcompound.a("Remaining", (short)jrem);
-       
-        //nbttagcompound.a("getSaddled", getSaddled);
         nbttagcompound.a("getSaddled", getSaddled());
     }
 
@@ -73,10 +72,6 @@ public class EntityPhyg extends EntityAetherAnimal
     public void a(NBTTagCompound nbttagcompound)
     {
         super.a(nbttagcompound);
-        //jumps = nbttagcompound.d("Jumps");
-        //jrem = nbttagcompound.d("Remaining");
-       
-        //getSaddled = nbttagcompound.m("getSaddled");
         if(getSaddled)
         {
             texture = "/aether/mobs/Mob_FlyingPigSaddle.png";
@@ -116,7 +111,6 @@ public class EntityPhyg extends EntityAetherAnimal
         {
             wingAngle *= 0.8F;
             aimingForFold = 0.1F;
-            jpress = false;
             jrem = jumps;
         } else
         {
@@ -192,7 +186,17 @@ public class EntityPhyg extends EntityAetherAnimal
         world.a(this, (byte)3);
     }
     protected void dropFewItems(EntityHuman human) {
-    	b(random.nextBoolean() ? Item.FEATHER.id : Item.PORK.id, 1 * (ItemManager.equippedSkyrootSword(human) ? 2 : 1));
+        List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
+        int count = 2 * (human != null && ItemManager.equippedSkyrootSword(human) ? 2 : 1);
+        if (random.nextBoolean())
+        	loot.add(new org.bukkit.inventory.ItemStack(Item.FEATHER.id, count));
+        else 
+        	loot.add(new org.bukkit.inventory.ItemStack(Item.PORK.id, count));
+        CraftEntity entity = (CraftEntity)this.getBukkitEntity();
+        EntityDeathEvent event = new EntityDeathEvent(entity, loot);
+        this.world.getServer().getPluginManager().callEvent(event);
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops())
+            b(stack.getTypeId(), stack.getAmount());
     }
     
     
@@ -203,6 +207,6 @@ public class EntityPhyg extends EntityAetherAnimal
     private float aimingForFold;
     public int jumps;
     public int jrem;
-    private boolean jpress;
     private int ticks;
+    public boolean hasJumped = true;
 }

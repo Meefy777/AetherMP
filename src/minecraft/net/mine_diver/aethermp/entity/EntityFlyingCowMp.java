@@ -32,7 +32,8 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
 		}
 	}
 	
-    public void onLivingUpdate()
+    @SuppressWarnings("rawtypes")
+	public void onLivingUpdate()
     {
         if(riddenByEntity != null)
         {
@@ -89,6 +90,8 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
     {
         if(worldObj.multiplayerWorld && riddenByEntity != null && (riddenByEntity instanceof EntityLiving))
         {
+        	Packet230ModLoader packet = new Packet230ModLoader();
+        	packet.packetType = 61;
             EntityLiving entityliving = (EntityLiving)riddenByEntity;
             moveForward = 0.0F;
             moveStrafing = 0.0F;
@@ -98,69 +101,65 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
             prevRotationPitch = rotationPitch = riddenByEntity.rotationPitch;
             float f = 3.141593F;
             float f1 = f / 180F;
-            if(mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) > 0.1F)
+            float forward = mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving);
+            float strafing = mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving);
+            boolean jump = mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving);
+            if(forward > 0.1F)
             {
                 float f2 = entityliving.rotationYaw * f1;
-                motionX += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) * -Math.sin(f2) * 0.17499999701976776D;
-                motionZ += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) * Math.cos(f2) * 0.17499999701976776D;
+                motionX += forward * -Math.sin(f2) * 0.17499999701976776D;
+                motionZ += forward * Math.cos(f2) * 0.17499999701976776D;
             } else
-            if(mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) < -0.1F)
+            if(forward < -0.1F)
             {
                 float f3 = entityliving.rotationYaw * f1;
-                motionX += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) * -Math.sin(f3) * 0.17499999701976776D;
-                motionZ += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving) * Math.cos(f3) * 0.17499999701976776D;
+                motionX += forward * -Math.sin(f3) * 0.17499999701976776D;
+                motionZ += forward * Math.cos(f3) * 0.17499999701976776D;
             }
-            if(mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) > 0.1F)
+            if(strafing > 0.1F)
             {
                 float f4 = entityliving.rotationYaw * f1;
-                motionX += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) * Math.cos(f4) * 0.17499999701976776D;
-                motionZ += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) * Math.sin(f4) * 0.17499999701976776D;
+                motionX += strafing * Math.cos(f4) * 0.17499999701976776D;
+                motionZ += strafing * Math.sin(f4) * 0.17499999701976776D;
             } else
-            if(mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) < -0.1F)
+            if(strafing < -0.1F)
             {
                 float f5 = entityliving.rotationYaw * f1;
-                motionX += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) * Math.cos(f5) * 0.17499999701976776D;
-                motionZ += (double)mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving) * Math.sin(f5) * 0.17499999701976776D;
+                motionX += strafing * Math.cos(f5) * 0.17499999701976776D;
+                motionZ += strafing * Math.sin(f5) * 0.17499999701976776D;
             }
-            if(onGround && mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving))
+            if(onGround && jump)
             {
                 onGround = false;
                 motionY = 1.3999999999999999D;
-                try {
-					ModLoader.setPrivateValue(EntityFlyingCow.class, this, "jpress", true);
-				} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
-					e.printStackTrace();
-				}
+                setPrivateBool(EntityFlyingCow.class, "jpress", true);
                 jrem--;
+                packet.dataInt = new int [] {1};
+                ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
             } else
-            if(handleWaterMovement() && mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving))
+            if(handleWaterMovement() && jump)
             {
                 motionY = 0.5D;
-                try {
-					ModLoader.setPrivateValue(EntityFlyingCow.class, this, "jpress", true);
-				} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
-					e.printStackTrace();
-				}
+                setPrivateBool(EntityFlyingCow.class, "jpress", true);
                 jrem--;
-            } else
-				try {
-					if(jrem > 0 && !(boolean)ModLoader.getPrivateValue(EntityFlyingCow.class, this, "jpress") && mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving))
-					{
-					    motionY = 1.2D;
-					    ModLoader.setPrivateValue(EntityFlyingCow.class, this, "jpress", true);
-					    jrem--;
-					}
-				} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
-					e.printStackTrace();
+                packet.dataInt = new int [] {1};
+                ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+            } else if(jrem > 0 && !getPrivateBool(EntityFlyingCow.class, "jpress") && jump) {
+				    motionY = 1.2D;
+				    setPrivateBool(EntityFlyingCow.class, "jpress", true);
+				    jrem--;
+                    packet.dataInt = new int [] {1};
+                    ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+				} else if (onGround && !touchedGround) {
+					touchedGround = true;
+					packet.dataInt = new int [] {0};
+					ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 				}
-            try {
-				if((boolean)ModLoader.getPrivateValue(EntityFlyingCow.class, this, "jpress") && !mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving))
-				{
-					ModLoader.setPrivateValue(EntityFlyingCow.class, this, "jpress", false);
-				}
-			} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
-				e.printStackTrace();
-			}
+				if(getPrivateBool(EntityFlyingCow.class, "jpress") && !jump)
+					setPrivateBool(EntityFlyingCow.class, "jpress", false);
+				
+                if(touchedGround && !onGround)
+                	touchedGround = false;
             double d = Math.abs(Math.sqrt(motionX * motionX + motionZ * motionZ));
             if(d > 0.375D)
             {
@@ -170,10 +169,10 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
             }
             
            rotationYaw = entityliving.rotationYaw;
-     	   Packet230ModLoader packet = new Packet230ModLoader();
-     	   packet.packetType = 69;
-     	   packet.dataFloat = new float[] {(float) this.motionX, (float) this.motionY, (float) this.motionZ, (float) this.posX, (float) this.posY, (float) this.posZ, this.rotationYaw, this.rotationPitch};
-     	   ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+     	   Packet230ModLoader packetMove = new Packet230ModLoader();
+     	   packetMove.packetType = 69;
+     	   packetMove.dataFloat = new float[] {(float) this.motionX, (float) this.motionY, (float) this.motionZ, (float) this.posX, (float) this.posY, (float) this.posZ, this.rotationYaw, this.rotationPitch};
+     	   ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packetMove);
             
             return;
         } else
@@ -189,7 +188,6 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             setSaddled(true);
-            //texture = "/aether/mobs/Mob_FlyingCowSaddle.png";
             return true;
         }
         if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
@@ -200,6 +198,23 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
         {
             return false;
         }
+    }
+    
+    private void setPrivateBool(@SuppressWarnings("rawtypes") Class c, String bool, boolean value) {
+    	try {
+			ModLoader.setPrivateValue(c, this, bool, value);
+		} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    private boolean getPrivateBool(@SuppressWarnings("rawtypes") Class c, String bool) {
+    	try {
+			return (boolean) ModLoader.getPrivateValue(c, this, bool);
+		} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+    	return false;
     }
     
     public boolean getSaddled()
@@ -219,7 +234,7 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
             texture = "/aether/mobs/Mob_FlyingCowBase.png";
         }
     }
-
 	
-
+    private boolean touchedGround = true;
+    
 }

@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import net.mine_diver.aethermp.blocks.tileentities.TileEntityEnchanter;
 import net.mine_diver.aethermp.blocks.tileentities.TileEntityFreezer;
+import net.mine_diver.aethermp.blocks.tileentities.TileEntityIncubator;
 import net.mine_diver.aethermp.items.ItemBlockAercloud;
 import net.mine_diver.aethermp.items.ItemBlockAetherLog;
 import net.mine_diver.aethermp.items.ItemBlockHolystone;
@@ -78,8 +79,9 @@ public class BlockManager {
     QuicksoilGlass = new BlockQuicksoilGlass(mod_AetherMp.idBlockQuicksoilGlass).a("QuicksoilGlass"),
     Freezer = new BlockFreezer(mod_AetherMp.idBlockFreezer).a("Freezer"),
     WhiteFlower = new BlockAetherFlower(mod_AetherMp.idBlockWhiteFlower).a("White_Flower"),
-    PurpleFlower = new BlockAetherFlower(mod_AetherMp.idBlockPurpleFlower).a("Purple_Flower");
-	
+    PurpleFlower = new BlockAetherFlower(mod_AetherMp.idBlockPurpleFlower).a("Purple_Flower"),
+	Incubator = new BlockIncubator(mod_AetherMp.idBlockIncubator).a("Incubator");
+    
 	public static final BlockInfo[] blocks = new BlockInfo[] {
 			new BlockInfo(Portal).setHardness(-1).setResistance(6000000),
 			new BlockInfo(Dirt).setHardness(0.2F),
@@ -113,7 +115,8 @@ public class BlockManager {
 			new BlockInfo(QuicksoilGlass).setHardness(0.2F).setLightValue(0.7375F).setLightOpacity(0),
 			new BlockInfo(Freezer).setHardness(2.5F).setTileEntity(TileEntityFreezer.class),
 			new BlockInfo(WhiteFlower).setHardness(0),
-			new BlockInfo(PurpleFlower).setHardness(0)
+			new BlockInfo(PurpleFlower).setHardness(0),
+			new BlockInfo(Incubator).setHardness(2.0F).setTileEntity(TileEntityIncubator.class),
 	};
 	
 	public static final ToolBase

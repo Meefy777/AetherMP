@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.mine_diver.aethermp.Core;
+import net.mine_diver.aethermp.entities.EntityFlyingCow;
+import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
 
 public class mod_AetherMp extends BaseModMp {
@@ -56,6 +58,32 @@ public class mod_AetherMp extends BaseModMp {
 	@Override
 	public void HandlePacket(Packet230ModLoader packet, EntityPlayer player) {
 		switch(packet.packetType) {
+			case 60: {
+				if (player.vehicle != null && player.vehicle instanceof EntityMoa)
+					((EntityMoa)player.vehicle).jrem = packet.dataInt[0];
+				break;
+			}
+		
+			case 61: {
+				if (player.vehicle != null) {
+					if (player.vehicle instanceof EntityPhyg) {
+						EntityPhyg mount = (EntityPhyg)player.vehicle;
+						if (packet.dataInt[0] == 1)
+							mount.hasJumped = true;
+						else
+							mount.hasJumped = false;
+					}
+					if (player.vehicle instanceof EntityFlyingCow) {
+						EntityFlyingCow mount = (EntityFlyingCow)player.vehicle;
+						if (packet.dataInt[0] == 1)
+							mount.hasJumped = true;
+						else 
+							mount.hasJumped = false;
+					}
+				}
+				break;
+			}
+		
 			case 69: {
 				if (player.vehicle instanceof EntityLiving) {
 					EntityLiving mount = (EntityLiving) player.vehicle;
@@ -95,7 +123,8 @@ public class mod_AetherMp extends BaseModMp {
 	allowLoreBookKeyBind = true,
 	punishQuittingDuringFight = true,
 	preventTeleportDuringFight = true,
-	punishTeleportDuringFight = false;
+	punishTeleportDuringFight = false,
+	bookOfLoreCoolDown = false;
 	
 	@MLProp
 	public static String
@@ -113,6 +142,7 @@ public class mod_AetherMp extends BaseModMp {
 	idGuiTreasureChest = 81,
 	idGuiFreezer = 82,
 	idGuiLore = 83,
+	idGuiIncubator = 84,
 	
 	idEntityFloatingBlock = 80,
 	idEntityMimic = 81,
@@ -135,12 +165,14 @@ public class mod_AetherMp extends BaseModMp {
 	idEntitySlider = 112,
 	idEntityPhyg = 113,
 	idEntityFlyingCow = 114,
+	idEntityMoa = 115,
 	
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
 	raritySheepuff = 10,
 	rarityPhyg = 10,
 	rarityFlyingCow = 10,
+	rarityMoa = 10,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,
@@ -151,6 +183,7 @@ public class mod_AetherMp extends BaseModMp {
     idBlockAercloud = 171,
     idBlockAerogel = 172,
     idBlockEnchanter = 173,
+    idBlockIncubator = 174,
     idBlockLog = 175,
     idBlockPlank = 176,
     idBlockSkyrootLeaves = 177,
@@ -273,7 +306,9 @@ public class mod_AetherMp extends BaseModMp {
     idItemIceRing = 17094,
     idItemIcePendant = 17095,
     
-    commandCancellationDistance = 17;
+    commandCancellationDistance = 17,
+	
+	secondsBetweenLoreBooks = 5;
 	
 	public static class PackageAccess {
 		

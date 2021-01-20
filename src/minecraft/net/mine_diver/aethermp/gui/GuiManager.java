@@ -14,6 +14,7 @@ import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.TileEntityChest;
 import net.minecraft.src.TileEntityEnchanter;
 import net.minecraft.src.TileEntityFreezer;
+import net.minecraft.src.TileEntityIncubator;
 import net.minecraft.src.mod_AetherMp;
 
 public class GuiManager {
@@ -39,5 +40,6 @@ public class GuiManager {
 		guisMeta.put(mod_AetherMp.idGuiTreasureChest, (meta) -> {return new GuiTreasureChest(ModLoader.getMinecraftInstance().thePlayer.inventory, new TileEntityChest(), meta);});
 		guis.put(mod_AetherMp.idGuiFreezer, () -> {return new GuiFreezer(ModLoader.getMinecraftInstance().thePlayer.inventory, new TileEntityFreezer());});
 		guisMeta.put(mod_AetherMp.idGuiLore, (meta) -> {return new GuiLore(ModLoader.getMinecraftInstance().thePlayer.inventory, meta);});
+		guis.put(mod_AetherMp.idGuiIncubator, () -> {return new GuiIncubatorMp(ModLoader.getMinecraftInstance().thePlayer.inventory, new TileEntityIncubator());});
 	}
 }

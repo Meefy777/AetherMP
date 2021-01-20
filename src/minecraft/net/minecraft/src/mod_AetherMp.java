@@ -84,6 +84,7 @@ public class mod_AetherMp extends BaseModMp {
 	idGuiTreasureChest = 81,
 	idGuiFreezer = 82,
 	idGuiLore = 83,
+	idGuiIncubator = 84,
 	
 	idEntityFloatingBlock = 80,
 	idEntityMimic = 81,
@@ -105,7 +106,8 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityPoisonNeedle = 111,
 	idEntitySlider = 112,
 	idEntityPhyg = 113,
-	idEntityFlyingCow = 114;
+	idEntityFlyingCow = 114,
+	idEntityMoa = 115;
 	
 	public static class PackageAccess {
 		

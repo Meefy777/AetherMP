@@ -111,7 +111,8 @@ public class EntityManager {
 			new EntityInfo(EntitySlider.class, "Slider", mod_AetherMp.idEntitySentry, "NEUTRAL"),
 			new EntityInfo(EntitySlider.class, mod_AetherMp.idEntitySlider, 512, 2),
 			new EntityInfo(EntityPhyg.class, "Phyg", mod_AetherMp.idEntityPhyg, "FRIENDLY", ""),
-			new EntityInfo(EntityFlyingCow.class, "Flyingcow", mod_AetherMp.idEntityFlyingCow, "FRIENDLY", "")
+			new EntityInfo(EntityFlyingCow.class, "Flyingcow", mod_AetherMp.idEntityFlyingCow, "FRIENDLY", ""),
+			new EntityInfo(EntityMoa.class, "Moa", mod_AetherMp.idEntityMoa, "FRIENDLY", "")
 					
 	};
 	

@@ -4,4 +4,9 @@ import org.bukkit.entity.Animals;
 
 public interface Phyg extends Animals {
 
+	boolean getSaddled();
+	
+	void setSaddled(boolean flag);
+	
+	boolean hasJumped();
 }

@@ -82,14 +82,27 @@ public class Core {
 	}
 	
 	public void handleSendKey(EntityPlayer entityplayer, int key) {
+		PlayerBaseAether playerBase = (PlayerBaseAether)PlayerAPI.getPlayerBase(entityplayer, PlayerBaseAether.class);
 		if (key == 0) {
 			Environment env = entityplayer.getBukkitEntity().getWorld().getEnvironment();
-			if (env.equals(Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase())))
-                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 2));
-            else if(env.equals(Environment.NORMAL))
-                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 0));
-            else if(env.equals(Environment.NETHER))
-                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 1));
+			if (mod_AetherMp.bookOfLoreCoolDown) {
+					if (playerBase.canReceiveLore) {
+					if (env.equals(Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase())))
+		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 2));
+		            else if(env.equals(Environment.NORMAL))
+		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 0));
+		            else if(env.equals(Environment.NETHER))
+		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 1));
+					playerBase.canReceiveLore = false;
+				}
+			} else {
+				if (env.equals(Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase())))
+	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 2));
+	            else if(env.equals(Environment.NORMAL))
+	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 0));
+	            else if(env.equals(Environment.NETHER))
+	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 1));
+			}
 		}
 	}
 	

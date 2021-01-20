@@ -19,7 +19,7 @@ public class Achievements {
     defeatSilver = (new Achievement(802, "defeatSilver", 0, 4, new ItemStack(ItemManager.Key, 1, 1), enterAether)).c(),
     defeatGold = (new Achievement(803, "defeatGold", 2, 3, new ItemStack(ItemManager.Key, 1, 2), enterAether)).c(),
     enchanter = (new Achievement(804, "enchanter", 2, 1, BlockManager.Enchanter, enterAether)).c(),
-    //incubator = (new Achievement(805, "incubator", 2, -1, BlockManager.Incubator, enterAether)).c(),
+    incubator = (new Achievement(805, "incubator", 2, -1, BlockManager.Incubator, enterAether)).c(),
     blueCloud = (new Achievement(806, "blueCloud", -2, -1, new ItemStack(BlockManager.Aercloud, 1, 1), enterAether)).c(),
     flyingPig = (new Achievement(807, "flyingPig", -2, 1, Item.SADDLE, enterAether)).c(),
     gravTools = (new Achievement(808, "gravTools", -1, -3, ItemManager.PickGravitite, enterAether)).c(),

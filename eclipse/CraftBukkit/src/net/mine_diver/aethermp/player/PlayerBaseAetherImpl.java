@@ -15,7 +15,7 @@ import net.minecraft.server.Packet5EntityEquipment;
 import net.minecraft.server.PlayerBase;
 import net.minecraft.server.mod_AetherMp;
 
-public abstract class PlayerBaseAetherImpl extends PlayerBase implements Poisonable, Fallable, EntranceBonus, HasAccessories, HasMoreArmor, AdditionalHealth, CanFightBoss {
+public abstract class PlayerBaseAetherImpl extends PlayerBase implements Poisonable, Fallable, EntranceBonus, HasAccessories, HasMoreArmor, AdditionalHealth, CanFightBoss, LoreCooldown {
 
 	public PlayerBaseAetherImpl(EntityPlayer var1) {
 		super(var1);
@@ -37,6 +37,7 @@ public abstract class PlayerBaseAetherImpl extends PlayerBase implements Poisona
 	        doAetherUpdate();
 		updatePoison();
 		doAccessoriesPhysics();
+		doLoreTick();
 		return false;
 	}
 	

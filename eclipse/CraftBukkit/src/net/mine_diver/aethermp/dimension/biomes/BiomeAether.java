@@ -6,6 +6,7 @@ import net.mine_diver.aethermp.dimension.world.generation.AetherGenGoldenOak;
 import net.mine_diver.aethermp.dimension.world.generation.AetherGenSkyroot;
 import net.mine_diver.aethermp.entities.EntityAechorPlant;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
+import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
 import net.mine_diver.aethermp.entities.EntitySheepuff;
 import net.mine_diver.aethermp.entities.EntityZephyr;
@@ -35,8 +36,8 @@ public class BiomeAether extends BiomeBase {
             t.add(new BiomeMeta(EntitySheepuff.class, mod_AetherMp.raritySheepuff));
         if(mod_AetherMp.rarityPhyg != 0)
             t.add(new BiomeMeta(EntityPhyg.class, mod_AetherMp.rarityPhyg));
-        //if(mod_AetherMp.rarityMoa != 0)
-          //  t.add(new BiomeMeta(EntityMoa.class, mod_AetherMp.rarityMoa));
+        if(mod_AetherMp.rarityMoa != 0)
+            t.add(new BiomeMeta(EntityMoa.class, mod_AetherMp.rarityMoa));
         if(mod_AetherMp.rarityFlyingCow != 0)
             t.add(new BiomeMeta(EntityFlyingCow.class, mod_AetherMp.rarityFlyingCow));
         /*if(mod_AetherMp.rarityWhirlwind != 0)
