@@ -166,13 +166,15 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityPhyg = 113,
 	idEntityFlyingCow = 114,
 	idEntityMoa = 115,
+	idEntityAerBunny = 116,
 	
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
 	raritySheepuff = 10,
-	rarityPhyg = 10,
+	rarityPhyg = 12,
 	rarityFlyingCow = 10,
 	rarityMoa = 10,
+	rarityAerbunny = 11,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,

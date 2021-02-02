@@ -5,6 +5,7 @@ import java.util.Random;
 import net.mine_diver.aethermp.dimension.world.generation.AetherGenGoldenOak;
 import net.mine_diver.aethermp.dimension.world.generation.AetherGenSkyroot;
 import net.mine_diver.aethermp.entities.EntityAechorPlant;
+import net.mine_diver.aethermp.entities.EntityAerbunny;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
@@ -41,8 +42,8 @@ public class BiomeAether extends BiomeBase {
         if(mod_AetherMp.rarityFlyingCow != 0)
             t.add(new BiomeMeta(EntityFlyingCow.class, mod_AetherMp.rarityFlyingCow));
         /*if(mod_AetherMp.rarityWhirlwind != 0)
-            t.add(new BiomeMeta(Whirly.class, mod_AetherMp.rarityWhirlwind));
-        if(mod_AetherMp.rarityAerbunny != 0)
+            t.add(new BiomeMeta(Whirly.class, mod_AetherMp.rarityWhirlwind));*/
+        /*if(mod_AetherMp.rarityAerbunny != 0)
             t.add(new BiomeMeta(EntityAerbunny.class, mod_AetherMp.rarityAerbunny));*/
         me = this;
     }

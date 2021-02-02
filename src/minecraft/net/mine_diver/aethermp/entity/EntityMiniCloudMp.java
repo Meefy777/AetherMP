@@ -22,6 +22,8 @@ public class EntityMiniCloudMp extends EntityMiniCloud implements ISpawnable {
 	
 	@Override
 	public void updatePlayerActionState() {
+		if (dude == null)
+			return;
         getTargetPos();
         if (atShoulder()) {
             motionX *= 0.65000000000000002D;
@@ -32,12 +34,22 @@ public class EntityMiniCloudMp extends EntityMiniCloud implements ISpawnable {
         } else
             approachTarget();
 	}
+	
+	@Override
+	public void getTargetPos() {
+		if (dude == null)
+			return;
+		super.getTargetPos();
+	}
 
 	@Override
 	public void spawn(Packet230ModLoader packet) {
 		entityId = packet.dataInt[0];
 		Entity entity = EntityManager.getEntityByID(packet.dataInt[1]);
 		EntityPlayer ep = null;
+		if (entity == null)
+			return;
+		
 		if (entity instanceof EntityPlayer)
 			ep = (EntityPlayer) entity;
 		boolean flag = packet.dataInt[2] == 1;

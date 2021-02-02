@@ -160,8 +160,14 @@ public class EntityMiniCloud extends EntityFlying implements ISpawnable {
 	@Override
 	public Packet230ModLoader getSpawnPacket() {
 		Packet230ModLoader packet = new Packet230ModLoader();
-		packet.dataInt = new int[] {id, dude.id, toLeft ? 1 : 0};
+		if (dude == null)
+			packet.dataInt = new int[] {id, -1, toLeft ? 1 : 0};
+		else 
+			packet.dataInt = new int[] {id, dude.id, toLeft ? 1 : 0};
 		packet.dataFloat = new float[] {(float) locX, (float) locY, (float) locZ};
+		if (dude == null)
+			packet.dataInt[1] = -1;
+		
 		return packet;
 	}
 
