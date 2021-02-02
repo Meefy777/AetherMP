@@ -72,6 +72,6 @@ public class EntityManager {
 			new EntityType(EntityPhygMp.class, mod_AetherMp.idEntityPhyg, RegType.MAIN),
 			new EntityType(EntityFlyingCowMp.class, mod_AetherMp.idEntityFlyingCow, RegType.MAIN),
 			new EntityType(EntityMoaMp.class, mod_AetherMp.idEntityMoa, RegType.MAIN),
-			//new EntityType(EntityAerbunnyMp.class, mod_AetherMp.idEntityAerBunny, RegType.MAIN)
+			new EntityType(EntityAerbunnyMp.class, mod_AetherMp.idEntityAerBunny, RegType.MAIN)
 	};
 }

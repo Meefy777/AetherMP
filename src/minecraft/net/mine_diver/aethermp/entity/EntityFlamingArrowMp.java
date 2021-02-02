@@ -28,7 +28,7 @@ public class EntityFlamingArrowMp extends EntityFlamingArrow implements ISpawnab
 			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "yTile", -1);
 			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "zTile", -1);
 			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "inTile", 0);
-			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "inData", 0);
+			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "field_28019_h", 0);
 			ModLoader.setPrivateValue(EntityFlamingArrow.class, this, "inGround", false);
 	        doesArrowBelongToPlayer = false;
 	        arrowShake = 0;
