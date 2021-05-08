@@ -5,6 +5,7 @@ import java.util.Random;
 import net.mine_diver.aethermp.api.event.dimension.world.generation.dungeon.DungeonLoot;
 import net.mine_diver.aethermp.api.util.LootType;
 import net.mine_diver.aethermp.blocks.BlockManager;
+import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.minecraft.server.Block;
 import net.minecraft.server.Item;
@@ -235,10 +236,10 @@ public class AetherGenDungeonSilver extends AetherGenBuildings {
         addChandelier(world, i + 28, j, k + 19, 8);
         addSapling(world, random, i + 45, j + 1, k + 6);
         addSapling(world, random, i + 45, j + 1, k + 21);
-        /*EntityValkyrie entityvalkyrie = new EntityValkyrie(world, (double)i + 40D, (double)j + 1.5D, (double)k + 15D, true);
+        EntityValkyrie entityvalkyrie = new EntityValkyrie(world, (double)i + 40D, (double)j + 1.5D, (double)k + 15D, true);
         entityvalkyrie.setPosition(i + 40, j + 2, k + 15);
         entityvalkyrie.setDungeon(i + 26, j, k + 5);
-        world.entityJoinedWorld(entityvalkyrie);*/
+        world.addEntity(entityvalkyrie);
         setBlocks(lockedBlockID1, lockedBlockID1, 1);
         setMetadata(1, 1);
         addHollowBox(world, random, i + 41, j - 2, k + 13, 4, 4, 4);

@@ -46,7 +46,7 @@ public class BlockTrap extends BlockBreakable {
                 break;
 
             case 1: // '\001'
-                EntityValkyrie entityvalkyrie = new EntityValkyrie(world);
+                EntityValkyrie entityvalkyrie = new EntityValkyrie(world); //(double)l + 0.5D, (double)i1 + 1.5D, (double)j1 + 0.5D
                 entityvalkyrie.setPosition((double)l + 0.5D, (double)i1 + 1.5D, (double)j1 + 0.5D);
                 world.addEntity(entityvalkyrie);
                 break;

@@ -207,6 +207,4 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
     public boolean firstRun;
     public int life;
     public int lifeSpan;
-    private static final double topSpeed = 0.125D;
-    private static final float sponge = 57.29577F;
 }

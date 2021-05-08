@@ -74,8 +74,8 @@ public class mod_AetherMp extends BaseModMp {
 	
 	@Override
 	public void HandlePacket(Packet230ModLoader packet) {
+		EntityPlayer player = ModLoader.getMinecraftInstance().thePlayer;
 		if(packet.packetType == 30) {
-			EntityPlayer player = ModLoader.getMinecraftInstance().thePlayer;
 			if(player == null || !player.isRiding())
 				return;
 			Entity mount = player.ridingEntity;
@@ -90,6 +90,11 @@ public class mod_AetherMp extends BaseModMp {
 				EntityFlyingCowMp cow = (EntityFlyingCowMp) mount;
 				cow.jrem = packet.dataInt[0];
 			}
+		}
+		else if (packet.packetType == 31) {
+			if (player == null)
+				return;
+			player.worldObj.spawnParticle(packet.dataString[0], packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
 		}
 		else
 			CORE.handlePacket(packet);

@@ -73,6 +73,6 @@ public class EntityManager {
 			new EntityType(EntityMoaMp.class, mod_AetherMp.idEntityMoa, RegType.MAIN),
 			new EntityType(EntityAerbunnyMp.class, mod_AetherMp.idEntityAerBunny, RegType.MAIN),
 			new EntityType(EntityHomeShotMp.class, mod_AetherMp.idEntityHomeShot, RegType.SECONDARY),
-			new EntityType(EntityValkyrieMp.class, mod_AetherMp.idEntityValkyrie, RegType.MAIN),
+			new EntityType(EntityValkyrieMp.class, mod_AetherMp.idEntityValkyrie, RegType.SECONDARY),
 	};
 }
