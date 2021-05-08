@@ -138,7 +138,7 @@ public class EntityPhygMp extends EntityPhyg {
                     motionY = 1.3999999999999999D;
                     setPrivateBool(EntityPhyg.class, "jpress", true);
                     jrem--;
-                    packet.dataInt = new int [] {1};
+                    packet.dataInt = new int [] {1, jrem};
                     ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
                 } else
                 if(handleWaterMovement() && jump)
@@ -146,17 +146,17 @@ public class EntityPhygMp extends EntityPhyg {
                     motionY = 0.5D;
                     setPrivateBool(EntityPhyg.class, "jpress", true);
                     jrem--;
-                    packet.dataInt = new int [] {1};
+                    packet.dataInt = new int [] {1, jrem};
                     ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
                 } else if(jrem > 0 && !getPrivateBool(EntityPhyg.class, "jpress") && jump) {
 					    motionY = 1.2D;
 					    setPrivateBool(EntityPhyg.class, "jpress", true);
 					    jrem--;
-	                    packet.dataInt = new int [] {1};
+	                    packet.dataInt = new int [] {1, jrem};
 	                    ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 					}else if (onGround && !touchedGround) {
 						touchedGround = true;
-						packet.dataInt = new int [] {0};
+						packet.dataInt = new int [] {0, jrem};
 						ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 					}
                 

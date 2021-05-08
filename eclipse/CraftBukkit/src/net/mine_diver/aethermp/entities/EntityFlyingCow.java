@@ -15,9 +15,13 @@ import net.mine_diver.aethermp.items.ItemManager;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Item;
+import net.minecraft.server.ModLoaderMp;
 import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
+import net.minecraft.server.mod_AetherMp;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityAetherAnimal, DataWatcher, NBTTagCompound, World, 
@@ -153,6 +157,11 @@ public class EntityFlyingCow extends EntityAetherAnimal
         if(getSaddled() && (passenger == null || passenger == entityplayer))
         {
             entityplayer.mount(this);
+            Packet230ModLoader packet = new Packet230ModLoader();
+            packet.packetType = 30;
+            packet.dataInt = new int [] {jrem};
+            if (passenger != null && passenger instanceof EntityPlayer)
+            	ModLoaderMp.SendPacketTo(ModLoaderMp.GetModInstance(mod_AetherMp.class), (EntityPlayer) passenger, packet);
             return true;
         } else
         {

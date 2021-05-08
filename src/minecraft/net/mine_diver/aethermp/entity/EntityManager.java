@@ -4,7 +4,6 @@ import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entity.EntityType.RegType;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityAechorPlant;
-import net.minecraft.src.EntityAerbunny;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.EntityMimic;
 import net.minecraft.src.EntitySentry;
@@ -72,6 +71,8 @@ public class EntityManager {
 			new EntityType(EntityPhygMp.class, mod_AetherMp.idEntityPhyg, RegType.MAIN),
 			new EntityType(EntityFlyingCowMp.class, mod_AetherMp.idEntityFlyingCow, RegType.MAIN),
 			new EntityType(EntityMoaMp.class, mod_AetherMp.idEntityMoa, RegType.MAIN),
-			new EntityType(EntityAerbunnyMp.class, mod_AetherMp.idEntityAerBunny, RegType.MAIN)
+			new EntityType(EntityAerbunnyMp.class, mod_AetherMp.idEntityAerBunny, RegType.MAIN),
+			new EntityType(EntityHomeShotMp.class, mod_AetherMp.idEntityHomeShot, RegType.SECONDARY),
+			new EntityType(EntityValkyrieMp.class, mod_AetherMp.idEntityValkyrie, RegType.MAIN),
 	};
 }

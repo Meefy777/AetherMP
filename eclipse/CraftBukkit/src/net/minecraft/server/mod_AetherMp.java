@@ -72,6 +72,8 @@ public class mod_AetherMp extends BaseModMp {
 							mount.hasJumped = true;
 						else
 							mount.hasJumped = false;
+						
+						mount.jrem = packet.dataInt[1];
 					}
 					if (player.vehicle instanceof EntityFlyingCow) {
 						EntityFlyingCow mount = (EntityFlyingCow)player.vehicle;
@@ -79,6 +81,8 @@ public class mod_AetherMp extends BaseModMp {
 							mount.hasJumped = true;
 						else 
 							mount.hasJumped = false;
+						
+						mount.jrem = packet.dataInt[1];
 					}
 				}
 				break;
@@ -167,7 +171,9 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityFlyingCow = 114,
 	idEntityMoa = 115,
 	idEntityAerBunny = 116,
-	
+	idEntityHomeShot = 117,
+	idEntityValkyrie = 118,
+			
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
 	raritySheepuff = 10,
@@ -393,6 +399,10 @@ public class mod_AetherMp extends BaseModMp {
 			
 			public static void dropFewItems(net.minecraft.server.EntityLiving entityliving) {
 				entityliving.q();
+			}
+			
+			public static boolean getJumping(net.minecraft.server.EntityLiving living) {
+				return living.aC;
 			}
 		}
 	}

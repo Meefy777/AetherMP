@@ -44,6 +44,13 @@ public class EntityMoaMp extends EntityMoa
     public EntityMoaMp(World world, boolean babyBool, boolean grownBool, boolean saddledBool, MoaColour moaColour)
     {
         super(world);
+        dataWatcher.addObject(16, Byte.valueOf((byte)0));
+        dataWatcher.addObject(17, Byte.valueOf((byte)0));
+        dataWatcher.addObject(18, Byte.valueOf((byte)0));
+        dataWatcher.addObject(19, Byte.valueOf((byte)0));
+        dataWatcher.addObject(20, Byte.valueOf((byte)0));
+        dataWatcher.addObject(21, Byte.valueOf((byte)0));
+        
         setPetalsEaten(0);
         setWellFed(false);
         setPrivateBool(EntityMoa.class, "followPlayer", false);
@@ -72,7 +79,7 @@ public class EntityMoaMp extends EntityMoa
         texture = MoaColour.getColour(getColor()).getTexture(getSaddled());
     }
     
-    protected void entityInit()
+    /*protected void entityInit()
     {
         dataWatcher.addObject(16, Byte.valueOf((byte)0));
         dataWatcher.addObject(17, Byte.valueOf((byte)0));
@@ -80,7 +87,7 @@ public class EntityMoaMp extends EntityMoa
         dataWatcher.addObject(19, Byte.valueOf((byte)0));
         dataWatcher.addObject(20, Byte.valueOf((byte)0));
         dataWatcher.addObject(21, Byte.valueOf((byte)0));
-    }
+    }*/
 
     public void onLivingUpdate()
     {

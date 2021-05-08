@@ -134,7 +134,7 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
                 motionY = 1.3999999999999999D;
                 setPrivateBool(EntityFlyingCow.class, "jpress", true);
                 jrem--;
-                packet.dataInt = new int [] {1};
+                packet.dataInt = new int [] {1, jrem};
                 ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
             } else
             if(handleWaterMovement() && jump)
@@ -142,17 +142,17 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
                 motionY = 0.5D;
                 setPrivateBool(EntityFlyingCow.class, "jpress", true);
                 jrem--;
-                packet.dataInt = new int [] {1};
+                packet.dataInt = new int [] {1, jrem};
                 ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
             } else if(jrem > 0 && !getPrivateBool(EntityFlyingCow.class, "jpress") && jump) {
 				    motionY = 1.2D;
 				    setPrivateBool(EntityFlyingCow.class, "jpress", true);
 				    jrem--;
-                    packet.dataInt = new int [] {1};
+                    packet.dataInt = new int [] {1, jrem};
                     ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 				} else if (onGround && !touchedGround) {
 					touchedGround = true;
-					packet.dataInt = new int [] {0};
+					packet.dataInt = new int [] {0, jrem};
 					ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 				}
 				if(getPrivateBool(EntityFlyingCow.class, "jpress") && !jump)

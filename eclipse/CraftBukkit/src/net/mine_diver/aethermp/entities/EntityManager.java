@@ -113,8 +113,11 @@ public class EntityManager {
 			new EntityInfo(EntityPhyg.class, "Phyg", mod_AetherMp.idEntityPhyg, "FRIENDLY", ""),
 			new EntityInfo(EntityFlyingCow.class, "Flyingcow", mod_AetherMp.idEntityFlyingCow, "FRIENDLY", ""),
 			new EntityInfo(EntityMoa.class, "Moa", mod_AetherMp.idEntityMoa, "FRIENDLY", ""),
-			//new EntityInfo(EntityAerbunny.class, "Aerbunny", mod_AetherMp.idEntityAerBunny, "FRIENDLY", "")
-					
+			new EntityInfo(EntityAerbunny.class, "Aerbunny", mod_AetherMp.idEntityAerBunny, "FRIENDLY", ""),
+			new EntityInfo(EntityValkyrie.class, "Valkyrie", mod_AetherMp.idEntityValkyrie, "NEUTRAL"),
+			new EntityInfo(EntityValkyrie.class, mod_AetherMp.idEntityValkyrie, 512, 2),
+			new EntityInfo(EntityHomeShot.class, "HomeShot", mod_AetherMp.idEntityHomeShot, "NEUTRAL"),
+			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 20),
 	};
 	
 	public static final Map<String, CreatureType> mapping;

@@ -43,8 +43,8 @@ public class BiomeAether extends BiomeBase {
             t.add(new BiomeMeta(EntityFlyingCow.class, mod_AetherMp.rarityFlyingCow));
         /*if(mod_AetherMp.rarityWhirlwind != 0)
             t.add(new BiomeMeta(Whirly.class, mod_AetherMp.rarityWhirlwind));*/
-        /*if(mod_AetherMp.rarityAerbunny != 0)
-            t.add(new BiomeMeta(EntityAerbunny.class, mod_AetherMp.rarityAerbunny));*/
+        if(mod_AetherMp.rarityAerbunny != 0)
+            t.add(new BiomeMeta(EntityAerbunny.class, mod_AetherMp.rarityAerbunny));
         me = this;
     }
     

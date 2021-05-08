@@ -7,6 +7,9 @@ import java.util.Properties;
 import java.util.Random;
 
 import net.mine_diver.aethermp.Core;
+import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
+import net.mine_diver.aethermp.entity.EntityMoaMp;
+import net.mine_diver.aethermp.entity.EntityPhygMp;
 import net.minecraft.client.Minecraft;
 
 public class mod_AetherMp extends BaseModMp {
@@ -71,7 +74,25 @@ public class mod_AetherMp extends BaseModMp {
 	
 	@Override
 	public void HandlePacket(Packet230ModLoader packet) {
-		CORE.handlePacket(packet);
+		if(packet.packetType == 30) {
+			EntityPlayer player = ModLoader.getMinecraftInstance().thePlayer;
+			if(player == null || !player.isRiding())
+				return;
+			Entity mount = player.ridingEntity;
+
+			if (mount instanceof EntityMoaMp) {
+				EntityMoaMp moa = (EntityMoaMp) mount;
+				moa.jrem = packet.dataInt[0];
+			} else if (mount instanceof EntityPhygMp) {
+				EntityPhygMp phyg = (EntityPhygMp) mount;
+				phyg.jrem = packet.dataInt[0];
+			} else if (mount instanceof EntityFlyingCowMp) {
+				EntityFlyingCowMp cow = (EntityFlyingCowMp) mount;
+				cow.jrem = packet.dataInt[0];
+			}
+		}
+		else
+			CORE.handlePacket(packet);
     }
 	
 	public static final Core CORE = new Core();
@@ -108,7 +129,10 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityPhyg = 113,
 	idEntityFlyingCow = 114,
 	idEntityMoa = 115,
-	idEntityAerBunny = 116;
+	idEntityAerBunny = 116,
+	idEntityHomeShot = 117,
+	idEntityValkyrie = 118;
+	
 	
 	public static class PackageAccess {
 		

@@ -25,6 +25,7 @@ import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.World;
+import net.minecraft.server.mod_AetherMp;
 import net.minecraft.server.ModLoader;
 
 // Referenced classes of package net.minecraft.src:
@@ -50,11 +51,19 @@ public class EntityAerbunny extends EntityAetherAnimal
         age = random.nextInt(64);
         mate = 0;
     }
+    
+    @Override
+    public void b()
+    {
+    	datawatcher.a(16, String.valueOf((byte)0));
+    	datawatcher.a(17, Byte.valueOf((byte)0));
+    }
+
 
     @Override
     public void m_()
     {
-        if(gotrider)
+       /* if(gotrider)
         {
             gotrider = false;
             if(vehicle == null)
@@ -65,7 +74,11 @@ public class EntityAerbunny extends EntityAetherAnimal
                     mount(entityplayer);
                 }
             }
-        }
+        }*/
+    	if(onGround != getRenderOnGround())
+    	{
+    		setRenderOnGround(onGround);
+    	}
         if(age < 1023)
         {
             age++;
@@ -120,12 +133,12 @@ public class EntityAerbunny extends EntityAetherAnimal
                 mate = random.nextInt(16);
             }
         }
-        if(puffiness > 0.0F)
+        if(getPuffiness() > 0.0F)
         {
-            puffiness -= 0.1F;
+            setPuffiness(getPuffiness()-0.1F);
         } else
         {
-            puffiness = 0.0F;
+            setPuffiness(0.0F);
         }
         super.m_();
     }
@@ -169,9 +182,9 @@ public class EntityAerbunny extends EntityAetherAnimal
                 a();
             }
         } else
-      /*  if(vehicle != null)
+        if(vehicle != null)
         {
-           /* if(vehicle.dead)
+            if(vehicle.dead)
             {
                 mount(vehicle);
             } else
@@ -179,13 +192,14 @@ public class EntityAerbunny extends EntityAetherAnimal
             {
             	vehicle.fallDistance = 0.0F;
             	vehicle.motY += 0.05000000074505806D;
-               /* if(vehicle.motY < -0.22499999403953552D && (vehicle instanceof EntityLiving) && ((EntityLiving)vehicle).aC)
+            	boolean aC = mod_AetherMp.PackageAccess.EntityLiving.getJumping((EntityLiving) vehicle);
+                if(vehicle.motY < -0.22499999403953552D && (vehicle instanceof EntityLiving) && aC)
                 {
                 	vehicle.motY = 0.125D;
                     cloudPoop();
-                    puffiness = 1.15F;
+                    setPuffiness(1.15F);
                 }
-           // }
+            }
         } else
         if(!grab)
         {
@@ -200,7 +214,7 @@ public class EntityAerbunny extends EntityAetherAnimal
                     if(motY < 0.0D)
                     {
                         cloudPoop();
-                        puffiness = 0.9F;
+                        setPuffiness(0.9F);
                     }
                     motY = 0.20000000000000001D;
                 }
@@ -209,7 +223,7 @@ public class EntityAerbunny extends EntityAetherAnimal
             {
                 motY = -0.10000000000000001D;
             }
-        }*/
+        }
         if(!grab)
         {
             super.c_();
@@ -412,6 +426,32 @@ public class EntityAerbunny extends EntityAetherAnimal
     {
         return super.d();
     }
+    
+    public float getPuffiness()
+    {
+    	return Float.valueOf(datawatcher.c(16));
+    }
+    
+    public void setPuffiness(float value)
+    {
+    	datawatcher.watch(16, String.valueOf(value));
+    }
+    
+    public boolean getRenderOnGround()
+    {
+        return (datawatcher.a(17) & 1) != 0;
+    }
+
+    public void setRenderOnGround(boolean flag)
+    {
+        if(flag)
+        {
+            datawatcher.watch(17, Byte.valueOf((byte)1));
+        } else
+        {
+            datawatcher.watch(17, Byte.valueOf((byte)0));
+        }
+    }
 
     public int age;
     public int mate;
@@ -419,5 +459,4 @@ public class EntityAerbunny extends EntityAetherAnimal
     public boolean fear;
     public boolean gotrider;
     public Entity runFrom;
-    public float puffiness;
 }

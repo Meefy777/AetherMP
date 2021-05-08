@@ -3,6 +3,7 @@ package net.mine_diver.aethermp.blocks;
 import java.util.Random;
 
 import net.mine_diver.aethermp.entities.EntitySentry;
+import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.network.PacketManager;
 import net.minecraft.server.BlockBreakable;
 import net.minecraft.server.Entity;
@@ -44,11 +45,11 @@ public class BlockTrap extends BlockBreakable {
                 world.addEntity(entitysentry);
                 break;
 
-            /*case 1: // '\001'
+            case 1: // '\001'
                 EntityValkyrie entityvalkyrie = new EntityValkyrie(world);
                 entityvalkyrie.setPosition((double)l + 0.5D, (double)i1 + 1.5D, (double)j1 + 0.5D);
-                world.entityJoinedWorld(entityvalkyrie);
-                break;*/
+                world.addEntity(entityvalkyrie);
+                break;
             }
             world.setTypeIdAndData(i, j, k, BlockManager.LockedDungeonStone.id, world.getData(i, j, k));
         }
