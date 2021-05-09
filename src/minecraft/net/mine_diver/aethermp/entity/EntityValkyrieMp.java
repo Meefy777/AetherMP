@@ -7,15 +7,11 @@ public class EntityValkyrieMp extends EntityValkyrie {
 
 	public EntityValkyrieMp(World world, double x, double y, double z) {
 		super(world);
-		setPosition(x, y, z);
-	}
-	
-	@Override
-	public void entityInit() {
 		dataWatcher.addObject(15, Byte.valueOf((byte)0)); //boss
 		dataWatcher.addObject(16, Integer.valueOf((int)0)); //hp
 		dataWatcher.addObject(17, String.valueOf((String) "")); //name
 		dataWatcher.addObject(18, Byte.valueOf((byte)0)); //isMad
+		setPosition(x, y, z);
 	}
 	
 	@Override
@@ -31,8 +27,7 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	}
 	
 	public boolean isBoss() {
-		//return (dataWatcher.getWatchableObjectInt(15) & 1) != 0;
-		return true;
+		return (dataWatcher.getWatchableObjectByte(15) & 1) != 0;
 	}
 	
    public boolean isMad() {
@@ -44,13 +39,10 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	}
 	
 	@Override
-	public boolean otherDimension() {
-		return false;
-	}
-	
-	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		
+		chatTime = Integer.MAX_VALUE;
 		if (isBoss())
 			texture = "/aether/mobs/valkyrie2.png";
 		else

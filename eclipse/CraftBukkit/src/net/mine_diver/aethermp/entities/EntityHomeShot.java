@@ -14,6 +14,7 @@ import net.minecraft.server.ISpawnable;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
+import net.minecraft.server.WorldServer;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityFlying, World, EntityLiving, EntityLightningBolt, 
@@ -75,8 +76,7 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         if(life <= 0)
         {  
             EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
-            entitylightningbolt.setLocation(locX, locY, locZ, yaw, 0.0F);
-            world.addEntity(entitylightningbolt);
+            world.strikeLightning(entitylightningbolt);
             dead = true;
         } else
         {

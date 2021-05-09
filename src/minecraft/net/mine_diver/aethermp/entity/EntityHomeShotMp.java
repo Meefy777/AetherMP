@@ -1,5 +1,6 @@
 package net.mine_diver.aethermp.entity;
 
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityHomeShot;
 import net.minecraft.src.ISpawnable;
 import net.minecraft.src.Packet230ModLoader;
@@ -22,5 +23,5 @@ public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable {
         motionY = packet.dataFloat[4];
         motionZ = packet.dataFloat[5];
 	}
-
+	
 }

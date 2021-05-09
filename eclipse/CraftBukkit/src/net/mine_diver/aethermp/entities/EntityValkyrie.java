@@ -1,8 +1,5 @@
 package net.mine_diver.aethermp.entities;
 
-
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
@@ -13,6 +10,7 @@ import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.player.PlayerManager;
+import net.mine_diver.aethermp.util.Achievements;
 import net.mine_diver.aethermp.util.NameGen;
 import net.minecraft.server.Block;
 import net.minecraft.server.Entity;
@@ -56,16 +54,16 @@ public class EntityValkyrie extends EntityDungeonMob
         safeY = locY;
         safeZ = locZ;
 
+        
         setBoss(true);
-        health = 500;
+        health = 75;
         setName(NameGen.gen());
         
-        //logging out and logign back in breaks it she still targets you
+        //stuck in death animation
+        //relogging breaks texture
         //home shot doesnt work
-        //glitrhces out when you get her to low hp
-        //doesnt generate in dungeons
-        //fix textueres
-        //test dungeon door and chest ope nand close
+        //fix target swap between players after people hit or someone die and it swap
+        //bukkit integration
         //dungeon command unlock
     }
 
@@ -155,10 +153,9 @@ public class EntityValkyrie extends EntityDungeonMob
     @Override
     public void m_()
     {
-    	
+        super.m_();
     	setHealth(health);
         lastMotionY = motY;
-        super.m_();
         if(!onGround && target != null && lastMotionY >= 0.0D && motY < 0.0D && f(target) <= 16F && e(target))
         {
             double a = target.locX - locX;
@@ -508,7 +505,8 @@ public class EntityValkyrie extends EntityDungeonMob
         nbttagcompound.a("IsCurrentBoss", current);
         if (current)
         	nbttagcompound.setString("TargetNickname", ((EntityPlayer)target).name);
-        nbttagcompound.setString("BossName", getName());
+        if(isBoss())
+        	nbttagcompound.setString("BossName", getName());
     }
 
     @Override
@@ -539,7 +537,8 @@ public class EntityValkyrie extends EntityDungeonMob
 	            PlayerManager.setCurrentBoss(player, this);
         	}
         }
-        setName(nbttagcompound.getString("BossName"));
+        if(isBoss())
+        	setName(nbttagcompound.getString("BossName"));
     }
 
     @Override
@@ -577,7 +576,6 @@ public class EntityValkyrie extends EntityDungeonMob
                 if(target == null)
                 {
                 	PlayerManager.setCurrentBoss((EntityPlayer) entity, this);
-                	System.out.println(2132213213);///////////////////////////
                     chatTime = 0;
                     chatItUp("This will be your final battle!", (EntityHuman) entity);
                 } else
@@ -620,7 +618,7 @@ public class EntityValkyrie extends EntityDungeonMob
             {
             	dead = false;
                 unlockDoor();
-                unlockTreasure();
+                unlockTreasure((EntityPlayer) entity);
                 chatItUp("You are truly... a mighty warrior...", (EntityHuman) entity);
                 PlayerManager.setCurrentBoss((EntityPlayer) target, null);
             } else
@@ -711,13 +709,13 @@ public class EntityValkyrie extends EntityDungeonMob
         world.setRawTypeId(dungeonX - 1, dungeonY + 1, dungeonEntranceZ, 0);
     }
 
-    private void unlockTreasure()
+    private void unlockTreasure(EntityPlayer entityplayer)
     {
     	world.setRawTypeIdAndData(dungeonX + 16, dungeonY + 1, dungeonZ + 9, Block.TRAP_DOOR.id, 3);
         world.setRawTypeIdAndData(dungeonX + 17, dungeonY + 1, dungeonZ + 9, Block.TRAP_DOOR.id, 2);
         world.setRawTypeIdAndData(dungeonX + 16, dungeonY + 1, dungeonZ + 10, Block.TRAP_DOOR.id, 3);
         world.setRawTypeIdAndData(dungeonX + 17, dungeonY + 1, dungeonZ + 10, Block.TRAP_DOOR.id, 2);
-        //mod_Aether.giveAchievement(AetherAchievements.defeatSilver);
+        Achievements.giveAchievement(Achievements.defeatSilver, entityplayer);
         for(int x = dungeonX - 26; x < dungeonX + 29; x++)
         {
             for(int y = dungeonY - 1; y < dungeonY + 22; y++)
@@ -780,6 +778,7 @@ public class EntityValkyrie extends EntityDungeonMob
         if (target instanceof EntityPlayer)
         	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
         target = null; 
+        angerLevel = 0;
         unlockDoor();
 	}
 

@@ -91,11 +91,8 @@ public class mod_AetherMp extends BaseModMp {
 				cow.jrem = packet.dataInt[0];
 			}
 		}
-		else if (packet.packetType == 31) {
-			if (player == null)
-				return;
+		else if (packet.packetType == 31 && player != null)
 			player.worldObj.spawnParticle(packet.dataString[0], packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
-		}
 		else
 			CORE.handlePacket(packet);
     }

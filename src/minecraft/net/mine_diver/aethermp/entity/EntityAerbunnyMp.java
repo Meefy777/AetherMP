@@ -1,12 +1,7 @@
 package net.mine_diver.aethermp.entity;
 
-import java.util.List;
-
-import net.minecraft.src.Entity;
 import net.minecraft.src.EntityAerbunny;
-import net.minecraft.src.EntityMob;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.MathHelper;
 import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.World;
