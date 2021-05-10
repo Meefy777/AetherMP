@@ -117,7 +117,7 @@ public class EntityManager {
 			new EntityInfo(EntityValkyrie.class, "Valkyrie", mod_AetherMp.idEntityValkyrie, "NEUTRAL"),
 			new EntityInfo(EntityValkyrie.class, mod_AetherMp.idEntityValkyrie, 512, 2),
 			new EntityInfo(EntityHomeShot.class, "HomeShot", mod_AetherMp.idEntityHomeShot, "NEUTRAL"),
-			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 20),
+			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 2),
 	};
 	
 	public static final Map<String, CreatureType> mapping;

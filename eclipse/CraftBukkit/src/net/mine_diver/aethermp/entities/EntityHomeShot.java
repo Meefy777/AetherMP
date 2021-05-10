@@ -5,6 +5,7 @@
 
 package net.mine_diver.aethermp.entities;
 
+import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityFlying;
 import net.minecraft.server.EntityHuman;
@@ -201,6 +202,13 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
 		packet.dataFloat = new float [] {(float) locX, (float) locY, (float) locZ, (float) motX, (float) motY, (float) motZ};
 		return packet;
 	}
+	
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity() {
+        if (this.bukkitEntity == null)
+            this.bukkitEntity = CraftEntityAether.getEntity(this.world.getServer(), this);
+        return this.bukkitEntity;
+    }
 
     public float sinage[];
     public EntityLiving target;

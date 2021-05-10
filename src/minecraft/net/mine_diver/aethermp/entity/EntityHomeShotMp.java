@@ -24,4 +24,9 @@ public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable {
         motionZ = packet.dataFloat[5];
 	}
 	
+	@Override
+    public void moveIt(Entity e1, double sped)
+    {
+    }
+	
 }

@@ -41,8 +41,7 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
-		chatTime = Integer.MAX_VALUE;
+		timeLeft = Integer.MAX_VALUE;
 		if (isBoss())
 			texture = "/aether/mobs/valkyrie2.png";
 		else
@@ -51,6 +50,11 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	
 	@Override
 	public void teleport(double x, double y, double z, int rad) {
+	}
+	
+	@Override
+	public boolean otherDimension() {
+		return false;
 	}
 	
 }

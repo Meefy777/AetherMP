@@ -58,13 +58,6 @@ public class EntityValkyrie extends EntityDungeonMob
         setBoss(true);
         health = 75;
         setName(NameGen.gen());
-        
-        //stuck in death animation
-        //relogging breaks texture
-        //home shot doesnt work
-        //fix target swap between players after people hit or someone die and it swap
-        //bukkit integration
-        //dungeon command unlock
     }
 
     public EntityValkyrie(World world, double x, double y, double z, 
@@ -405,7 +398,7 @@ public class EntityValkyrie extends EntityDungeonMob
 
     @Override
     public void c_()
-    {	
+    {	    	
     	super.c_();
         teleTimer++;
         if(teleTimer >= 450)
@@ -486,6 +479,7 @@ public class EntityValkyrie extends EntityDungeonMob
         return world.k(i, j, k) > 8 && world.containsEntity(boundingBox) && world.getEntities(this, boundingBox).size() == 0 && !world.b(boundingBox);
     }
 
+    @Override
     public void b(NBTTagCompound nbttagcompound)
     {
         super.b(nbttagcompound);
