@@ -146,9 +146,9 @@ public class EntityValkyrie extends EntityDungeonMob
     @Override
     public void m_()
     {
-        super.m_();
     	setHealth(health);
         lastMotionY = motY;
+        super.m_();
         if(!onGround && target != null && lastMotionY >= 0.0D && motY < 0.0D && f(target) <= 16F && e(target))
         {
             double a = target.locX - locX;
@@ -157,18 +157,6 @@ public class EntityValkyrie extends EntityDungeonMob
             motX = Math.sin(angle) * 0.25D;
             motZ = Math.cos(angle) * 0.25D;
         }
-        if(target != null && (target instanceof EntityLiving)) {
-            EntityLiving e1 = (EntityLiving)target;
-            if(e1.health <= 0) {
-            	stopFight();
-                return;
-            }
-        } else if(target == null || target.dead) {
-         	stopFight();
-            return;
-        }
-        
-        
         if(!onGround && !p() && Math.abs(motY - lastMotionY) > 0.070000000000000007D && Math.abs(motY - lastMotionY) < 0.089999999999999997D)
         {
             motY += 0.054999999701976776D;
@@ -205,22 +193,18 @@ public class EntityValkyrie extends EntityDungeonMob
         {
             sinage -= 6.283186F;
         }
-        if(!otherDimension())
-        {
-            timeLeft--;
-            if(timeLeft <= 0)
-            {
-            	dead = true;
-                S();
+        if(target != null && (target instanceof EntityLiving)) {
+            EntityLiving e1 = (EntityLiving)target;
+            if(e1.health <= 0) {
+            	stopFight();
+                return;
             }
+        } else if(target == null || target.dead) {
+         	stopFight();
+            return;
         }
     }
-
-    public boolean otherDimension()
-    {
-        return true;
-    }
-
+    
     public void teleport(double x, double y, double z, int rad)
     {
         int a = random.nextInt(rad + 1);
@@ -366,7 +350,7 @@ public class EntityValkyrie extends EntityDungeonMob
 
     private void chatItUp(String s, EntityHuman player)
     {
-        if(chatTime <= 0 && otherDimension())
+        if(chatTime <= 0)
         {
             player.a(s);
             chatTime = 60;
@@ -538,7 +522,7 @@ public class EntityValkyrie extends EntityDungeonMob
     @Override
     protected Entity findTarget()
     {
-        if(otherDimension() && (world.spawnMonsters <= 0 || isBoss() && !duel || angerLevel <= 0))
+        if(world.spawnMonsters <= 0 || isBoss() && !duel || angerLevel <= 0)
         {
             return null;
         } else
