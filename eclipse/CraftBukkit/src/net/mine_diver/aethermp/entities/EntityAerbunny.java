@@ -7,7 +7,6 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -26,7 +25,6 @@ import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.World;
 import net.minecraft.server.mod_AetherMp;
-import net.minecraft.server.ModLoader;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityAetherAnimal, World, EntityPlayer, AxisAlignedBB, 
@@ -60,7 +58,8 @@ public class EntityAerbunny extends EntityAetherAnimal
     }
 
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public void m_()
     {
        /* if(gotrider)
@@ -172,7 +171,8 @@ public class EntityAerbunny extends EntityAetherAnimal
         mate = nbttagcompound.d("RepMate");
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     protected void c_()
     {
         if(onGround)
@@ -269,14 +269,15 @@ public class EntityAerbunny extends EntityAetherAnimal
         }
     }
 
-    public void cloudPoop()
+    @SuppressWarnings("unused")
+	public void cloudPoop()
     {
         double a = random.nextFloat() - 0.5F;
         double c = random.nextFloat() - 0.5F;
         double d = locX + a * 0.40000000596046448D;
         double e = boundingBox.b;
         double f = locZ + a * 0.40000000596046448D;
-        //worldObj.spawnParticle("explode", d, e, f, 0.0D, -0.075000002980232239D, 0.0D);
+        world.a("explode", d, e, f, 0.0D, -0.075000002980232239D, 0.0D);
     }
 
     @Override

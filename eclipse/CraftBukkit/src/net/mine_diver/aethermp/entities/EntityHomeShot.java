@@ -5,17 +5,20 @@
 
 package net.mine_diver.aethermp.entities;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockIgniteEvent;
+
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityFlying;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.EntityWeatherStorm;
 import net.minecraft.server.ISpawnable;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
-import net.minecraft.server.WorldServer;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityFlying, World, EntityLiving, EntityLightningBolt, 
@@ -76,8 +79,14 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         } else
         if(life <= 0)
         {  
-            EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
-            world.strikeLightning(entitylightningbolt);
+        	BlockIgniteEvent event = null;
+        	if (target instanceof EntityPlayer) {
+        		event = new BlockIgniteEvent(world.getWorld().getBlockAt((int)locX, (int)locY, (int)locZ), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) target.getBukkitEntity());
+        		world.getServer().getPluginManager().callEvent(event);
+        	}
+        	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
+        	if(event == null || !event.isCancelled())
+        		world.strikeLightning(entitylightningbolt);
             dead = true;
         } else
         {

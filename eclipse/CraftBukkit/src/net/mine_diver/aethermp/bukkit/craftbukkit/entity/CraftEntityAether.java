@@ -3,6 +3,7 @@ package net.mine_diver.aethermp.bukkit.craftbukkit.entity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 
+import net.mine_diver.aethermp.entities.EntityAerbunny;
 import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.entities.EntityAetherLightning;
 import net.mine_diver.aethermp.entities.EntityCloudParachute;
@@ -14,6 +15,7 @@ import net.mine_diver.aethermp.entities.EntityFiroBall;
 import net.mine_diver.aethermp.entities.EntityFlamingArrow;
 import net.mine_diver.aethermp.entities.EntityFloatingBlock;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
+import net.mine_diver.aethermp.entities.EntityHomeShot;
 import net.mine_diver.aethermp.entities.EntityLightningKnife;
 import net.mine_diver.aethermp.entities.EntityMimic;
 import net.mine_diver.aethermp.entities.EntityMiniCloud;
@@ -25,6 +27,7 @@ import net.mine_diver.aethermp.entities.EntityProjectileBase;
 import net.mine_diver.aethermp.entities.EntitySentry;
 import net.mine_diver.aethermp.entities.EntitySheepuff;
 import net.mine_diver.aethermp.entities.EntitySlider;
+import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.entities.EntityZephyr;
 import net.mine_diver.aethermp.entities.EntityZephyrSnowball;
 import net.minecraft.server.Entity;
@@ -49,6 +52,8 @@ public class CraftEntityAether extends CraftEntity {
 						return new CraftSentry(server, (EntitySentry) entity);
 					if (entity instanceof EntityMimic)
 						return new CraftMimic(server, (EntityMimic) entity);
+					if (entity instanceof EntityValkyrie)
+						return new CraftValkyrie(server, (EntityValkyrie) entity);
 				} else if (entity instanceof EntityAnimal) {
 					if (entity instanceof EntityAetherAnimal) {
 						if (entity instanceof EntitySheepuff)
@@ -59,6 +64,8 @@ public class CraftEntityAether extends CraftEntity {
 							return new CraftFlyingCow(server, (EntityFlyingCow) entity);
 						if (entity instanceof EntityMoa)
 							return new CraftMoa(server, (EntityMoa) entity);
+						if (entity instanceof EntityAerbunny)
+							return new CraftAerbunny(server, (EntityAerbunny) entity);
 					}
 				}
 			} else if (entity instanceof EntityFlying) {
@@ -70,6 +77,8 @@ public class CraftEntityAether extends CraftEntity {
 					return new CraftMiniCloud(server, (EntityMiniCloud) entity);
 				if (entity instanceof EntitySlider)
 					return new CraftSlider(server, (EntitySlider) entity);
+				if (entity instanceof EntityHomeShot)
+					return new CraftHomeShot(server, (EntityHomeShot) entity);
 			}
 		} else {
 			if (entity instanceof EntityProjectileBase) {

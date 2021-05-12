@@ -53,11 +53,6 @@ public class EntityValkyrie extends EntityDungeonMob
         safeX = locX;
         safeY = locY;
         safeZ = locZ;
-
-        
-        setBoss(true);
-        health = 75;
-        setName(NameGen.gen());
     }
 
     public EntityValkyrie(World world, double x, double y, double z, 
@@ -563,6 +558,7 @@ public class EntityValkyrie extends EntityDungeonMob
             } else
             if(target == null)
             {
+                becomeAngryAt(entity);
                 chatTime = 0;
                 int pokey = random.nextInt(3);
                 if(pokey == 2)
@@ -580,14 +576,19 @@ public class EntityValkyrie extends EntityDungeonMob
             {
                 teleTimer -= 10;
             }
-            becomeAngryAt(entity);
         } else
         {
             teleport(locX, locY, locZ, 8);
             fireTicks = 0;
             return false;
         }
-        boolean flag = super.damageEntity(entity, i);
+        
+        boolean flag;
+        if(target == null)
+        	flag = super.damageEntity(entity, i);
+        else
+        	flag = super.damageEntity(target, i);
+        
         if(flag && health <= 0)
         {
             int pokey = random.nextInt(3);

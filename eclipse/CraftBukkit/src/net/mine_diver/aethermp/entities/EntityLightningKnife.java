@@ -2,6 +2,9 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockIgniteEvent;
+
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Entity;
@@ -154,16 +157,24 @@ public class EntityLightningKnife extends Entity implements ISpawnable {
                 int x = MathHelper.floor(movingobjectposition.entity.boundingBox.a);
                 int y = MathHelper.floor(movingobjectposition.entity.boundingBox.b);
                 int z = MathHelper.floor(movingobjectposition.entity.boundingBox.c);
-                EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, x, y, z);
-                entitylightningbolt.setLocation(x, y, z, yaw, 0.0F);
-                world.addEntity(entitylightningbolt);
+                BlockIgniteEvent event = new BlockIgniteEvent(world.getWorld().getBlockAt((int) locX, (int) locY, (int) locZ), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) thrower.getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(event);
+                if(!event.isCancelled()) {
+                	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, x, y, z);
+                	entitylightningbolt.setLocation(x, y, z, yaw, 0.0F);
+                	world.addEntity(entitylightningbolt);
+                }
             } else {
                 int i = MathHelper.floor(locX);
                 int j = MathHelper.floor(locY);
                 int k = MathHelper.floor(locZ);
-                EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
-                entitylightningbolt.setLocation(i, j, k, yaw, 0.0F);
-                world.addEntity(entitylightningbolt);
+                BlockIgniteEvent event = new BlockIgniteEvent(world.getWorld().getBlockAt(i, j, k), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) thrower.getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(event);
+                if(!event.isCancelled()) {
+                	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
+                	entitylightningbolt.setLocation(i, j, k, yaw, 0.0F);
+                	world.addEntity(entitylightningbolt);
+                }
             }
             die();
         }
