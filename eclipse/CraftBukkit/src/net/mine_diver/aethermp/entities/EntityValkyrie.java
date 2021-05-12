@@ -558,7 +558,6 @@ public class EntityValkyrie extends EntityDungeonMob
             } else
             if(target == null)
             {
-                becomeAngryAt(entity);
                 chatTime = 0;
                 int pokey = random.nextInt(3);
                 if(pokey == 2)
@@ -576,6 +575,7 @@ public class EntityValkyrie extends EntityDungeonMob
             {
                 teleTimer -= 10;
             }
+            becomeAngryAt(entity);
         } else
         {
             teleport(locX, locY, locZ, 8);
@@ -666,7 +666,7 @@ public class EntityValkyrie extends EntityDungeonMob
         {
             for(int k = dungeonZ + 2; k < dungeonZ + 23; k += 7)
             {
-                if(world.getTypeId(dungeonX - 1, dungeonY, k) == 0)
+                if(world.getTypeId(dungeonX - 1, dungeonY, k) == 0 && health > 0)
                 {
                     dungeonEntranceZ = k;
                     world.setRawTypeIdAndData(dungeonX - 1, dungeonY, k, BlockManager.LockedDungeonStone.id, 1);
@@ -695,11 +695,11 @@ public class EntityValkyrie extends EntityDungeonMob
         world.setRawTypeIdAndData(dungeonX + 16, dungeonY + 1, dungeonZ + 10, Block.TRAP_DOOR.id, 3);
         world.setRawTypeIdAndData(dungeonX + 17, dungeonY + 1, dungeonZ + 10, Block.TRAP_DOOR.id, 2);
         Achievements.giveAchievement(Achievements.defeatSilver, entityplayer);
-        for(int x = dungeonX - 26; x < dungeonX + 29; x++)
+        for(int x = dungeonX - 27; x < dungeonX + 30; x++)
         {
-            for(int y = dungeonY - 1; y < dungeonY + 22; y++)
+            for(int y = dungeonY - 3; y < dungeonY + 22; y++)
             {
-                for(int z = dungeonZ - 5; z < dungeonZ + 25; z++)
+                for(int z = dungeonZ - 7; z < dungeonZ + 27; z++)
                 {
                     int id = world.getTypeId(x, y, z);
                     if(id == BlockManager.LockedDungeonStone.id)
