@@ -162,7 +162,7 @@ public class EntityLightningKnife extends Entity implements ISpawnable {
                 if(!event.isCancelled()) {
                 	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, x, y, z);
                 	entitylightningbolt.setLocation(x, y, z, yaw, 0.0F);
-                	world.addEntity(entitylightningbolt);
+                	world.strikeLightning(entitylightningbolt);
                 }
             } else {
                 int i = MathHelper.floor(locX);
@@ -173,7 +173,7 @@ public class EntityLightningKnife extends Entity implements ISpawnable {
                 if(!event.isCancelled()) {
                 	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
                 	entitylightningbolt.setLocation(i, j, k, yaw, 0.0F);
-                	world.addEntity(entitylightningbolt);
+                	world.strikeLightning(entitylightningbolt);
                 }
             }
             die();

@@ -49,7 +49,8 @@ public class ItemManager {
 					new ItemType(ItemCloudStaffMp.class, AetherItems.class.getDeclaredField("CloudStaff"), mod_Aether.idItemCloudStaff),
 					new ItemType(ItemSwordHolystoneMp.class, AetherItems.class.getDeclaredField("SwordHolystone"), mod_Aether.idItemSwordHolystone, (item, targetItem) -> {
 						return new ItemSwordHolystoneMp(targetItem.shiftedIndex - Block.blocksList.length, EnumToolMaterial.STONE);
-					})
+					}),
+					new ItemType(ItemLightningKnifeMp.class, AetherItems.class.getDeclaredField("LightningKnife"), mod_Aether.idItemLightningKnife)
 			};
 		} catch (Exception e) {
 			throw new RuntimeException(e);

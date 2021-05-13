@@ -7,10 +7,16 @@ public class EntityValkyrieMp extends EntityValkyrie {
 
 	public EntityValkyrieMp(World world, double x, double y, double z) {
 		super(world);
-		dataWatcher.addObject(15, Byte.valueOf((byte)0)); //boss
-		dataWatcher.addObject(16, Integer.valueOf((int)0)); //hp
-		dataWatcher.addObject(17, String.valueOf((String) "")); //name
-		dataWatcher.addObject(18, Byte.valueOf((byte)0)); //isMad
+		dataWatcher.addObject(15, (byte)0); //boss
+		dataWatcher.addObject(16, (int)0); //hp
+		dataWatcher.addObject(17, (String) ""); //name
+		dataWatcher.addObject(18, (byte)0); //isMad
+		
+		
+		//dataWatcher.addObject(15, Byte.valueOf((byte)0)); //boss
+		//dataWatcher.addObject(16, Integer.valueOf((int)0)); //hp
+		//dataWatcher.addObject(17, String.valueOf((String) "")); //name
+		//dataWatcher.addObject(18, Byte.valueOf((byte)0)); //isMad
 		setPosition(x, y, z);
 	}
 	

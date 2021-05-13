@@ -42,17 +42,17 @@ public class EntityValkyrie extends EntityDungeonMob
 
     public EntityValkyrie(World world)
     {
-        super(world);
-        b(0.8F, 1.6F);
-        texture = "/aether/mobs/valkyrie.png";
-        teleTimer = random.nextInt(250);
-        health = 50;
-        aE = 0.5F;
-        timeLeft = 1200;
-        attackStrength = 7;
-        safeX = locX;
-        safeY = locY;
-        safeZ = locZ;
+        this(world, 0, 0, 0, false);
+        //b(0.8F, 1.6F);
+        //texture = "/aether/mobs/valkyrie.png";
+        //teleTimer = random.nextInt(250);
+        //health = 50;
+       // aE = 0.5F;
+        //timeLeft = 1200;
+        //attackStrength = 7;
+        //safeX = locX;
+        //safeY = locY;
+        //safeZ = locZ;
     }
 
     public EntityValkyrie(World world, double x, double y, double z, 
@@ -79,14 +79,6 @@ public class EntityValkyrie extends EntityDungeonMob
         safeY = locY = y;
         safeZ = locZ = z;
         hasDungeon = false;
-    }
-    
-    @Override
-    protected void b() {
-    	datawatcher.a(15, Byte.valueOf((byte) 0)); //is boss?
-    	datawatcher.a(16, Integer.valueOf((int) 0)); //hp
-    	datawatcher.a(17, String.valueOf("")); //name
-    	datawatcher.a(18, Byte.valueOf((byte) 0)); //is mad
     }
     
     public int getHealth() {
@@ -131,6 +123,14 @@ public class EntityValkyrie extends EntityDungeonMob
         {
             datawatcher.watch(18, Byte.valueOf((byte)0));
         }
+    }
+    
+    @Override
+    protected void b() {
+    	datawatcher.a(15, Byte.valueOf((byte) 0)); //is boss?
+    	datawatcher.a(16, Integer.valueOf((int) 0)); //hp
+    	datawatcher.a(17, String.valueOf("")); //name
+    	datawatcher.a(18, Byte.valueOf((byte) 0)); //is mad
     }
     
     @Override
@@ -584,7 +584,7 @@ public class EntityValkyrie extends EntityDungeonMob
         }
         
         boolean flag;
-        if(target == null)
+       if(target == null)
         	flag = super.damageEntity(entity, i);
         else
         	flag = super.damageEntity(target, i);
