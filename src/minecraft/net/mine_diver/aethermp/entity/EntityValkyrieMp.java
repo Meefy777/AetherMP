@@ -7,19 +7,14 @@ public class EntityValkyrieMp extends EntityValkyrie {
 
 	public EntityValkyrieMp(World world, double x, double y, double z) {
 		super(world);
-		//dataWatcher.addObject(15, Byte.valueOf((byte)0)); //boss
-		//dataWatcher.addObject(16, Integer.valueOf((int)0)); //hp
-		//dataWatcher.addObject(17, String.valueOf((String) "")); //name
-		//dataWatcher.addObject(18, Byte.valueOf((byte)0)); //isMad
 		setPosition(x, y, z);
 	}
 	
 	@Override
 	protected void entityInit() {
-		dataWatcher.addObject(15, (byte)0); //boss
+		dataWatcher.addObject(19, (byte)0); //boss
 		dataWatcher.addObject(16, (int)0); //hp
 		dataWatcher.addObject(17, (String) ""); //name
-		dataWatcher.addObject(18, (byte)0); //isMad
 	}
 	
 	@Override
@@ -35,12 +30,8 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	}
 	
 	public boolean isBoss() {
-		return (dataWatcher.getWatchableObjectByte(15) & 1) != 0;
+		return (dataWatcher.getWatchableObjectByte(19) & 1) != 0;
 	}
-	
-   public boolean isMad() {
-	   return (dataWatcher.getWatchableObjectByte(18) & 1) != 0;
-   }
 	
 	@Override
 	public void updatePlayerActionState() {
@@ -64,5 +55,4 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	public boolean otherDimension() {
 		return false;
 	}
-	
 }

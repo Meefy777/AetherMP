@@ -10,6 +10,7 @@ import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
 import net.mine_diver.aethermp.entity.EntityMoaMp;
 import net.mine_diver.aethermp.entity.EntityPhygMp;
+import net.mine_diver.aethermp.entity.EntityValkyrieMp;
 import net.minecraft.client.Minecraft;
 
 public class mod_AetherMp extends BaseModMp {
@@ -75,8 +76,8 @@ public class mod_AetherMp extends BaseModMp {
 	@Override
 	public void HandlePacket(Packet230ModLoader packet) {
 		EntityPlayer player = ModLoader.getMinecraftInstance().thePlayer;
-		if(packet.packetType == 30) {
-			if(player == null || !player.isRiding())
+		if(packet.packetType == 30 && player != null) {
+			if(!player.isRiding())
 				return;
 			Entity mount = player.ridingEntity;
 
@@ -93,6 +94,13 @@ public class mod_AetherMp extends BaseModMp {
 		}
 		else if (packet.packetType == 31 && player != null)
 			player.worldObj.spawnParticle(packet.dataString[0], packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
+		else if (packet.packetType == 32 && player != null) {
+			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
+			if(ent == null || !(ent instanceof EntityValkyrieMp))
+				return;
+			EntityValkyrieMp valk = (EntityValkyrieMp) ent;
+			valk.swingArm();
+		}
 		else
 			CORE.handlePacket(packet);
     }

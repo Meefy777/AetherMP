@@ -43,16 +43,6 @@ public class EntityValkyrie extends EntityDungeonMob
     public EntityValkyrie(World world)
     {
         this(world, 0, 0, 0, false);
-        //b(0.8F, 1.6F);
-        //texture = "/aether/mobs/valkyrie.png";
-        //teleTimer = random.nextInt(250);
-        //health = 50;
-       // aE = 0.5F;
-        //timeLeft = 1200;
-        //attackStrength = 7;
-        //safeX = locX;
-        //safeY = locY;
-        //safeZ = locZ;
     }
 
     public EntityValkyrie(World world, double x, double y, double z, 
@@ -81,6 +71,13 @@ public class EntityValkyrie extends EntityDungeonMob
         hasDungeon = false;
     }
     
+    @Override
+    protected void b() {
+    	datawatcher.a(19, Byte.valueOf((byte) 0)); //is boss?
+    	datawatcher.a(16, Integer.valueOf((int) 0)); //hp
+    	datawatcher.a(17, String.valueOf("")); //name
+    }
+    
     public int getHealth() {
     	return Integer.valueOf(datawatcher.b(16));
     }
@@ -98,46 +95,23 @@ public class EntityValkyrie extends EntityDungeonMob
     }
 
     public boolean isBoss() {
-    	return (datawatcher.a(15) & 1) != 0;
+    	return (datawatcher.a(19) & 1) != 0;
     }
     
     public void setBoss(boolean flag) {
         if(flag)
         {
-            datawatcher.watch(15, Byte.valueOf((byte)1));
+            datawatcher.watch(19, Byte.valueOf((byte)1));
         } else
         {
-            datawatcher.watch(15, Byte.valueOf((byte)0));
+            datawatcher.watch(19, Byte.valueOf((byte)0));
         }
-    }
-    
-    public boolean isMad() {
-    	return (datawatcher.a(18) & 1) != 0;
-    }
-    
-    public void setMad(boolean flag) {
-        if(flag)
-        {
-            datawatcher.watch(18, Byte.valueOf((byte)1));
-        } else
-        {
-            datawatcher.watch(18, Byte.valueOf((byte)0));
-        }
-    }
-    
-    @Override
-    protected void b() {
-    	datawatcher.a(15, Byte.valueOf((byte) 0)); //is boss?
-    	datawatcher.a(16, Integer.valueOf((int) 0)); //hp
-    	datawatcher.a(17, String.valueOf("")); //name
-    	datawatcher.a(18, Byte.valueOf((byte) 0)); //is mad
     }
     
     @Override
     public void a(float f1)
     {
     }
-
     @Override
     public void m_()
     {
@@ -379,6 +353,7 @@ public class EntityValkyrie extends EntityDungeonMob
     public void c_()
     {	    	
     	super.c_();
+    	
         teleTimer++;
         if(teleTimer >= 450)
         {
@@ -433,6 +408,10 @@ public class EntityValkyrie extends EntityDungeonMob
 
     public void swingArm()
     {
+    	Packet230ModLoader packet = new Packet230ModLoader();
+    	packet.packetType = 32;
+    	packet.dataInt = new int[] {id};
+    	PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
         if(!isSwinging)
         {
             isSwinging = true;
