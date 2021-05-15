@@ -29,4 +29,9 @@ public class CraftPhyg extends AbstractAetherAnimal implements Phyg {
 	public boolean hasJumped() {
 		return ((EntityPhyg)getHandle()).hasJumped;
 	}
+
+	@Override
+	public void setHasJumped(boolean flag) {
+		((EntityPhyg)getHandle()).hasJumped = flag;
+	}
 }

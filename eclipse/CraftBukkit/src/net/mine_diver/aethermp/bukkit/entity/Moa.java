@@ -30,4 +30,6 @@ public interface Moa extends Animals {
 	
 	int getJumpsRemaining();
 	
+	void setJumpsRemaining(int i);
+	
 }

@@ -10,4 +10,6 @@ public interface FlyingCow extends Animals {
 	
 	boolean hasJumped();
 	
+	void setHasJumped(boolean flag);
+	
 }

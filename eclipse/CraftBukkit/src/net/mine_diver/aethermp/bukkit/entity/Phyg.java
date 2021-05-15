@@ -9,4 +9,6 @@ public interface Phyg extends Animals {
 	void setSaddled(boolean flag);
 	
 	boolean hasJumped();
+	
+	void setHasJumped(boolean flag);
 }

@@ -31,4 +31,9 @@ public class CraftFlyingCow extends AbstractAetherAnimal implements FlyingCow {
 		return ((EntityFlyingCow)getHandle()).hasJumped;
 	}
 
+	@Override
+	public void setHasJumped(boolean flag) {
+		((EntityFlyingCow)getHandle()).hasJumped = flag;
+	}
+
 }

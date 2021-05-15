@@ -80,5 +80,10 @@ public class CraftMoa extends AbstractAetherAnimal implements Moa {
 	public int getJumpsRemaining() {
 		return ((EntityMoa)getHandle()).jrem;
 	}
+
+	@Override
+	public void setJumpsRemaining(int i) {
+		((EntityMoa)getHandle()).jrem = i;
+	}
 	
 }
