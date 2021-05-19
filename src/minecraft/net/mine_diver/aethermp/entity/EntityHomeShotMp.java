@@ -6,7 +6,8 @@ import net.minecraft.src.ISpawnable;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.World;
 
-public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable {
+public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable 
+	{
 
 	public EntityHomeShotMp(World world) {
 		super(world);
@@ -19,13 +20,23 @@ public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable {
         serverPosX = (int) (posX * 32);
         serverPosY = (int) (posY * 32);
         serverPosZ = (int) (posZ * 32);
-        motionX = packet.dataFloat[3];
-        motionY = packet.dataFloat[4];
-        motionZ = packet.dataFloat[5];
+        //motionX = packet.dataFloat[3];
+        //motionY = packet.dataFloat[4];
+        //motionZ = packet.dataFloat[5];
 	}
 	
 	@Override
     public void moveIt(Entity e1, double sped)
     {
     }
+	
+	@Override
+	public void faceIt() {	
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		life = 2;
+	}
 }

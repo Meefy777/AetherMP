@@ -12,6 +12,8 @@ public interface FiroBall extends Flying {
 	
 	int getTicksAlive();
 	
+	int getLifeSpan();
+	
 	void setFrosty(boolean frosty);
 	
 	void setSmacked(boolean smacked);
@@ -19,4 +21,7 @@ public interface FiroBall extends Flying {
 	void setFromCloud(boolean fromCloud);
 	
 	void setTicksAlive(int life);
+	
+	void setLifeSpan(int i);
+	
 }

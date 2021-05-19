@@ -348,13 +348,18 @@ public class EntityValkyrie extends EntityDungeonMob
             b(ItemManager.VictoryMedal.id, 1);
         }
     }
-
+    int poo;
     @Override
     public void c_()
     {	    	
     	super.c_();
-    	
-        teleTimer++;
+    	if (poo < 60)
+    		poo++;
+    	else {
+    		makeHomeShot(1, (EntityLiving)target);
+    		poo = 0;
+    	}
+		teleTimer++;
         if(teleTimer >= 450)
         {
             if(target != null)

@@ -3,12 +3,11 @@ package net.mine_diver.aethermp.bukkit.craftbukkit.entity;
 import org.bukkit.craftbukkit.CraftServer;
 
 import net.mine_diver.aethermp.bukkit.entity.Moa;
-import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.entities.EntityMoa;
 
 public class CraftMoa extends AbstractAetherAnimal implements Moa {
 
-	public CraftMoa(CraftServer server, EntityAetherAnimal entity) {
+	public CraftMoa(CraftServer server, EntityMoa entity) {
 		super(server, entity);
 	}
 	

@@ -26,6 +26,10 @@ public class CraftFiroBall extends CraftFlyingAether implements FiroBall {
 		return ((EntityFiroBall)getHandle()).fromCloud;
 	}
 
+	@Override
+	public int getLifeSpan() {
+		return ((EntityFiroBall) getHandle()).lifeSpan;
+	}
 
 	@Override
 	public int getTicksAlive() {
@@ -50,6 +54,11 @@ public class CraftFiroBall extends CraftFlyingAether implements FiroBall {
 	@Override
 	public void setTicksAlive(int life) {
 		((EntityFiroBall)getHandle()).life = life;
+	}
+	
+	@Override
+	public void setLifeSpan(int i) {
+		((EntityFiroBall) getHandle()).lifeSpan = i;
 	}
 	
 	@Override
