@@ -92,7 +92,7 @@ public class mod_AetherMp extends BaseModMp {
 				cow.jrem = packet.dataInt[0];
 			}
 		}
-		else if (packet.packetType == 31 && player != null)
+		else if (packet.packetType == 31 && player != null) 
 			player.worldObj.spawnParticle(packet.dataString[0], packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
 		else if (packet.packetType == 32 && player != null) {
 			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
@@ -100,6 +100,15 @@ public class mod_AetherMp extends BaseModMp {
 				return;
 			EntityValkyrieMp valk = (EntityValkyrieMp) ent;
 			valk.swingArm();
+		}
+		else if (packet.packetType == 33 && player != null) {
+			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
+			if (ent == null || !(ent instanceof EntityValkyrieMp))
+				return;
+			EntityValkyrieMp valk = (EntityValkyrieMp) ent;
+			valk.setBoss(true);
+			valk.bossName = packet.dataString[0];
+			valk.name = packet.dataString[0];
 		}
 		else
 			CORE.handlePacket(packet);

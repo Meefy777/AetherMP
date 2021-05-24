@@ -7,6 +7,7 @@ import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
+import net.mine_diver.aethermp.entities.EntityValkyrie;
 
 public class mod_AetherMp extends BaseModMp {
 
@@ -72,7 +73,7 @@ public class mod_AetherMp extends BaseModMp {
 							mount.hasJumped = true;
 						else
 							mount.hasJumped = false;
-						
+	
 						mount.jrem = packet.dataInt[1];
 					}
 					if (player.vehicle instanceof EntityFlyingCow) {
@@ -87,7 +88,6 @@ public class mod_AetherMp extends BaseModMp {
 				}
 				break;
 			}
-		
 			case 69: {
 				if (player.vehicle instanceof EntityLiving) {
 					EntityLiving mount = (EntityLiving) player.vehicle;
@@ -109,8 +109,20 @@ public class mod_AetherMp extends BaseModMp {
 					player.yaw = packet.dataFloat[6];
 					player.pitch = packet.dataFloat[7];
 				}
-				
-				
+				break;
+			}
+			case 70: {
+				Entity ent = ((WorldServer)player.world).getEntity(packet.dataInt[0]);
+				if (ent == null || !(ent instanceof EntityValkyrie))
+					return;
+				EntityValkyrie valk = (EntityValkyrie) ent;
+				if (!valk.isBoss())
+					return;
+				Packet230ModLoader info = new Packet230ModLoader();
+				info.packetType = 33;
+				info.dataInt = new int [] {valk.id};
+				info.dataString = new String [] {valk.getName()};
+				ModLoaderMp.SendPacketTo(this, player, info);
 				break;
 			}
 		}

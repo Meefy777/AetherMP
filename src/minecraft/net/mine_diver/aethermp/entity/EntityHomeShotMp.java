@@ -20,9 +20,9 @@ public class EntityHomeShotMp extends EntityHomeShot implements ISpawnable
         serverPosX = (int) (posX * 32);
         serverPosY = (int) (posY * 32);
         serverPosZ = (int) (posZ * 32);
-        //motionX = packet.dataFloat[3];
-        //motionY = packet.dataFloat[4];
-        //motionZ = packet.dataFloat[5];
+        motionX = packet.dataFloat[3];
+        motionY = packet.dataFloat[4];
+        motionZ = packet.dataFloat[5];
 	}
 	
 	@Override

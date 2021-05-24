@@ -1,5 +1,7 @@
 package net.mine_diver.aethermp.entities;
 
+import java.util.List;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
@@ -112,12 +114,31 @@ public class EntityValkyrie extends EntityDungeonMob
     public void a(float f1)
     {
     }
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void m_()
     {
+    	System.out.println(lastTarget);
     	setHealth(health);
         lastMotionY = motY;
         super.m_();
+        if (target == null && !isBoss() && lastTarget != null) {
+        	EntityHuman entityplayer = world.a(lastTarget);
+        	if (entityplayer != null) {
+        		boolean isMad = false;
+	    		List<Entity> list = world.b(this, this.boundingBox.b(32D, 32D, 32D));
+	            for(int j = 0; j < list.size(); j++) {
+	                Entity entity1 = list.get(j);
+	                if(entity1 instanceof EntityPlayer && ((EntityPlayer)entity1).name.equals(lastTarget)) {
+	                	becomeAngryAt(entity1);
+	                	isMad = true;
+	                }
+	            }
+	            if(!isMad)
+	            	lastTarget = null;
+        	}
+        }
+        
         if(!onGround && target != null && lastMotionY >= 0.0D && motY < 0.0D && f(target) <= 16F && e(target))
         {
             double a = target.locX - locX;
@@ -139,6 +160,7 @@ public class EntityValkyrie extends EntityDungeonMob
         {
             angerLevel = 0;
             target = null;
+            lastTarget = null;
         }
         if(isSwinging)
         {
@@ -348,17 +370,10 @@ public class EntityValkyrie extends EntityDungeonMob
             b(ItemManager.VictoryMedal.id, 1);
         }
     }
-    int poo;
     @Override
     public void c_()
     {	    	
     	super.c_();
-    	if (poo < 60)
-    		poo++;
-    	else {
-    		makeHomeShot(1, (EntityLiving)target);
-    		poo = 0;
-    	}
 		teleTimer++;
         if(teleTimer >= 450)
         {
@@ -464,6 +479,8 @@ public class EntityValkyrie extends EntityDungeonMob
         	nbttagcompound.setString("TargetNickname", ((EntityPlayer)target).name);
         if(isBoss())
         	nbttagcompound.setString("BossName", getName());
+        if (lastTarget != null)
+        	nbttagcompound.setString("LastTarget", lastTarget);
     }
 
     @Override
@@ -496,6 +513,7 @@ public class EntityValkyrie extends EntityDungeonMob
         }
         if(isBoss())
         	setName(nbttagcompound.getString("BossName"));
+        lastTarget = nbttagcompound.getString("LastTarget");
     }
 
     @Override
@@ -567,7 +585,7 @@ public class EntityValkyrie extends EntityDungeonMob
             return false;
         }
         
-        boolean flag;
+       boolean flag;
        if(target == null)
         	flag = super.damageEntity(entity, i);
         else
@@ -615,6 +633,7 @@ public class EntityValkyrie extends EntityDungeonMob
                 if(e1.health <= 0)
                 {
                 	target = null;
+                	lastTarget = null;
                     angerLevel = 0;
                     int pokey = random.nextInt(3);
                     chatTime = 0;
@@ -644,7 +663,10 @@ public class EntityValkyrie extends EntityDungeonMob
 
     private void becomeAngryAt(Entity entity)
     {
-    	target = entity;
+    	if (target == null)
+    		target = entity;
+    	if (target instanceof EntityPlayer)
+    		lastTarget = ((EntityPlayer) target).name;
         angerLevel = 200 + random.nextInt(200);
         if(isBoss())
         {
@@ -773,4 +795,5 @@ public class EntityValkyrie extends EntityDungeonMob
     public double safeZ;
     public float sinage;
     public double lastMotionY;
+    private String lastTarget;
 }

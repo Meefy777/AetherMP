@@ -17,7 +17,7 @@ public class EntitySliderMp extends EntitySlider {
 	public void entityInit() {
 		super.entityInit();
 		dataWatcher.addObject(16, (byte) 0);
-		dataWatcher.addObject(17, 0);
+		dataWatcher.addObject(17, 1);
 		dataWatcher.addObject(18, "");
 	}
 	

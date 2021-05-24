@@ -115,11 +115,13 @@ public class EntityMoaMp extends EntityMoa
         {
             destPos = 0.0F;
             jpress = false;
-            jrem = MoaColour.getColour(getColor()).jumps;
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 60;
-            packet.dataInt = new int [] {jrem};
-            ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+            if(riddenByEntity != null && riddenByEntity instanceof EntityPlayer) {
+	            jrem = MoaColour.getColour(getColor()).jumps;
+	            Packet230ModLoader packet = new Packet230ModLoader();
+	            packet.packetType = 60;
+	            packet.dataInt = new int [] {jrem};
+	            ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+            }
         }
         if(!onGround && field_755_h < 1.0F)
         {
@@ -389,6 +391,7 @@ public class EntityMoaMp extends EntityMoa
             	setPrivateBool(EntityMoa.class, "followPlayer", false);
                 playerToAttack = null;
             }
+
         }
         return true;
     }

@@ -35,13 +35,7 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         life = lifeSpan;
         b(0.7F, 0.7F);
         firstRun = true;
-        sinage = new float[3];
-        fireProof = true;
-        for(int i = 0; i < 3; i++)
-        {
-            sinage[i] = random.nextFloat() * 6F;
-        }
-
+        fireProof = true;        
     }
 
     public EntityHomeShot(World world, double x, double y, double z, 
@@ -54,13 +48,7 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         b(0.7F, 0.7F);
         setPosition(x, y, z);
         target = ep;
-        sinage = new float[3];
         fireProof = true;
-        for(int i = 0; i < 3; i++)
-        {
-            sinage[i] = random.nextFloat() * 6F;
-        }
-
     }
 
     @Override
@@ -90,7 +78,6 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
             dead = true;
         } else
         {
-            updateAnims();
             faceIt();
             moveIt(target, 0.02D);
         }
@@ -102,16 +89,17 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         motX -= Math.sin(angle1) * sped;
         motZ += Math.cos(angle1) * sped;
         double a = e1.locY - 0.75D;
-        if(a < boundingBox.b - 0.5D)
+        double minY = boundingBox.b;
+        if(a < minY - 0.5D)
         {
             motY -= sped / 2D;
         } else
-        if(a > boundingBox.b + 0.5D)
+        if(a > minY + 0.5D)
         {
             motY += sped / 2D;
         } else
         {
-            motY += (a - boundingBox.b) * (sped / 2D);
+            motY += (a - minY) * (sped / 2D);
         }
         if(onGround)
         {
@@ -123,19 +111,6 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
     public void faceIt()
     {
         a(target, 10F, 10F);
-    }
-
-    public void updateAnims()
-    {
-        for(int i = 0; i < 3; i++)
-        {
-            sinage[i] += 0.3F + (float)i * 0.13F;
-            if(sinage[i] > 6.283186F)
-            {
-                sinage[i] -= 6.283186F;
-            }
-        }
-
     }
 
     public void b(NBTTagCompound nbttagcompound)
@@ -219,7 +194,6 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         return this.bukkitEntity;
     }
 
-    public float sinage[];
     public EntityLiving target;
     public boolean firstRun;
     public int life;
