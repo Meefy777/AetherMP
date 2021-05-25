@@ -118,7 +118,6 @@ public class EntityValkyrie extends EntityDungeonMob
 	@Override
     public void m_()
     {
-    	System.out.println(lastTarget);
     	setHealth(health);
         lastMotionY = motY;
         super.m_();
@@ -192,6 +191,8 @@ public class EntityValkyrie extends EntityDungeonMob
             }
         } else if(target == null || target.dead) {
          	stopFight();
+         	if (target.dead)
+         		lastTarget = null;
             return;
         }
     }

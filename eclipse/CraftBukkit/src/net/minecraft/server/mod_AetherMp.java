@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.mine_diver.aethermp.Core;
+import net.mine_diver.aethermp.entities.EntityAerbunny;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
+import net.mine_diver.aethermp.network.PacketManager;
 
 public class mod_AetherMp extends BaseModMp {
 
@@ -109,6 +111,15 @@ public class mod_AetherMp extends BaseModMp {
 					player.yaw = packet.dataFloat[6];
 					player.pitch = packet.dataFloat[7];
 				}
+				
+				if (player.passenger != null && player.passenger instanceof EntityAerbunny) {
+					Packet230ModLoader puffy = new Packet230ModLoader();
+					puffy.packetType = 34;
+					puffy.dataInt = new int [] {player.passenger.id};
+					puffy.dataFloat = new float [] {packet.dataFloat[8]};
+					PacketManager.sendToViewDistance(puffy, ((WorldServer) player.world).dimension, packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
+				}
+				
 				break;
 			}
 			case 70: {
@@ -123,6 +134,14 @@ public class mod_AetherMp extends BaseModMp {
 				info.dataInt = new int [] {valk.id};
 				info.dataString = new String [] {valk.getName()};
 				ModLoaderMp.SendPacketTo(this, player, info);
+				break;
+			}
+			case 71: {
+	            Packet230ModLoader info = new Packet230ModLoader();
+	            info.packetType = 31;
+	            info.dataFloat = packet.dataFloat;
+	            info.dataString = packet.dataString;
+	            PacketManager.sendToViewDistance(info, ((WorldServer) player.world).dimension, packet.dataFloat[6], packet.dataFloat[7], packet.dataFloat[8]);
 				break;
 			}
 		}

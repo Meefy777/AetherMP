@@ -2,15 +2,21 @@ package net.mine_diver.aethermp.bukkit.craftbukkit.listener;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.entity.CraftCow;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
 import net.mine_diver.aethermp.blocks.BlockManager;
+import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftFlyingCow;
+import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.mod_AetherMp;
 
@@ -73,4 +79,13 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	public void onPlayerPortal(PlayerPortalEvent event) {
 		onPlayerTeleport(event);
 	}
+	
+	@Override
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		Entity entity = event.getRightClicked();
+		Player player = event.getPlayer();
+		ItemStack stack = player.getItemInHand();
+		if (stack.getTypeId() == ItemManager.Bucket.id && stack.getDurability() == 0 && (entity instanceof CraftCow || entity instanceof CraftFlyingCow))
+			player.getItemInHand().setDurability((short) 1);
+    }
 }

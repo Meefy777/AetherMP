@@ -22,8 +22,10 @@ import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Item;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.World;
+import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
 
 // Referenced classes of package net.minecraft.src:
@@ -55,6 +57,7 @@ public class EntityAerbunny extends EntityAetherAnimal
     {
     	datawatcher.a(16, String.valueOf((byte)0));
     	datawatcher.a(17, Byte.valueOf((byte)0));
+    	datawatcher.a(18, String.valueOf((String) ""));
     }
 
 
@@ -62,6 +65,9 @@ public class EntityAerbunny extends EntityAetherAnimal
 	@Override
     public void m_()
     {
+    	if(vehicle == null && !getPlayer().equals(""))
+    		setPlayer("");
+    	
        /* if(gotrider)
         {
             gotrider = false;
@@ -186,6 +192,7 @@ public class EntityAerbunny extends EntityAetherAnimal
         {
             if(vehicle.dead)
             {
+            	setPlayer("");
                 mount(vehicle);
             } else
             if(!vehicle.onGround && !vehicle.f_())
@@ -278,6 +285,11 @@ public class EntityAerbunny extends EntityAetherAnimal
         double e = boundingBox.b;
         double f = locZ + a * 0.40000000596046448D;
         world.a("explode", d, e, f, 0.0D, -0.075000002980232239D, 0.0D);
+        Packet230ModLoader packet = new Packet230ModLoader();
+        packet.packetType = 31;
+        packet.dataFloat = new float [] {(float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F};
+        packet.dataString = new String [] {"explode"};
+        PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
     }
 
     @Override
@@ -342,6 +354,8 @@ public class EntityAerbunny extends EntityAetherAnimal
     @Override
     public boolean a(EntityHuman entityplayer)
     {
+    	if (this.vehicle != null && !getPlayer().equals(entityplayer.name)) 
+    		return true;
         yaw = entityplayer.yaw;
         if(vehicle != null)
         {
@@ -349,7 +363,11 @@ public class EntityAerbunny extends EntityAetherAnimal
             yaw = vehicle.yaw;
         }
         mount(entityplayer);
-        if(vehicle == null)
+        if(this.vehicle == null)
+        	setPlayer("");
+        else
+        	setPlayer(entityplayer.name);
+    	if(vehicle == null)
         {
             grab = true;
         } else
@@ -452,6 +470,16 @@ public class EntityAerbunny extends EntityAetherAnimal
         {
             datawatcher.watch(17, Byte.valueOf((byte)0));
         }
+    }
+    
+    public String getPlayer()
+    {
+    	return datawatcher.c(18);
+    }
+    
+    public void setPlayer(String value)
+    {
+    	datawatcher.watch(18, String.valueOf(value));
     }
 
     public int age;

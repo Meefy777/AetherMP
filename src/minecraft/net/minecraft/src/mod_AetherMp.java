@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import net.mine_diver.aethermp.Core;
+import net.mine_diver.aethermp.entity.EntityAerbunnyMp;
 import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
 import net.mine_diver.aethermp.entity.EntityMoaMp;
 import net.mine_diver.aethermp.entity.EntityPhygMp;
@@ -109,6 +110,13 @@ public class mod_AetherMp extends BaseModMp {
 			valk.setBoss(true);
 			valk.bossName = packet.dataString[0];
 			valk.name = packet.dataString[0];
+		}
+		else if (packet.packetType == 34 && player != null) {
+			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
+			if (ent == null || !(ent instanceof EntityAerbunnyMp) || (player.riddenByEntity != null && packet.dataInt[0] == player.riddenByEntity.entityId))
+				return;
+			EntityAerbunnyMp bunny = (EntityAerbunnyMp) ent;
+			bunny.puffiness = packet.dataFloat[0];
 		}
 		else
 			CORE.handlePacket(packet);
