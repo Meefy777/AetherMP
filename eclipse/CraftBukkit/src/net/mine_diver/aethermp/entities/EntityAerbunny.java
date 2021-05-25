@@ -239,7 +239,11 @@ public class EntityAerbunny extends EntityAetherAnimal
                 if(runFrom != null)
                 {
                     runLikeHell();
-                   // world.spawnParticle("splash", locX, locY, locZ, 0.0D, 0.0D, 0.0D);
+                    Packet230ModLoader packet = new Packet230ModLoader();
+                    packet.packetType = 31;
+                    packet.dataString = new String [] {"splash"};
+                    packet.dataFloat = new float [] {(float) locX, (float) locY, (float) locZ, 0.0F, 0.0F, 0.0F};
+                    PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
                     if(!C())
                     {
                         a(runFrom, 30F, 30F);

@@ -11,6 +11,7 @@ import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
 import net.mine_diver.aethermp.entities.EntitySheepuff;
 import net.mine_diver.aethermp.entities.EntityZephyr;
+import net.mine_diver.aethermp.entities.Whirly;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.BiomeMeta;
 import net.minecraft.server.WorldGenerator;
@@ -41,8 +42,8 @@ public class BiomeAether extends BiomeBase {
             t.add(new BiomeMeta(EntityMoa.class, mod_AetherMp.rarityMoa));
         if(mod_AetherMp.rarityFlyingCow != 0)
             t.add(new BiomeMeta(EntityFlyingCow.class, mod_AetherMp.rarityFlyingCow));
-        /*if(mod_AetherMp.rarityWhirlwind != 0)
-            t.add(new BiomeMeta(Whirly.class, mod_AetherMp.rarityWhirlwind));*/
+        if(mod_AetherMp.rarityWhirlwind != 0)
+            t.add(new BiomeMeta(Whirly.class, mod_AetherMp.rarityWhirlwind));
         if(mod_AetherMp.rarityAerbunny != 0)
             t.add(new BiomeMeta(EntityAerbunny.class, mod_AetherMp.rarityAerbunny));
         me = this;

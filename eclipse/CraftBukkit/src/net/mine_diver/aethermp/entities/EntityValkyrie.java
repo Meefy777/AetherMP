@@ -191,10 +191,11 @@ public class EntityValkyrie extends EntityDungeonMob
             }
         } else if(target == null || target.dead) {
          	stopFight();
-         	if (target.dead)
-         		lastTarget = null;
             return;
         }
+        
+     	if (target != null && target.dead)
+     		lastTarget = null;
     }
     
     public void teleport(double x, double y, double z, int rad)

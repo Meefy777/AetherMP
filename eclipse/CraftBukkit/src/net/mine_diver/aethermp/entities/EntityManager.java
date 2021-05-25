@@ -118,6 +118,8 @@ public class EntityManager {
 			new EntityInfo(EntityValkyrie.class, mod_AetherMp.idEntityValkyrie, 512, 2),
 			new EntityInfo(EntityHomeShot.class, "HomeShot", mod_AetherMp.idEntityHomeShot, "NEUTRAL"),
 			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 2),
+			new EntityInfo(Whirly.class, mod_AetherMp.idEntityWhirlwind, 128, 2),
+			new EntityInfo(Whirly.class, "Whirly", mod_AetherMp.idEntityWhirlwind, "ENEMY"),
 	};
 	
 	public static final Map<String, CreatureType> mapping;

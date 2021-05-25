@@ -30,6 +30,7 @@ import net.mine_diver.aethermp.entities.EntitySlider;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.entities.EntityZephyr;
 import net.mine_diver.aethermp.entities.EntityZephyrSnowball;
+import net.mine_diver.aethermp.entities.Whirly;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityAnimal;
 import net.minecraft.server.EntityCreature;
@@ -66,6 +67,8 @@ public class CraftEntityAether extends CraftEntity {
 							return new CraftMoa(server, (EntityMoa) entity);
 						if (entity instanceof EntityAerbunny)
 							return new CraftAerbunny(server, (EntityAerbunny) entity);
+						if (entity instanceof Whirly)
+							return new CraftWhirly(server, (Whirly) entity);
 					}
 				}
 			} else if (entity instanceof EntityFlying) {
