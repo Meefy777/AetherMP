@@ -7,6 +7,7 @@ import net.mine_diver.aethermp.entities.EntityAerbunny;
 import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.entities.EntityAetherLightning;
 import net.mine_diver.aethermp.entities.EntityCloudParachute;
+import net.mine_diver.aethermp.entities.EntityCockatrice;
 import net.mine_diver.aethermp.entities.EntityDartEnchanted;
 import net.mine_diver.aethermp.entities.EntityDartGolden;
 import net.mine_diver.aethermp.entities.EntityDartPoison;
@@ -36,6 +37,7 @@ import net.minecraft.server.EntityAnimal;
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.EntityFlying;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityMonster;
 import net.minecraft.server.EntityWeather;
 import net.minecraft.server.EntityWeatherStorm;
 
@@ -70,6 +72,9 @@ public class CraftEntityAether extends CraftEntity {
 						if (entity instanceof Whirly)
 							return new CraftWhirly(server, (Whirly) entity);
 					}
+				} else if (entity instanceof EntityMonster) {
+					if (entity instanceof EntityCockatrice)
+						return new CraftCockatrice(server, (EntityCockatrice) entity);
 				}
 			} else if (entity instanceof EntityFlying) {
 				if (entity instanceof EntityZephyr)

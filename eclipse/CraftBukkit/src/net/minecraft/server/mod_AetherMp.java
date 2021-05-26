@@ -205,6 +205,7 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityHomeShot = 117,
 	idEntityValkyrie = 118,
 	idEntityWhirlwind = 119,
+	idEntityCockatrice = 120,
 			
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
@@ -214,6 +215,7 @@ public class mod_AetherMp extends BaseModMp {
 	rarityMoa = 10,
 	rarityAerbunny = 11,
 	rarityWhirlwind = 8,
+	rarityCockatrice = 3,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,

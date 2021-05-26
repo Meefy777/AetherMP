@@ -120,6 +120,7 @@ public class EntityManager {
 			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 2),
 			new EntityInfo(Whirly.class, mod_AetherMp.idEntityWhirlwind, 128, 2),
 			new EntityInfo(Whirly.class, "Whirly", mod_AetherMp.idEntityWhirlwind, "ENEMY"),
+			new EntityInfo(EntityCockatrice.class, "Cockatrice", mod_AetherMp.idEntityCockatrice, "ENEMY", ""),
 	};
 	
 	public static final Map<String, CreatureType> mapping;

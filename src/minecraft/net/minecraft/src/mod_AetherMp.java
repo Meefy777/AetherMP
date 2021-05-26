@@ -159,7 +159,8 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityAerBunny = 116,
 	idEntityHomeShot = 117,
 	idEntityValkyrie = 118,
-	idEntityWhirlwind = 119;
+	idEntityWhirlwind = 119,
+	idEntityCockatrice = 120;
 	
 	
 	public static class PackageAccess {

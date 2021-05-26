@@ -6,6 +6,7 @@ import net.mine_diver.aethermp.dimension.world.generation.AetherGenGoldenOak;
 import net.mine_diver.aethermp.dimension.world.generation.AetherGenSkyroot;
 import net.mine_diver.aethermp.entities.EntityAechorPlant;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
+import net.mine_diver.aethermp.entities.EntityCockatrice;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
@@ -28,9 +29,9 @@ public class BiomeAether extends BiomeBase {
             t.add(new BiomeMeta(EntitySwet.class, mod_AetherMp.raritySwet));*/
         if(mod_AetherMp.rarityAechorPlant != 0)
             t.add(new BiomeMeta(EntityAechorPlant.class, mod_AetherMp.rarityAechorPlant));
-        /*if(mod_AetherMp.rarityCockatrice != 0)
+        if(mod_AetherMp.rarityCockatrice != 0)
             s.add(new BiomeMeta(EntityCockatrice.class, mod_AetherMp.rarityCockatrice));
-        if(mod_AetherMp.rarityAerwhale != 0)
+        /*if(mod_AetherMp.rarityAerwhale != 0)
             s.add(new BiomeMeta(EntityAerwhale.class, mod_AetherMp.rarityAerwhale));*/
         if(mod_AetherMp.rarityZephyr != 0)
             s.add(new BiomeMeta(EntityZephyr.class, mod_AetherMp.rarityZephyr));

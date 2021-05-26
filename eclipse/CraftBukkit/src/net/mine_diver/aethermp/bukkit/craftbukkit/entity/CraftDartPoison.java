@@ -12,7 +12,17 @@ public class CraftDartPoison extends CraftDartGolden implements DartPoison {
 	}
 	
 	@Override
+	public int getPoisonTime() {
+		return ((EntityDartPoison) getHandle()).poisonTime;
+	}
+
+	@Override
+	public void setPoisonTime(int i) {
+		((EntityDartPoison)getHandle()).poisonTime = i;
+	}
+	
+	@Override
     public String toString() {
         return "CraftDartPoison";
-    }
+	}
 }
