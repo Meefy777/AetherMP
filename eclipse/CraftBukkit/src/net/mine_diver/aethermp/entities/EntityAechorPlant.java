@@ -219,5 +219,5 @@ public class EntityAechorPlant extends EntityAetherAnimal {
     public boolean grounded;
     public boolean noDespawn;
     public float sinage;
-    private int poisonLeft;
+    public int poisonLeft;
 }

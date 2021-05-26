@@ -206,6 +206,7 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityValkyrie = 118,
 	idEntityWhirlwind = 119,
 	idEntityCockatrice = 120,
+	idEntitySwet = 121,
 			
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
@@ -216,6 +217,7 @@ public class mod_AetherMp extends BaseModMp {
 	rarityAerbunny = 11,
 	rarityWhirlwind = 8,
 	rarityCockatrice = 3,
+	raritySwet = 8,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,
@@ -438,6 +440,22 @@ public class mod_AetherMp extends BaseModMp {
 			
 			public static boolean getJumping(net.minecraft.server.EntityLiving living) {
 				return living.aC;
+			}
+			
+			public static float getMoveForward(net.minecraft.server.EntityLiving living) {
+				return living.aA;
+			}
+			
+			public static float getMoveStrafing(net.minecraft.server.EntityLiving living) {
+				return living.az;
+			}
+			
+			public static void setMoveForward(net.minecraft.server.EntityLiving living, float f) {
+				living.aA = f;
+			}
+			
+			public static void setMoveStrafing(net.minecraft.server.EntityLiving living, float f) {
+				living.az = f;
 			}
 		}
 	}

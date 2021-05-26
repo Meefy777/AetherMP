@@ -85,7 +85,9 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 		Entity entity = event.getRightClicked();
 		Player player = event.getPlayer();
 		ItemStack stack = player.getItemInHand();
-		if (stack.getTypeId() == ItemManager.Bucket.id && stack.getDurability() == 0 && (entity instanceof CraftCow || entity instanceof CraftFlyingCow))
-			player.getItemInHand().setDurability((short) 1);
+		if (stack.getTypeId() == ItemManager.Bucket.id) {
+			if (stack.getDurability() == 0 && (entity instanceof CraftCow || entity instanceof CraftFlyingCow))
+				player.getItemInHand().setDurability((short) 1);
+		}
     }
 }

@@ -3,6 +3,7 @@ package net.mine_diver.aethermp.bukkit.craftbukkit.entity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 
+import net.mine_diver.aethermp.entities.EntityAechorPlant;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
 import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.entities.EntityAetherLightning;
@@ -71,6 +72,8 @@ public class CraftEntityAether extends CraftEntity {
 							return new CraftAerbunny(server, (EntityAerbunny) entity);
 						if (entity instanceof Whirly)
 							return new CraftWhirly(server, (Whirly) entity);
+						if (entity instanceof EntityAechorPlant)
+							return new CraftAechorPlant(server, (EntityAechorPlant) entity);
 					}
 				} else if (entity instanceof EntityMonster) {
 					if (entity instanceof EntityCockatrice)
