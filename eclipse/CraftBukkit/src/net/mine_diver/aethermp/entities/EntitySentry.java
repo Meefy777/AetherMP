@@ -220,7 +220,7 @@ public class EntitySentry extends EntityDungeonMob {
 
     public float field_100021_a;
     public float field_100020_b;
-    private int jcount;
+    public int jcount;
     public int size;
     public int counter;
 }

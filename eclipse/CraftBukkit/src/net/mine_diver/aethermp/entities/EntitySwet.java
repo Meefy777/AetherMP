@@ -92,6 +92,7 @@ public class EntitySwet extends EntityAetherAnimal
     	datawatcher.a(15, String.valueOf(0.1f)); //width 
     	datawatcher.a(16, String.valueOf(0.1f)); //height
     	datawatcher.a(17, (byte) 0); //is ridden
+    	datawatcher.a(18, String.valueOf(0.0D)); //motY
     }
     
     public void setTexture(int i) {
@@ -104,6 +105,10 @@ public class EntitySwet extends EntityAetherAnimal
     
     public void setHeight(float f) {
     	datawatcher.watch(16, String.valueOf(f));
+    }
+    
+    public void setMotY() {
+    	datawatcher.watch(18, String.valueOf(motY));
     }
     
     public boolean getIsRidden()
@@ -129,6 +134,7 @@ public class EntitySwet extends EntityAetherAnimal
 	@Override
     public void m_()
     {
+    	setMotY();
         if(target != null)
         {
             for(int i = 0; i < 3; i++)

@@ -11,6 +11,12 @@ public class EntityFiroBallMp extends EntityFiroBall implements ISpawnable {
 		super(world);
 		isMultiplayerEntity = true;
 	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		updateAnims();
+	}
 
 	@Override
 	public void spawn(Packet230ModLoader packet) {

@@ -34,4 +34,24 @@ public class CraftPhyg extends AbstractAetherAnimal implements Phyg {
 	public void setHasJumped(boolean flag) {
 		((EntityPhyg)getHandle()).hasJumped = flag;
 	}
+
+	@Override
+	public int getJumps() {
+		return ((EntityPhyg)getHandle()).jumps;
+	}
+
+	@Override
+	public void setJumps(int i) {
+		((EntityPhyg)getHandle()).jumps = i;
+	}
+
+	@Override
+	public int getJrem() {
+		return ((EntityPhyg)getHandle()).jrem;
+	}
+
+	@Override
+	public void setJrem(int i) {
+		((EntityPhyg)getHandle()).jrem = i;
+	}
 }

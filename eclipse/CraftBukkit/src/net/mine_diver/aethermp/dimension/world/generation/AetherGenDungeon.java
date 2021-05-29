@@ -5,6 +5,7 @@ import java.util.Random;
 import net.mine_diver.aethermp.api.event.dimension.world.generation.dungeon.DungeonLoot;
 import net.mine_diver.aethermp.api.util.LootType;
 import net.mine_diver.aethermp.blocks.BlockManager;
+import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.minecraft.server.Block;
 import net.minecraft.server.ItemStack;
@@ -165,8 +166,9 @@ public class AetherGenDungeon extends WorldGenerator {
                 break;
             i2++;
         } while(true);
-        /*EntityFireMonster entityfiremonster = new EntityFireMonster(world, i, j - 1, k, i1, k1);
-        world.entityJoinedWorld(entityfiremonster);*/
+        System.out.println(i + " and " + (j - 1) + " and " + k);
+        EntityFireMonster entityfiremonster = new EntityFireMonster(world, i, j - 1, k, i1, k1);
+        world.addEntity(entityfiremonster);
         return true;
     }
 

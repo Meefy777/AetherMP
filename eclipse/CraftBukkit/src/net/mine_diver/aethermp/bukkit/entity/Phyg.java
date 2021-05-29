@@ -11,4 +11,12 @@ public interface Phyg extends Animals {
 	boolean hasJumped();
 	
 	void setHasJumped(boolean flag);
+	
+	int getJumps();
+	
+	void setJumps(int i);
+	
+	int getJrem();
+	
+	void setJrem(int i);
 }

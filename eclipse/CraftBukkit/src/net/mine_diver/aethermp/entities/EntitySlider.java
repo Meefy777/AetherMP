@@ -525,7 +525,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     public float speedy;
     public float harvey;
     public int direction;
-    private int dungeonX;
-    private int dungeonY;
-    private int dungeonZ;
+    public int dungeonX;
+    public int dungeonY;
+    public int dungeonZ;
 }

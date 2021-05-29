@@ -54,6 +54,120 @@ public class CraftSlider extends CraftFlyingAether implements Slider {
 	public void stopFight() {
 		((EntitySlider) getHandle()).stopFight();
 	}
+
+	@Override
+	public void setMoveTimer(int i) {
+		((EntitySlider) getHandle()).moveTimer = i;
+	}
+
+	@Override
+	public int getMoveTimer() {
+		return ((EntitySlider) getHandle()).moveTimer;
+	}
+
+	@Override
+	public void setDennis(int i) {
+		((EntitySlider) getHandle()).dennis = i;
+	}
+
+	@Override
+	public int getDennis() {
+		return ((EntitySlider) getHandle()).dennis;
+	}
+
+	@Override
+	public void setRennis(int i) {
+		((EntitySlider) getHandle()).rennis = i;
+	}
+
+	@Override
+	public int getRennis() {
+		return ((EntitySlider) getHandle()).rennis;
+	}
+
+	@Override
+	public void setChatTime(int i) {
+		((EntitySlider) getHandle()).chatTime = i;
+	}
+
+	@Override
+	public int getChatTime() {
+		return ((EntitySlider) getHandle()).chatTime;
+	}
+
+	@Override
+	public void setAwake(boolean flag) {
+		((EntitySlider) getHandle()).awake = flag;
+	}
+
+	@Override
+	public boolean getAwake() {
+		return ((EntitySlider) getHandle()).awake;
+	}
+
+	@Override
+	public void setGotMovement(boolean flag) {
+		((EntitySlider) getHandle()).gotMovement = flag;
+	}
+
+	@Override
+	public boolean getGotMovement() {
+		return ((EntitySlider) getHandle()).gotMovement;
+	}
+
+	@Override
+	public void setCrushed(boolean flag) {
+		((EntitySlider) getHandle()).crushed = flag;
+	}
+
+	@Override
+	public boolean getCrushed() {
+		return ((EntitySlider) getHandle()).crushed;
+	}
+
+	@Override
+	public void setSpeedy(float f) {
+		((EntitySlider) getHandle()).speedy = f;
+	}
+
+	@Override
+	public float getSpeedy() {
+		return ((EntitySlider) getHandle()).speedy;
+	}
+
+	@Override
+	public void setHarvey(float f) {
+		((EntitySlider) getHandle()).harvey = f;
+	}
+
+	@Override
+	public float getHarvey() {
+		return ((EntitySlider) getHandle()).harvey;
+	}
+
+	@Override
+	public void setDirection(int i) {
+		((EntitySlider) getHandle()).direction = i;
+	}
+
+	@Override
+	public int getDirection() {
+		return ((EntitySlider) getHandle()).direction;
+	}
+
+	@Override
+	public void setDungeonCoords(int[] i) {
+		((EntitySlider) getHandle()).dungeonX = i[0];
+		((EntitySlider) getHandle()).dungeonY = i[1];
+		((EntitySlider) getHandle()).dungeonZ = i[2];
+	}
+
+	@Override
+	public int[] getDungeonCoords() {
+		EntitySlider slider = ((EntitySlider) getHandle());
+		int i[] = new int [] {slider.dungeonX, slider.dungeonY, slider.dungeonZ};
+		return i;
+	}
 	
 	@Override
 	public String toString() {

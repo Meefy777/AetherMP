@@ -13,6 +13,8 @@ import net.mine_diver.aethermp.entities.EntityDartEnchanted;
 import net.mine_diver.aethermp.entities.EntityDartGolden;
 import net.mine_diver.aethermp.entities.EntityDartPoison;
 import net.mine_diver.aethermp.entities.EntityDungeonMob;
+import net.mine_diver.aethermp.entities.EntityFireMinion;
+import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.entities.EntityFiroBall;
 import net.mine_diver.aethermp.entities.EntityFlamingArrow;
 import net.mine_diver.aethermp.entities.EntityFloatingBlock;
@@ -78,6 +80,8 @@ public class CraftEntityAether extends CraftEntity {
 				} else if (entity instanceof EntityMonster) {
 					if (entity instanceof EntityCockatrice)
 						return new CraftCockatrice(server, (EntityCockatrice) entity);
+					if (entity instanceof EntityFireMinion)
+						return new CraftFireMinion(server, (EntityFireMinion) entity);
 				}
 			} else if (entity instanceof EntityFlying) {
 				if (entity instanceof EntityZephyr)
@@ -90,6 +94,8 @@ public class CraftEntityAether extends CraftEntity {
 					return new CraftSlider(server, (EntitySlider) entity);
 				if (entity instanceof EntityHomeShot)
 					return new CraftHomeShot(server, (EntityHomeShot) entity);
+				 if (entity instanceof EntityFireMonster)
+					 return new CraftFireMonster(server, (EntityFireMonster) entity);
 			}
 		} else {
 			if (entity instanceof EntityProjectileBase) {

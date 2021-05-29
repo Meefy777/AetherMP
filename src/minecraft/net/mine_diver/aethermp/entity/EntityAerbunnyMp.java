@@ -68,8 +68,6 @@ public class EntityAerbunnyMp extends EntityAerbunny {
 	
 	@Override
 	public void runLikeHell() {
-		/*if (ridingEntity != null && ridingEntity instanceof EntityPlayer)
-			super.runLikeHell();*/
 	}
 	
 	@Override
@@ -93,7 +91,6 @@ public class EntityAerbunnyMp extends EntityAerbunny {
 	
 	@Override
 	public void jump() {
-		
 	}
 	
 	@Override

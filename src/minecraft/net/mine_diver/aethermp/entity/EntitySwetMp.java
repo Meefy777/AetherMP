@@ -16,6 +16,7 @@ public class EntitySwetMp extends EntitySwet {
 		dataWatcher.addObject(15, String.valueOf(0.1f)); //width 
 		dataWatcher.addObject(16, String.valueOf(0.1f)); //height
 		dataWatcher.addObject(17, (byte) 0); //isRidden
+		dataWatcher.addObject(18, String.valueOf(0.0D)); //motY
 	}
 	
     public byte getTexture() {
@@ -28,6 +29,10 @@ public class EntitySwetMp extends EntitySwet {
     
     public float getHeight() {
     	return Float.valueOf(dataWatcher.getWatchableObjectString(16));
+    }
+    
+    public double getMotY() {
+    	return Double.valueOf(dataWatcher.getWatchableObjectString(18));
     }
     
     public boolean getIsRidden() {
@@ -55,7 +60,6 @@ public class EntitySwetMp extends EntitySwet {
     @Override
     public void onUpdate() {
     	super.onUpdate();
-    	System.out.println(motionY);
     	if(getTexture() == 1)
         {
             texture = "/aether/mobs/swets.png";

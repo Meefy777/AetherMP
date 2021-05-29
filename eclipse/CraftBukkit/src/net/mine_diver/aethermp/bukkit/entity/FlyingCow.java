@@ -12,4 +12,12 @@ public interface FlyingCow extends Animals {
 	
 	void setHasJumped(boolean flag);
 	
+	int getJumps();
+	
+	void setJumps(int i);
+	
+	int getJrem();
+	
+	void setJrem(int i);
+	
 }

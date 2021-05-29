@@ -84,5 +84,25 @@ public class CraftMoa extends AbstractAetherAnimal implements Moa {
 	public void setJumpsRemaining(int i) {
 		((EntityMoa)getHandle()).jrem = i;
 	}
+
+	@Override
+	public boolean getFollowPlayer() {
+		return ((EntityMoa)getHandle()).followPlayer;
+	}
+
+	@Override
+	public void setFollowPlayer(boolean flag) {
+		((EntityMoa)getHandle()).followPlayer = flag;
+	}
+
+	@Override
+	public int getTimeUntilEgg() {
+		return ((EntityMoa)getHandle()).timeUntilNextEgg;
+	}
+
+	@Override
+	public void setTimeUntilEgg(int i) {
+		((EntityMoa)getHandle()).timeUntilNextEgg = i;
+	}
 	
 }

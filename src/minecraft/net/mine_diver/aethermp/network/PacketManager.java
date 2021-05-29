@@ -27,6 +27,8 @@ import net.minecraft.src.mod_Aether;
 public class PacketManager {
 	
 	public static void handlePacket(Packet230ModLoader packet) {
+		if (packet.packetType == 0 && EntityManager.getEntityByID(packet.dataInt[0]) == null)
+			return;
 		handlers.get(packet.packetType).accept(packet);
 	}
 	

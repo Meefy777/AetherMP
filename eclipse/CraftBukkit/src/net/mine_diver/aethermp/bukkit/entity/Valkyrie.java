@@ -19,5 +19,33 @@ public interface Valkyrie extends AetherBoss, Monster {
 	int getTeleTime();
 	
 	void setTeleTime(int time);
+	
+	boolean getHasDungeon();
+	
+	void setHasDungeon(boolean flag);
+	
+	int getAngerLevel();
+	
+	void setAngerLevel(int i);
+	
+	int getTimeLeft();
+	
+	void setTimeLeft(int i);
+	
+	double getLastMotionY();
+	
+	void setLastMotionY(Double d);
+	
+	int[] getDungeonCoords();
+	
+	void setDungeonCoords(int[] i);
+	
+	double[] getSafeCoords();
+	
+	void setSafeCoords(double[] i);
+	
+	int getDungeonEntranceZ();
+	
+	void setDungeonEntranceZ(int i);
 
 }

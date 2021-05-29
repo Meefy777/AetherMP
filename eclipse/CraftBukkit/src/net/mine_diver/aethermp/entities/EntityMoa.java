@@ -421,11 +421,11 @@ public class EntityMoa extends EntityAetherAnimal
     public float oFlapSpeed;
     public float oFlap;
     public float wingRotDelta;
-    public int timeUntilNextEgg;
+    public int timeUntilNextEgg; 
     public int jrem;
     int petalsEaten;
     boolean wellFed;
-    boolean followPlayer;
+    public boolean followPlayer; 
     public boolean jpress;
     public boolean baby;
     public boolean grown;

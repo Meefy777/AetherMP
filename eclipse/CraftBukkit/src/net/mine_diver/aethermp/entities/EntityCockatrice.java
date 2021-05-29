@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import net.mine_diver.aethermp.blocks.BlockManager;
+import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.network.PacketManager;
 import net.minecraft.server.Entity;
@@ -175,6 +176,13 @@ public class EntityCockatrice extends EntityMonster
         this.world.getServer().getPluginManager().callEvent(event);
         for (org.bukkit.inventory.ItemStack stack : event.getDrops())
             b(stack.getTypeId(), stack.getAmount());
+    }
+    
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity() {
+        if (this.bukkitEntity == null)
+            this.bukkitEntity = CraftEntityAether.getEntity(this.world.getServer(), this);
+        return this.bukkitEntity;
     }
 
     public float wingRotation;

@@ -104,8 +104,8 @@ public class EntityManager {
 			new EntityInfo(EntityMiniCloud.class, "Mini Cloud", mod_AetherMp.idEntityMiniCloud, "NEUTRAL"),
 			new EntityInfo(EntityMiniCloud.class, mod_AetherMp.idEntityMiniCloud, 512, 2),
 			new EntityInfo(EntityFiroBall.class, "Firo Ball", mod_AetherMp.idEntityFiroBall, "NEUTRAL"),
-			new EntityInfo(EntityFiroBall.class, mod_AetherMp.idEntityFiroBall, 64, 10),
-			new EntityInfo(EntityAechorPlant.class, "AechorPlant", mod_AetherMp.idEntityAechorPlant, "ENEMY"),
+			new EntityInfo(EntityFiroBall.class, mod_AetherMp.idEntityFiroBall, 64, 1),
+			new EntityInfo(EntityAechorPlant.class, "Aechorplant", mod_AetherMp.idEntityAechorPlant, "ENEMY"),
 			new EntityInfo(EntityPoisonNeedle.class, "PoisonNeedle", mod_AetherMp.idEntityPoisonNeedle, "NEUTRAL"),
 			new EntityInfo(EntityPoisonNeedle.class, mod_AetherMp.idEntityPoisonNeedle, 64, 20),
 			new EntityInfo(EntitySlider.class, "Slider", mod_AetherMp.idEntitySentry, "NEUTRAL"),
@@ -120,8 +120,12 @@ public class EntityManager {
 			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 2),
 			new EntityInfo(Whirly.class, mod_AetherMp.idEntityWhirlwind, 128, 2),
 			new EntityInfo(Whirly.class, "Whirly", mod_AetherMp.idEntityWhirlwind, "ENEMY"),
-			new EntityInfo(EntityCockatrice.class, "Cockatrice", mod_AetherMp.idEntityCockatrice, "ENEMY", ""),
+			//new EntityInfo(EntityCockatrice.class, "Cockatrice", mod_AetherMp.idEntityCockatrice, "ENEMY", ""),
 			new EntityInfo(EntitySwet.class, "Swet", mod_AetherMp.idEntitySwet, "ENEMY"),
+			new EntityInfo(EntityFireMonster.class, "Firemonster", mod_AetherMp.idEntityFireMonster, "NEUTRAL", ""),
+			new EntityInfo(EntityFireMonster.class, mod_AetherMp.idEntityFireMonster, 512, 2),
+			new EntityInfo(EntityFireMinion.class, "FireMinion", mod_AetherMp.idEntityFireMinion, "ENEMY"),
+			new EntityInfo(EntityFireMinion.class, mod_AetherMp.idEntityFireMinion, 512, 2),
 	};
 	
 	public static final Map<String, CreatureType> mapping;

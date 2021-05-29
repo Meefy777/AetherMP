@@ -27,4 +27,24 @@ public class CraftFlamingArrow extends AbstractProjectileAether implements Flami
 	public String toString() {
 		return "CraftFlamingArrow";
 	}
+
+	@Override
+	public boolean getDoesArrowBelongToPlayer() {
+		return ((EntityFlamingArrow)getHandle()).doesArrowBelongToPlayer;
+	}
+
+	@Override
+	public void setDoesArrowBelongToPlayer(boolean flag) {
+		((EntityFlamingArrow)getHandle()).doesArrowBelongToPlayer = flag;
+	}
+
+	@Override
+	public int getArrowShake() {
+		return ((EntityFlamingArrow)getHandle()).arrowShake;
+	}
+
+	@Override
+	public void setArrowShake(int i) {
+		((EntityFlamingArrow)getHandle()).arrowShake = i;
+	}
 }

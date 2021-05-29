@@ -8,6 +8,7 @@ import java.util.Random;
 
 import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entity.EntityAerbunnyMp;
+import net.mine_diver.aethermp.entity.EntityFireMonsterMp;
 import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
 import net.mine_diver.aethermp.entity.EntityMoaMp;
 import net.mine_diver.aethermp.entity.EntityPhygMp;
@@ -104,12 +105,20 @@ public class mod_AetherMp extends BaseModMp {
 		}
 		else if (packet.packetType == 33 && player != null) {
 			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
-			if (ent == null || !(ent instanceof EntityValkyrieMp))
+			if (ent == null || (!(ent instanceof EntityValkyrieMp) && !(ent instanceof EntityFireMonsterMp)))
 				return;
-			EntityValkyrieMp valk = (EntityValkyrieMp) ent;
-			valk.setBoss(true);
-			valk.bossName = packet.dataString[0];
-			valk.name = packet.dataString[0];
+			if (ent instanceof EntityValkyrieMp) {
+				EntityValkyrieMp valk = (EntityValkyrieMp) ent;
+				valk.setBoss(true);
+				valk.bossName = packet.dataString[0];
+				valk.name = packet.dataString[0];
+			} else if (ent instanceof EntityFireMonsterMp) {
+				EntityFireMonsterMp fire = (EntityFireMonsterMp) ent;
+				fire.orgX = packet.dataInt[1];
+				fire.orgY = packet.dataInt[2];
+				fire.orgZ = packet.dataInt[3];
+				fire.name = packet.dataString[0];
+			}
 		}
 		else if (packet.packetType == 34 && player != null) {
 			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
@@ -161,7 +170,9 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityValkyrie = 118,
 	idEntityWhirlwind = 119,
 	idEntityCockatrice = 120,
-	idEntitySwet = 121;
+	idEntitySwet = 121,
+	idEntityFireMonster = 122,
+	idEntityFireMinion = 123;
 	
 	
 	public static class PackageAccess {

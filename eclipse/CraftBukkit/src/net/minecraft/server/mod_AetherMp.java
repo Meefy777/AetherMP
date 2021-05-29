@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
+import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
@@ -124,15 +125,23 @@ public class mod_AetherMp extends BaseModMp {
 			}
 			case 70: {
 				Entity ent = ((WorldServer)player.world).getEntity(packet.dataInt[0]);
-				if (ent == null || !(ent instanceof EntityValkyrie))
-					return;
-				EntityValkyrie valk = (EntityValkyrie) ent;
-				if (!valk.isBoss())
+				if (ent == null || (!(ent instanceof EntityValkyrie) && !(ent instanceof EntityFireMonster)))
 					return;
 				Packet230ModLoader info = new Packet230ModLoader();
 				info.packetType = 33;
-				info.dataInt = new int [] {valk.id};
-				info.dataString = new String [] {valk.getName()};
+				if (ent instanceof EntityValkyrie) {
+					EntityValkyrie valk = (EntityValkyrie) ent;
+					if (!valk.isBoss())
+						return;
+					info.dataInt = new int [] {valk.id};
+					info.dataString = new String [] {valk.getName()};
+				} else if (ent instanceof EntityFireMonster) {
+					EntityFireMonster fire = (EntityFireMonster) ent;
+					fire.setOrg();
+					info.dataInt = new int [] {fire.id, fire.orgX, fire.orgY, fire.orgZ};
+					info.dataString = new String [] {fire.bossName};
+				}
+
 				ModLoaderMp.SendPacketTo(this, player, info);
 				break;
 			}
@@ -207,6 +216,8 @@ public class mod_AetherMp extends BaseModMp {
 	idEntityWhirlwind = 119,
 	idEntityCockatrice = 120,
 	idEntitySwet = 121,
+	idEntityFireMonster = 122,
+	idEntityFireMinion = 123,
 			
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
@@ -418,6 +429,10 @@ public class mod_AetherMp extends BaseModMp {
 			
 			public static void setIsImmuneToFire(net.minecraft.server.Entity entity, boolean isImmuneToFire) {
 				entity.fireProof = isImmuneToFire;
+			}
+			
+			public static boolean isImmuneToFire(net.minecraft.server.Entity ent) {
+				return ent.fireProof;
 			}
 			
 			public static void setEntityFlag(net.minecraft.server.Entity entity, int ID, boolean flag) {

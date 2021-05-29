@@ -4,6 +4,7 @@ import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityFlying;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ISpawnable;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
@@ -146,9 +147,9 @@ public class EntityFiroBall extends EntityFlying implements ISpawnable {
         super.collide(entity);
         boolean flag = false;
         if(entity != null && (entity instanceof EntityLiving) && !(entity instanceof EntityFiroBall)) {
-            if(frosty /*&& (!(entity instanceof EntityFireMonster) || smacked && !fromCloud) && !(entity instanceof EntityFireMinion)*/)
+            if(frosty && (!(entity instanceof EntityFireMonster) || smacked && !fromCloud) && !(entity instanceof EntityFireMinion))
                 flag = entity.damageEntity(this, 5);
-            else if(!frosty /*&& !(entity instanceof EntityFireMonster) && !(entity instanceof EntityFireMinion)*/) {
+            else if(!frosty && !(entity instanceof EntityFireMonster) && !(entity instanceof EntityFireMinion)) {
                 flag = entity.damageEntity(this, 5);
                 if(flag)
                     entity.fireTicks = 100;
@@ -160,7 +161,7 @@ public class EntityFiroBall extends EntityFlying implements ISpawnable {
     
     @Override
     public boolean damageEntity(Entity entity, int i) {
-        if(entity != null) {
+        if(entity != null && entity instanceof EntityPlayer) {
             Vec3D vec3d = entity.Z();
             if(vec3d != null) {
                 smotionX = vec3d.a;

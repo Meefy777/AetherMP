@@ -21,4 +21,24 @@ public class CraftFloatingBlock extends CraftEntity implements FloatingBlock {
 	public String toString() {
 		return "CraftFloatingBlock";
 	}
+
+	@Override
+	public int getMetadata() {
+		return ((EntityFloatingBlock)getHandle()).metadata;
+	}
+
+	@Override
+	public void setMetadata(int i) {
+		((EntityFloatingBlock)getHandle()).metadata = i;
+	}
+
+	@Override
+	public int getFlyTime() {
+		return ((EntityFloatingBlock)getHandle()).flytime;
+	}
+
+	@Override
+	public void setFlyTime(int i) {
+		((EntityFloatingBlock)getHandle()).flytime = i;
+	}
 }

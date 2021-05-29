@@ -32,4 +32,11 @@ public interface Moa extends Animals {
 	
 	void setJumpsRemaining(int i);
 	
+	boolean getFollowPlayer();
+	
+	void setFollowPlayer(boolean flag);
+	
+	int getTimeUntilEgg();
+	
+	void setTimeUntilEgg(int i);
 }
