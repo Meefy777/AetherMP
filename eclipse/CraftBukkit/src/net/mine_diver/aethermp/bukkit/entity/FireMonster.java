@@ -56,4 +56,6 @@ public interface FireMonster extends AetherBoss, Flying {
 	
 	void setOrg(int[] i);
 	
+	void clearFiroBalls();
+	
 }

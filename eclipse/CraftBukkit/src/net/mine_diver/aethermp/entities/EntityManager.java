@@ -120,11 +120,11 @@ public class EntityManager {
 			new EntityInfo(EntityHomeShot.class, mod_AetherMp.idEntityHomeShot, 64, 2),
 			new EntityInfo(Whirly.class, mod_AetherMp.idEntityWhirlwind, 128, 2),
 			new EntityInfo(Whirly.class, "Whirly", mod_AetherMp.idEntityWhirlwind, "ENEMY"),
-			//new EntityInfo(EntityCockatrice.class, "Cockatrice", mod_AetherMp.idEntityCockatrice, "ENEMY", ""),
+			new EntityInfo(EntityCockatrice.class, "Cockatrice", mod_AetherMp.idEntityCockatrice, "ENEMY", ""),
 			new EntityInfo(EntitySwet.class, "Swet", mod_AetherMp.idEntitySwet, "ENEMY"),
 			new EntityInfo(EntityFireMonster.class, "Firemonster", mod_AetherMp.idEntityFireMonster, "NEUTRAL", ""),
 			new EntityInfo(EntityFireMonster.class, mod_AetherMp.idEntityFireMonster, 512, 2),
-			new EntityInfo(EntityFireMinion.class, "FireMinion", mod_AetherMp.idEntityFireMinion, "ENEMY"),
+			new EntityInfo(EntityFireMinion.class, "Fireminion", mod_AetherMp.idEntityFireMinion, "ENEMY"),
 			new EntityInfo(EntityFireMinion.class, mod_AetherMp.idEntityFireMinion, 512, 2),
 	};
 	

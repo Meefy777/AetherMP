@@ -15,6 +15,7 @@ import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.mine_diver.aethermp.util.Achievements;
 import net.mine_diver.aethermp.util.NameGen;
+import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Block;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityFlying;
@@ -50,7 +51,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         orgY = MathHelper.floor(boundingBox.b) + 1;
         orgZ = MathHelper.floor(locZ);
         wideness = 10;
-        health = 50;
+        health = getBossMaxHP();
         speedness = 0.5D - ((double)health / 70D) * 0.20000000000000001D;
         direction = 0;
         entCount = random.nextInt(6);
@@ -58,7 +59,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         setOrg();
     }
 
-    public EntityFireMonster(World world, int x, int y, int z, int rad, int dir)
+	public EntityFireMonster(World world, int x, int y, int z, int rad, int dir)
     {
         super(world);
         setTexture(1);
@@ -70,7 +71,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         orgZ = z;
         bt = true;
         rotary = (double)random.nextFloat() * 360D;
-        health = 50;
+        health = getBossMaxHP();
         speedness = 0.5D - ((double)health / 70D) * 0.20000000000000001D;
         direction = dir;
         entCount = random.nextInt(6);
@@ -110,10 +111,14 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     {
         return false;
     }
-
+    
     @Override
     public void m_()
     {
+    	
+    	if (dir == 0)
+    		coordinate();
+    	
         super.m_();
         setHealth();
         if(health > 0)
@@ -172,7 +177,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         {
         	if (orgX != 0 && orgZ != 0)
         		setPosition((double)orgX + 0.5D, orgY, (double)orgZ + 0.5D);
-            setDoor(0);
+            setDoor(0, entranceDoor);
             return;
         }
         K = yaw;
@@ -239,10 +244,11 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
             motX = 0.0D;
             motY = 0.0D;
             motZ = 0.0D;
-            setDoor(0);
+            setDoor(0, entranceDoor);
             if (targetfire instanceof EntityPlayer) {
             	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
                 chatLine("\247cSuch is the fate of a being who opposes the might of the sun.", (EntityPlayer) targetfire);
+                clearFiroBalls();
             }
             targetfire = null;
             gotTarget = false;
@@ -257,7 +263,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         {
             Entity entity1 = (Entity)list.get(j);
             boolean fireProof = mod_AetherMp.PackageAccess.Entity.isImmuneToFire(entity1);
-            if((entity1 instanceof EntityLiving) && fireProof)
+            if((entity1 instanceof EntityLiving) && !fireProof)
             {
                 entity1.damageEntity(this, 10);
                 entity1.fireTicks = 300;
@@ -278,7 +284,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 continue;
             }
             world.setTypeId(x, b, z, 0);
-           // PacketManager.makeSound((float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, "random.fizz", 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F);
+            //PacketManager.makeSound((float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, "random.fizz", 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F);
             for(int l = 0; l < 8; l++)
             {
             	Packet230ModLoader packet = new Packet230ModLoader();
@@ -459,7 +465,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         {
             rotary = 57.295772552490234D * Math.atan2(locX - ep.locX, locZ - ep.locZ);
             targetfire = ep;
-            setDoor(BlockManager.LockedDungeonStone.id);
+            setDoor(BlockManager.LockedDungeonStone.id, entranceDoor);
             return true;
         } else
         {
@@ -498,10 +504,10 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
             if(health <= 0)
             {
                 if (targetfire instanceof EntityPlayer) {
-                	PlayerManager.setCurrentBoss((EntityPlayer) e, null);
+                	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
                 	chatLine("\247bSuch bitter cold... is this the feeling... of pain?", (EntityPlayer) targetfire);
                 }
-                setDoor(0);
+                setDoor(0, entranceDoor);
                 unlockTreasure(e);
             }
         }
@@ -514,60 +520,22 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         a(new ItemStack(ItemManager.Key, 1, 2), 0.0F);
     }
 
-    private void setDoor(int ID)
-    {
-        if(direction / 2 == 0)
-        {
-            for(int y = orgY - 1; y < orgY + 2; y++)
-            {
-                for(int z = orgZ - 1; z < orgZ + 2; z++)
-                {
-                    world.setRawTypeIdAndData(orgX + (direction != 0 ? 11 : -11), y, z, ID, 2);
-                }
-
-            }
-
-        } else
-        {
-            for(int y = orgY - 1; y < orgY + 2; y++)
-            {
-                for(int x = orgX - 1; x < orgX + 2; x++)
-                {
-                    world.setRawTypeIdAndData(x, y, orgZ + (direction != 3 ? -11 : 11), ID, 2);
-                }
-
-            }
-
-        }
-    }
-
     private void unlockTreasure(Entity ent)
     {
-        if(direction / 2 == 0)
-        {
-            for(int y = orgY - 1; y < orgY + 2; y++)
-            {
-                for(int z = orgZ - 1; z < orgZ + 2; z++)
-                {
-                    world.setRawTypeId(orgX + (direction != 0 ? -11 : 11), y, z, 0);
-                }
-
-            }
-
-        } else
-        {
-            for(int y = orgY - 1; y < orgY + 2; y++)
-            {
-                for(int x = orgX - 1; x < orgX + 2; x++)
-                {
-                    world.setRawTypeId(x, y, orgZ + (direction != 3 ? 11 : -11), 0);
-                }
-
-            }
-
-        }
+    	
+    	setDoor(0, treasureDoor);
+        
+        
+        EntityPlayer player;
+        
         if (ent instanceof EntityPlayer)
+        	player = (EntityPlayer) ent;
+        else
+        	player = (EntityPlayer) world.findNearbyPlayer(this, 20D);
+        	
+        if (player != null)	
         	Achievements.giveAchievement(Achievements.defeatGold, (EntityPlayer) ent);
+        
         for(int x = orgX - 20; x < orgX + 20; x++)
         {
             for(int y = orgY - 3; y < orgY + 6; y++)
@@ -590,6 +558,82 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         }
 
     }
+    
+    private void findDirection() {
+    	int tresid = BlockManager.TreasureChest.id;
+    	
+    	int i = world.getTypeId(orgX + 15, orgY - 1, orgZ);
+    	if (i == tresid) {
+    		dir = 1;
+    	}
+    	
+    	int j = world.getTypeId(orgX - 15, orgY - 1, orgZ);
+    	if (j == tresid) {
+    		dir = 2;
+    	}
+    	
+    	int k = world.getTypeId(orgX, orgY - 1, orgZ + 15);
+    	if (k == tresid) {
+    		dir = 3;
+    	}
+    	
+    	int l = world.getTypeId(orgX, orgY - 1, orgZ - 15);
+    	if (l == tresid) {
+    		dir = 4;
+    	}
+    }
+    
+    private void findDoors() {
+    	switch(dir) {
+    		case 1: {
+    			treasureDoor = (new int[] {orgX + 11, orgY - 1, orgZ});
+    			entranceDoor = (new int[] {orgX - 11, orgY - 1, orgZ});
+    			break;
+    		}
+    		case 2: {
+    			treasureDoor = (new int[] {orgX - 11, orgY - 1, orgZ});
+    			entranceDoor = (new int[] {orgX + 11, orgY - 1, orgZ});
+    			break;
+    		}
+    		case 3: {
+    			treasureDoor = (new int[] {orgX, orgY - 1, orgZ + 11});
+    			entranceDoor = (new int[] {orgX, orgY - 1, orgZ - 11});
+    			break;
+    		}
+    		case 4: {
+    			treasureDoor = (new int[] {orgX, orgY - 1, orgZ - 11});
+    			entranceDoor = (new int[] {orgX, orgY - 1, orgZ + 11});
+    			break;
+    		}
+		}
+    }
+    
+    private void setDoor(int ID, int[] doorLoc) {
+    	int meta;
+    	if (ID == BlockManager.LockedDungeonStone.id)
+    		meta = 2;
+    	else
+    		meta = 0;
+    	if (dir == 1 || dir == 2) {
+    		for (int y = 0; y <= 2; y++) {
+	    		world.setRawTypeIdAndData(doorLoc[0], doorLoc[1] + y, doorLoc[2], ID, meta);
+				world.setRawTypeIdAndData(doorLoc[0], doorLoc[1] + y, doorLoc[2] + 1, ID, meta);
+				world.setRawTypeIdAndData(doorLoc[0], doorLoc[1] + y, doorLoc[2] - 1, ID, meta);
+    		}
+    	}
+    	else if (dir == 3 || dir == 4) {
+    		for (int y = 0; y <= 2; y++) {
+				world.setRawTypeIdAndData(doorLoc[0], doorLoc[1] + y, doorLoc[2], ID, meta);
+				world.setRawTypeIdAndData(doorLoc[0] + 1, doorLoc[1] + y, doorLoc[2], ID, meta);
+				world.setRawTypeIdAndData(doorLoc[0] - 1, doorLoc[1] + y, doorLoc[2], ID, meta);
+    		}
+    	}
+    }
+  
+    private void coordinate() {
+   	 	findDirection();
+   	 	findDoors();
+	}
 
     @Override
     public int getBossHP()
@@ -631,7 +675,8 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
         targetfire = null;
         gotTarget = false;
-        setDoor(0);
+        setDoor(0, entranceDoor);
+        clearFiroBalls();
 	}
     
     @Override
@@ -639,6 +684,18 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         if (this.bukkitEntity == null)
             this.bukkitEntity = CraftEntityAether.getEntity(this.world.getServer(), this);
         return this.bukkitEntity;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void clearFiroBalls() {
+    	if (!mod_AetherMp.clearFiroBallsAfterDeath)
+    		return;
+        List<Entity> list = world.b(this, AxisAlignedBB.a(orgX-10, orgY-2, orgZ-10, orgX+11, orgY+5, orgZ+10));
+        for (int i = 0; i < list.size(); i++) {
+        	Entity ent = list.get(i);
+        	if (ent instanceof EntityFiroBall)
+        		((EntityFiroBall)ent).die();
+        }
     }
 
     public int wideness;
@@ -659,4 +716,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     public boolean gotTarget;
     public String bossName;
     public static final float jimz = 57.29577F;
+    private int dir;
+    private int treasureDoor[] = new int [3];
+    private int entranceDoor[] = new int [3];
 }

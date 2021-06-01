@@ -166,7 +166,6 @@ public class AetherGenDungeon extends WorldGenerator {
                 break;
             i2++;
         } while(true);
-        System.out.println(i + " and " + (j - 1) + " and " + k);
         EntityFireMonster entityfiremonster = new EntityFireMonster(world, i, j - 1, k, i1, k1);
         world.addEntity(entityfiremonster);
         return true;

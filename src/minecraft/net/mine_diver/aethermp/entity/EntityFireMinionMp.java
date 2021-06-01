@@ -13,5 +13,11 @@ public class EntityFireMinionMp extends EntityFireMinion {
 		super(world);
 		setPosition(x, y, z);
 	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		System.out.println("1");
+	}
 
 }

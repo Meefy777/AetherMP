@@ -1,5 +1,5 @@
 package net.mine_diver.aethermp.entity;
-
+ 
 import net.minecraft.src.EntityFireMonster;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ModLoaderMp;
@@ -35,6 +35,10 @@ public class EntityFireMonsterMp extends EntityFireMonster {
 	public int getBossHP() {
 		health = dataWatcher.getWatchableObjectInt(16);
 		return super.getBossHP();
+	}
+
+	@Override
+	public void updatePlayerActionState() {		
 	}
 	
 	@Override

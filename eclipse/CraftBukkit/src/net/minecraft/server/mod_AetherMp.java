@@ -168,7 +168,8 @@ public class mod_AetherMp extends BaseModMp {
 	punishQuittingDuringFight = true,
 	preventTeleportDuringFight = true,
 	punishTeleportDuringFight = false,
-	bookOfLoreCoolDown = false;
+	bookOfLoreCoolDown = false,
+	clearFiroBallsAfterDeath = false;
 	
 	@MLProp
 	public static String

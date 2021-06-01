@@ -42,7 +42,8 @@ public class EntityCockatrice extends EntityMonster
         health = 20;
     }
 
-    public boolean getCanSpawnHere()
+    @Override
+    public boolean d()
     {
         int i = MathHelper.floor(locX);
         int j = MathHelper.floor(boundingBox.b);

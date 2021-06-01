@@ -58,4 +58,5 @@ public class EntityFireMinion extends EntityMonster
             this.bukkitEntity = CraftEntityAether.getEntity(this.world.getServer(), this);
         return this.bukkitEntity;
     }
+
 }

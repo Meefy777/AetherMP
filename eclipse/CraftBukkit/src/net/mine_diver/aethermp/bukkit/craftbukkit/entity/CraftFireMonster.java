@@ -191,6 +191,11 @@ public class CraftFireMonster extends CraftFlyingAether implements FireMonster {
 	}
 	
 	@Override
+	public void clearFiroBalls() {
+		((EntityFireMonster) getHandle()).clearFiroBalls();
+	}
+	
+	@Override
 	public String toString() {
 		return "CraftFireMonster";
 	}
