@@ -115,7 +115,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     @Override
     public void m_()
     {
-    	
+    	System.out.println(orgX + " and " + orgY + " and " + orgZ);
     	if (dir == 0)
     		coordinate();
     	
@@ -331,9 +331,9 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     public void b(NBTTagCompound nbttagcompound)
     {
         super.b(nbttagcompound);
-        nbttagcompound.a("OriginX", (short)orgX);
-        nbttagcompound.a("OriginY", (short)orgY);
-        nbttagcompound.a("OriginZ", (short)orgZ);
+        nbttagcompound.a("OriginX", orgX);
+        nbttagcompound.a("OriginY", orgY);
+        nbttagcompound.a("OriginZ", orgZ);
         nbttagcompound.a("Wideness", (short)wideness);
         nbttagcompound.a("FlameCount", (short)flameCount);
         nbttagcompound.a("BallCount", (short)ballCount);
@@ -352,9 +352,9 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     public void a(NBTTagCompound nbttagcompound)
     {
         super.a(nbttagcompound);
-        orgX = nbttagcompound.d("OriginX");
-        orgY = nbttagcompound.d("OriginY");
-        orgZ = nbttagcompound.d("OriginZ");
+        orgX = nbttagcompound.e("OriginX");
+        orgY = nbttagcompound.e("OriginY");
+        orgZ = nbttagcompound.e("OriginZ");
         wideness = nbttagcompound.d("Wideness");
         flameCount = nbttagcompound.d("FlameCount");
         ballCount = nbttagcompound.d("BallCount");

@@ -7,17 +7,14 @@ public class EntityFireMinionMp extends EntityFireMinion {
 
 	public EntityFireMinionMp(World world) {
 		super(world);
+		isMultiplayerEntity = true;
 	}
 	
 	public EntityFireMinionMp(World world, double x, double y, double z) {
 		super(world);
 		setPosition(x, y, z);
+		isMultiplayerEntity = true;
 	}
 	
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		System.out.println("1");
-	}
 
 }

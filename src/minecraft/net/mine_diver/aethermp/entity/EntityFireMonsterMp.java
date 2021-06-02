@@ -12,6 +12,7 @@ public class EntityFireMonsterMp extends EntityFireMonster {
 	public EntityFireMonsterMp(World world, double x, double y, double z) {
 		super(world);
 		setPosition(x, y, z);
+		isMultiplayerEntity = true;
 	}
 	
 	@Override
