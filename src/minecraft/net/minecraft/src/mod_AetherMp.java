@@ -77,7 +77,8 @@ public class mod_AetherMp extends BaseModMp {
 	
 	@Override
 	public void HandlePacket(Packet230ModLoader packet) {
-		EntityPlayer player = ModLoader.getMinecraftInstance().thePlayer;
+		Minecraft game = ModLoader.getMinecraftInstance();
+		EntityPlayer player = game.thePlayer;
 		if(packet.packetType == 30 && player != null) {
 			if(!player.isRiding())
 				return;
@@ -134,6 +135,13 @@ public class mod_AetherMp extends BaseModMp {
 		else
 			CORE.handlePacket(packet);
     }
+	
+	public static int boolToInt(boolean flag) {
+		if (flag)
+			return 1;
+		else 
+			return 0;
+	}
 	
 	public static boolean isFireDefeated;
 	public static final Core CORE = new Core();

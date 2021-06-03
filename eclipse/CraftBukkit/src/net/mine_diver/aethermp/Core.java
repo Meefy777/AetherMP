@@ -59,6 +59,7 @@ public class Core {
 		SAPI.interceptAdd(new BlockPlacementHandler());
 		PlayerAPI.RegisterPlayerBase(PlayerBaseAether.class);
 		DimensionManager.registerDimensions();
+		dataHandler = new AetherMPDataHandler();
 		dataHandler.Initialize();
 	}
 	
@@ -118,7 +119,7 @@ public class Core {
 	}
 	
 	public final Logger LOGGER = Logger.getLogger("AetherMP");
-	public final AetherMPDataHandler dataHandler = new AetherMPDataHandler();
+	public AetherMPDataHandler dataHandler;
 	
 	public String[] dungeonAllowedCommands;
 }

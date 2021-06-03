@@ -156,6 +156,10 @@ public class mod_AetherMp extends BaseModMp {
 		}
 	}
 	
+	public static boolean intToBool(int i) {
+		return (i & 1) != 0;
+	}
+	
 	@Override
 	public void HandleLogin(EntityPlayer player) {
 		PacketManager.sendFireBoss(player);

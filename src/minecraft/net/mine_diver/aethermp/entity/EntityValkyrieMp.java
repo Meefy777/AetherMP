@@ -1,5 +1,6 @@
 package net.mine_diver.aethermp.entity;
 
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityValkyrie;
 import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.Packet230ModLoader;
@@ -74,6 +75,11 @@ public class EntityValkyrieMp extends EntityValkyrie {
 	@Override
 	public void teleport(double x, double y, double z, int rad) {
 	}
+	
+	@Override
+    public boolean interact(EntityPlayer entityplayer) {
+		return true;
+    }
 	
 	@Override
 	public boolean otherDimension() {

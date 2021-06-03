@@ -425,6 +425,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
     public World poisonWorld;
     public int poisonTime;
     public long clock;
+    public boolean isLookingAtAechor;
     public boolean canReceiveLore = false;
     public int loreTick = 0;
     public IAetherBoss currentBoss;

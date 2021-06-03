@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import net.mine_diver.aethermp.entity.EntityCloudParachuteMp;
 import net.mine_diver.aethermp.entity.EntityManager;
 import net.mine_diver.aethermp.gui.GuiManager;
+import net.mine_diver.aethermp.player.PlayerBaseAetherMp;
 import net.mine_diver.aethermp.util.AchievementHandler;
 import net.mine_diver.aethermp.util.AetherPoisonMp;
 import net.minecraft.src.Achievement;
@@ -20,6 +21,8 @@ import net.minecraft.src.GuiScreen;
 import net.minecraft.src.IAetherBoss;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Packet230ModLoader;
+import net.minecraft.src.PlayerAPI;
+import net.minecraft.src.PlayerBaseAether;
 import net.minecraft.src.StatList;
 import net.minecraft.src.WorldClient;
 import net.minecraft.src.mod_Aether;
@@ -71,7 +74,10 @@ public class PacketManager {
         	if (entity instanceof EntityProjectileBase)
         		((EntityProjectileBase)entity).setArrowHeading(packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4]);
         });
-        handlers.put(10, (packet) -> mod_Aether.currentBoss = packet.dataInt[0] == 0 ? null : (IAetherBoss) EntityManager.getEntityByID(packet.dataInt[1]));
+        handlers.put(10, (packet) ->  {
+        	mod_Aether.currentBoss = packet.dataInt[0] == 0 ? null : (IAetherBoss) EntityManager.getEntityByID(packet.dataInt[1]);
+        	PlayerBaseAetherMp.fromMP = true;
+        });
         handlers.put(11, (packet) -> {
         	if (ModLoader.getMinecraftInstance().gameSettings.fancyGraphics)
         		((EntitySlider) EntityManager.getEntityByID(packet.dataInt[0])).addSquirrelButts(packet.dataInt[1], packet.dataInt[2], packet.dataInt[3]);

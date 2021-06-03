@@ -2,22 +2,21 @@ package net.mine_diver.aethermp.bukkit.craftbukkit.listener;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftCow;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
 import net.mine_diver.aethermp.blocks.BlockManager;
-import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftFlyingCow;
-import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftAechorPlant;
+import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.PlayerAPI;
 import net.minecraft.server.mod_AetherMp;
 
 public class PlayerListener extends org.bukkit.event.player.PlayerListener {
@@ -81,13 +80,12 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	}
 	
 	@Override
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-		Entity entity = event.getRightClicked();
-		Player player = event.getPlayer();
-		ItemStack stack = player.getItemInHand();
-		if (stack.getTypeId() == ItemManager.Bucket.id) {
-			if (stack.getDurability() == 0 && (entity instanceof CraftCow || entity instanceof CraftFlyingCow))
-				player.getItemInHand().setDurability((short) 1);
-		}
-    }
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		if(!(event.getRightClicked() instanceof CraftAechorPlant))
+			return;
+		Player p = event.getPlayer();
+		EntityPlayer player = ((CraftPlayer) p).getHandle();
+		PlayerBaseAether playerBase = (PlayerBaseAether)PlayerAPI.getPlayerBase(player, PlayerBaseAether.class);
+		playerBase.isLookingAtAechor = true;
+	}
 }

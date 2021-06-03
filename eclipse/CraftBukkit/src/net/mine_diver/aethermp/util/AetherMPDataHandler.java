@@ -71,7 +71,10 @@ public class AetherMPDataHandler {
 	}
 	
 	public boolean getFireMonsterKilled() {
-		return (boolean) jsonData.get("isSunSpiritDead");
+		Object obj = jsonData.get("isSunSpiritDead");
+		if (obj == null)
+			return false;
+		return (boolean) obj;
 	}
 
 }

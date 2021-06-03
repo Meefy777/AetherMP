@@ -12,6 +12,7 @@ import net.minecraft.src.ISaveHandler;
 import net.minecraft.src.PlayerBaseAether;
 import net.minecraft.src.SaveHandlerMP;
 import net.minecraft.src.World;
+import net.minecraft.src.mod_Aether;
 
 import static net.minecraft.src.mod_AetherMp.PackageAccess;
 
@@ -32,6 +33,12 @@ public class PlayerBaseAetherMp extends PlayerBaseAether {
 	
 	@Override
 	public boolean onLivingUpdate() {
+		if (!player.worldObj.multiplayerWorld)
+			fromMP = false;	
+		if (mod_Aether.currentBoss != null && player.worldObj.multiplayerWorld && !fromMP)
+			mod_Aether.currentBoss = null;
+		
+		
 		if (!player.worldObj.multiplayerWorld)
 			return super.onLivingUpdate();
 		return false;
@@ -57,6 +64,8 @@ public class PlayerBaseAetherMp extends PlayerBaseAether {
 	private static PrintStream out;
 	private static boolean restore = false;
 	private static final Field saveHandlerField;
+	public static boolean fromMP;
+	
 	static {
 		Field field = null;
 		try {
