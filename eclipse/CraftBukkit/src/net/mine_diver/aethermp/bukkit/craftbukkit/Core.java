@@ -13,6 +13,7 @@ public class Core extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		mod_AetherMp.CORE.LOGGER.info("Disabling plugin...");
+		mod_AetherMp.CORE.dataHandler.saveData();
 	}
 
 	@Override
@@ -25,5 +26,6 @@ public class Core extends JavaPlugin {
 		pm.registerEvent(Type.PLAYER_TELEPORT, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_PORTAL, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_INTERACT_ENTITY, pListener, Priority.Highest, this);
+		
 	}
 }

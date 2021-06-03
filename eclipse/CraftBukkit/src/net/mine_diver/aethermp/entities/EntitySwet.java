@@ -53,7 +53,7 @@ public class EntitySwet extends EntityAetherAnimal
                 textureSet = true;
             }
         }
-        if(textureNum == 1)
+        if(getTexture() == 1)
         {
             texture = "/aether/mobs/swets.png";
             aE = 1.5F;
@@ -65,7 +65,7 @@ public class EntitySwet extends EntityAetherAnimal
         b(0.8F, 0.8F);
         setPosition(locX, locY, locZ);
         hops = 0;
-        gotrider = false;
+        setIsRidden(false);
         flutter = 0;
         ticker = 0;
     }
@@ -74,6 +74,11 @@ public class EntitySwet extends EntityAetherAnimal
     public void E()
     {
         super.E();
+        if (getTexture() == 1)
+        	aE = 1.5F;
+        else
+        	aE = 3F;
+        
         if(passenger != null && kickoff)
         {
             passenger.mount(this);
@@ -93,11 +98,39 @@ public class EntitySwet extends EntityAetherAnimal
     	datawatcher.a(16, String.valueOf(0.1f)); //height
     	datawatcher.a(17, (byte) 0); //is ridden
     	datawatcher.a(18, String.valueOf(0.0D)); //motY
+    	datawatcher.a(19, (byte) 0); //isTamed
+    	datawatcher.a(20, (String)""); //ridenName
+    }
+    
+    public String getPlayer()
+    {
+    	return datawatcher.c(20);
+    }
+    
+    public void setPlayer(String value)
+    {
+    	datawatcher.watch(20, String.valueOf(value));
+    }
+    
+    public boolean getTamed() {
+    	return (datawatcher.a(19) & 1) != 0;
+    }
+    
+    public void setTamed(boolean flag) {
+        if(flag)
+            datawatcher.watch(19, Byte.valueOf((byte)1));
+        else
+            datawatcher.watch(19, Byte.valueOf((byte)0));
     }
     
     public void setTexture(int i) {
     	datawatcher.watch(14, Byte.valueOf((byte)i));
     }
+    
+    public int getTexture() {
+    	return datawatcher.a(14);
+    }
+    
     
     public void setWidth(float f) {
     	datawatcher.watch(15, String.valueOf(f));
@@ -151,7 +184,7 @@ public class EntitySwet extends EntityAetherAnimal
 
         }
         super.m_();
-        if(gotrider)
+        if(getIsRidden())
         {
             if(passenger != null)
                 return;
@@ -162,7 +195,7 @@ public class EntitySwet extends EntityAetherAnimal
                 Entity entity = (Entity)list.get(j);
                 capturePrey(entity);
             }
-            gotrider = false;
+            setIsRidden(false);
         }
         if(f_())
             dissolve();
@@ -177,7 +210,7 @@ public class EntitySwet extends EntityAetherAnimal
     @Override
     public void a(float f)
     {
-        if(friendly)
+        if(getTamed())
         {
             return;
         }
@@ -290,7 +323,7 @@ public class EntitySwet extends EntityAetherAnimal
                 kickoff = true;
             }
         }
-        if(friendly && (target instanceof EntityPlayer))
+        if(getTamed() && (target instanceof EntityPlayer))
         {
             target = null;
         }
@@ -358,7 +391,7 @@ public class EntitySwet extends EntityAetherAnimal
             	float forward = mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving);
                 if(forward > 0.1F)
                 {
-                    if(textureNum == 1)
+                    if(getTexture() == 1)
                     {
                         motX += (double)forward * -Math.sin(f2) * 0.125D;
                         motZ += (double)forward * Math.cos(f2) * 0.125D;
@@ -370,7 +403,7 @@ public class EntitySwet extends EntityAetherAnimal
                 } else
                 if(forward < -0.1F)
                 {
-                    if(textureNum == 1)
+                    if(getTexture() == 1)
                     {
                         motX += (double)forward * -Math.sin(f2) * 0.125D;
                         motZ += (double)forward * Math.cos(f2) * 0.125D;
@@ -383,7 +416,7 @@ public class EntitySwet extends EntityAetherAnimal
                 float strafing = mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving);
                 if(strafing > 0.1F)
                 {
-                    if(textureNum == 1)
+                    if(getTexture() == 1)
                     {
                         motX += (double)strafing * Math.cos(f2) * 0.125D;
                         motZ += (double)strafing * Math.sin(f2) * 0.125D;
@@ -395,7 +428,7 @@ public class EntitySwet extends EntityAetherAnimal
                 } else
                 if(strafing < -0.1F)
                 {
-                    if(textureNum == 1)
+                    if(getTexture() == 1)
                     {
                         motX += (double)strafing * Math.cos(f2) * 0.125D;
                         motZ += (double)strafing * Math.sin(f2) * 0.125D;
@@ -426,7 +459,7 @@ public class EntitySwet extends EntityAetherAnimal
     {
         ay++;
         U();
-        if(friendly && passenger != null)
+        if(getTamed() && passenger != null)
         {
             d_2();
             return;
@@ -543,12 +576,12 @@ public class EntitySwet extends EntityAetherAnimal
         nbttagcompound.a("Flutter", (short)flutter);
         if(passenger != null)
         {
-            gotrider = true;
+            setIsRidden(true);
         }
-        nbttagcompound.a("GotRider", gotrider);
-        nbttagcompound.a("Friendly", friendly);
+        nbttagcompound.a("GotRider", getIsRidden());
+        nbttagcompound.a("Friendly", getTamed());
         nbttagcompound.a("textureSet", textureSet);
-        nbttagcompound.a("textureNum", (short)textureNum);
+        nbttagcompound.a("textureNum", (short)getTexture());
     }
 
     @Override
@@ -557,11 +590,11 @@ public class EntitySwet extends EntityAetherAnimal
         super.a(nbttagcompound);
         hops = nbttagcompound.d("Hops");
         flutter = nbttagcompound.d("Flutter");
-        gotrider = nbttagcompound.m("GotRider");
-        friendly = nbttagcompound.m("Friendly");
+        setIsRidden(nbttagcompound.m("GotRider"));
+        setTamed(nbttagcompound.m("Friendly"));
         textureSet = nbttagcompound.m("textureSet");
-        textureNum = nbttagcompound.d("textureNum");
-        if(textureNum == 1)
+        setTexture(nbttagcompound.d("textureNum"));
+        if(getTexture() == 1)
         {
             texture = "/aether/mobs/swets.png";
             aE = 1.5F;
@@ -604,13 +637,13 @@ public class EntitySwet extends EntityAetherAnimal
     @Override
     public boolean a(EntityHuman entityplayer)
     {
-        if(!friendly)
+        if(!getTamed())
         {
-            friendly = true;
+            setTamed(true);
             target = null;
             return true;
         }
-        if(friendly && passenger == null || passenger == entityplayer)
+        if(getTamed() && passenger == null || passenger == entityplayer)
         {
             capturePrey(entityplayer);
         }
@@ -624,7 +657,7 @@ public class EntitySwet extends EntityAetherAnimal
         for(int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity)list.get(i);
-            if((entity instanceof EntityLiving) && !(entity instanceof EntitySwet) && (friendly ? !(entity instanceof EntityPlayer) : !(entity instanceof EntityMonster)))
+            if((entity instanceof EntityLiving) && !(entity instanceof EntitySwet) && (getTamed() ? !(entity instanceof EntityPlayer) : !(entity instanceof EntityMonster)))
             {
                 return entity;
             }
@@ -635,7 +668,7 @@ public class EntitySwet extends EntityAetherAnimal
 
     protected void dropFewItems(EntityHuman human)
     {
-        ItemStack stack = new ItemStack(textureNum != 1 ? Block.GLOWSTONE.id : BlockManager.Aercloud.id, 3, textureNum != 1 ? 0 : 1);
+        ItemStack stack = new ItemStack(getTexture() != 1 ? Block.GLOWSTONE.id : BlockManager.Aercloud.id, 3, getTexture() != 1 ? 0 : 1);
         List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
         int count = stack.count * (human != null && ItemManager.equippedSkyrootSword(human) ? 2 : 1);
         loot.add(new org.bukkit.inventory.ItemStack(stack.id, count));
@@ -669,9 +702,6 @@ public class EntitySwet extends EntityAetherAnimal
     public int ticker;
     public int flutter;
     public int hops;
-    public int textureNum;
     public boolean textureSet;
-    public boolean gotrider;
     public boolean kickoff;
-    public boolean friendly;
 }

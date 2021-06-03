@@ -24,6 +24,7 @@ import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.proxy.MinecraftLoggerProxy;
 import net.mine_diver.aethermp.util.Achievements;
+import net.mine_diver.aethermp.util.AetherMPDataHandler;
 import net.mine_diver.aethermp.util.BlockPlacementHandler;
 import net.minecraft.server.BaseMod;
 import net.minecraft.server.EntityHuman;
@@ -58,6 +59,7 @@ public class Core {
 		SAPI.interceptAdd(new BlockPlacementHandler());
 		PlayerAPI.RegisterPlayerBase(PlayerBaseAether.class);
 		DimensionManager.registerDimensions();
+		dataHandler.Initialize();
 	}
 	
 	public void onBukkit() {
@@ -116,6 +118,7 @@ public class Core {
 	}
 	
 	public final Logger LOGGER = Logger.getLogger("AetherMP");
+	public final AetherMPDataHandler dataHandler = new AetherMPDataHandler();
 	
 	public String[] dungeonAllowedCommands;
 }

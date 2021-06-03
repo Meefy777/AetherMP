@@ -115,7 +115,6 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     @Override
     public void m_()
     {
-    	System.out.println(orgX + " and " + orgY + " and " + orgZ);
     	if (dir == 0)
     		coordinate();
     	
@@ -284,14 +283,18 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 continue;
             }
             world.setTypeId(x, b, z, 0);
-            //PacketManager.makeSound((float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, "random.fizz", 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F);
+            Packet230ModLoader packet = new Packet230ModLoader();
+            packet.packetType = 35;
+            packet.dataFloat = new float[] {(float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F};
+            packet.dataString = new String [] {"random.fizz"};
+            PacketManager.sendToViewDistance(packet, ((WorldServer)world).dimension, locX, locY, locZ);
             for(int l = 0; l < 8; l++)
             {
-            	Packet230ModLoader packet = new Packet230ModLoader();
-            	packet.packetType = 31;
-            	packet.dataString = new String [] {"largesmoke"};
-            	packet.dataFloat = new float [] {(float) ((float)x + Math.random()), (float) ((float)b + 0.75D), (float) ((float)z + Math.random()), 0.0F, 0.0F, 0.0F};
-            	PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+            	Packet230ModLoader smoke = new Packet230ModLoader();
+            	smoke.packetType = 31;
+            	smoke.dataString = new String [] {"largesmoke"};
+            	smoke.dataFloat = new float [] {(float) ((float)x + Math.random()), (float) ((float)b + 0.75D), (float) ((float)z + Math.random()), 0.0F, 0.0F, 0.0F};
+            	PacketManager.sendToViewDistance(smoke, ((WorldServer) world).dimension, locX, locY, locZ);
             }
 
         }
@@ -507,6 +510,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
                 	chatLine("\247bSuch bitter cold... is this the feeling... of pain?", (EntityPlayer) targetfire);
                 }
+            	mod_AetherMp.CORE.dataHandler.setFireMonsterKilled(true);
                 setDoor(0, entranceDoor);
                 unlockTreasure(e);
             }

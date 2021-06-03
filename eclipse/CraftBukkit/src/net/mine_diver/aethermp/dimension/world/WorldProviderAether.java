@@ -21,8 +21,7 @@ public class WorldProviderAether extends WorldProvider {
     
     @Override
     public float a(long l, float f) {
-        //boolean flag = ModLoader.getMinecraftInstance().statFileWriter.hasAchievementUnlocked(AetherAchievements.defeatGold);
-        boolean flag = false;
+        boolean flag = mod_AetherMp.CORE.dataHandler.getFireMonsterKilled();
         if (flag) {
             int i = (int)(l % 0x13880L);
             float f1 = ((float)i + f) / 120000F - 0.25F;

@@ -8,4 +8,5 @@ public class WorldProviderAetherProxy extends WorldProviderAether {
 	public IChunkProvider getChunkProvider() {
         return new ChunkProviderAetherProxy(worldObj, worldObj.getRandomSeed());
     }
+	
 }

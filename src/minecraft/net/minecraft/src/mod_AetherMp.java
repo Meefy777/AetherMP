@@ -127,10 +127,15 @@ public class mod_AetherMp extends BaseModMp {
 			EntityAerbunnyMp bunny = (EntityAerbunnyMp) ent;
 			bunny.puffiness = packet.dataFloat[0];
 		}
+		else if (packet.packetType == 35 && player != null)
+			player.worldObj.playSoundEffect(packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataString[0], packet.dataFloat[3], packet.dataFloat[4]);
+		else if (packet.packetType == 36 && player != null)
+			isFireDefeated = (packet.dataInt[0] & 1) != 0;
 		else
 			CORE.handlePacket(packet);
     }
 	
+	public static boolean isFireDefeated;
 	public static final Core CORE = new Core();
 	private final Properties info = new Properties();
 	private BaseMod aetherInstance;

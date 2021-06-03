@@ -156,6 +156,11 @@ public class mod_AetherMp extends BaseModMp {
 		}
 	}
 	
+	@Override
+	public void HandleLogin(EntityPlayer player) {
+		PacketManager.sendFireBoss(player);
+	}
+	
 	public static final Core CORE = new Core();
 	private final Properties info = new Properties();
 	
