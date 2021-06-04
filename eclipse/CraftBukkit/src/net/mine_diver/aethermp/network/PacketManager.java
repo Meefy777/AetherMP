@@ -50,6 +50,14 @@ public class PacketManager {
 			ModLoaderMp.SendPacketToAll(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
     }
     
+    public static void spawnParticle(String s, float a, float b, float c, float d, float e, float f, int dim, double x, double y, double z) {
+    	Packet230ModLoader packet = new Packet230ModLoader();
+    	packet.packetType = 31;
+    	packet.dataString = new String[] {s};
+    	packet.dataFloat = new float [] {a, b, c, d, e, f};
+    	sendToViewDistance(packet, dim, x, y, z);
+    }
+    
 	public static int boolToInt(boolean flag) {
 		if (flag)
 			return 1;

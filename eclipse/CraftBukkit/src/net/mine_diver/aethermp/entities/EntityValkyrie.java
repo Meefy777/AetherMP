@@ -256,11 +256,7 @@ public class EntityValkyrie extends EntityDungeonMob
             final double d2 = this.random.nextGaussian() * 0.02;
             final double d3 = this.random.nextGaussian() * 0.02;
             final double d4 = 10.0;
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 31;
-            packet.dataString = new String [] {"explode"};
-            packet.dataFloat = new float [] {(float) (this.locX + this.random.nextFloat() * this.length * 2.0f - this.length - d0 * d4), (float) (this.locY + this.random.nextFloat() * this.width - d2 * d4), (float) (this.locZ + this.random.nextFloat() * this.length * 2.0f - this.length - d3 * d4), (float) d0, (float) d2, (float) d3};
-            PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+            PacketManager.spawnParticle("explode", (float) (this.locX + this.random.nextFloat() * this.length * 2.0f - this.length - d0 * d4), (float) (this.locY + this.random.nextFloat() * this.width - d2 * d4), (float) (this.locZ + this.random.nextFloat() * this.length * 2.0f - this.length - d3 * d4), (float) d0, (float) d2, (float) d3, ((WorldServer) world).dimension, locX, locY, locZ);
         }
     }
 

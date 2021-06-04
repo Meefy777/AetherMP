@@ -22,7 +22,6 @@ import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Item;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
@@ -239,11 +238,8 @@ public class EntityAerbunny extends EntityAetherAnimal
                 if(runFrom != null)
                 {
                     runLikeHell();
-                    Packet230ModLoader packet = new Packet230ModLoader();
-                    packet.packetType = 31;
-                    packet.dataString = new String [] {"splash"};
-                    packet.dataFloat = new float [] {(float) locX, (float) locY, (float) locZ, 0.0F, 0.0F, 0.0F};
-                    PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+                    PacketManager.spawnParticle("splash", (float) locX, (float) locY, (float) locZ, 0.0F, 0.0F, 0.0F, ((WorldServer)world).dimension, locX, locY, locZ);
+                    
                     if(!C())
                     {
                         a(runFrom, 30F, 30F);
@@ -289,11 +285,7 @@ public class EntityAerbunny extends EntityAetherAnimal
         double e = boundingBox.b;
         double f = locZ + a * 0.40000000596046448D;
         world.a("explode", d, e, f, 0.0D, -0.075000002980232239D, 0.0D);
-        Packet230ModLoader packet = new Packet230ModLoader();
-        packet.packetType = 31;
-        packet.dataFloat = new float [] {(float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F};
-        packet.dataString = new String [] {"explode"};
-        PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+        PacketManager.spawnParticle("explode", (float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F, ((WorldServer)world).dimension, locX, locY, locZ);
     }
 
     @Override

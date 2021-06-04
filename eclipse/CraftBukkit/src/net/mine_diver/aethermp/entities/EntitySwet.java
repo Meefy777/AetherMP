@@ -23,7 +23,6 @@ import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
@@ -175,11 +174,7 @@ public class EntitySwet extends EntityAetherAnimal
                 double d = (float)locX + (random.nextFloat() - random.nextFloat()) * 0.3F;
                 double d1 = (float)locY + height;
                 double d2 = (float)locZ + (random.nextFloat() - random.nextFloat()) * 0.3F;
-                Packet230ModLoader packet = new Packet230ModLoader();
-                packet.packetType = 31;
-                packet.dataString = new String [] {"splash"};
-                packet.dataFloat = new float [] {(float) d, (float) (d1 - 0.25D), (float) d2, (float) 0.0D, (float) 0.0D, (float) 0.0D};
-                PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+                PacketManager.spawnParticle("splash", (float) d, (float) (d1 - 0.25D), (float) d2, (float) 0.0D, (float) 0.0D, (float) 0.0D, ((WorldServer)world).dimension, locX, locY, locZ);
             }
 
         }
@@ -242,11 +237,7 @@ public class EntitySwet extends EntityAetherAnimal
             float f1 = random.nextFloat() * 0.5F + 0.25F;
             float f2 = MathHelper.sin(f) * f1;
             float f3 = MathHelper.cos(f) * f1;
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 31;
-            packet.dataString = new String [] {"splash"};
-            packet.dataFloat = new float [] {(float) (locX + (double)f2), (float) (boundingBox.b + 1.25D), (float) (locZ + (double)f3), (float) ((double)f2 * 1.5D + motX), (float) 4D, (float) ((double)f3 * 1.5D + motZ)};
-            PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+            PacketManager.spawnParticle("splash", (float) (locX + (double)f2), (float) (boundingBox.b + 1.25D), (float) (locZ + (double)f3), (float) ((double)f2 * 1.5D + motX), (float) 4D, (float) ((double)f3 * 1.5D + motZ), ((WorldServer)world).dimension, locX, locY, locZ);
         }
 
         if(passenger != null)

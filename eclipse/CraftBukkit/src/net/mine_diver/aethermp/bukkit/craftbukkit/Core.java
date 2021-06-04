@@ -1,6 +1,5 @@
 package net.mine_diver.aethermp.bukkit.craftbukkit;
 
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -36,7 +35,7 @@ public class Core extends JavaPlugin {
 	}
 	
 	public void stopBossFights() {
-		Player[] player = Bukkit.getServer().getOnlinePlayers();
+		Player[] player = getServer().getOnlinePlayers();
 		for (int i = 0; i < player.length; i++) {
 			EntityPlayer p = ((CraftPlayer)player[i]).getHandle();
 			IAetherBoss boss = PlayerManager.getCurrentBoss(p);

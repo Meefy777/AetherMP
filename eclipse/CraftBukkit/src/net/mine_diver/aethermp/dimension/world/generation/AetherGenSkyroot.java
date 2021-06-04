@@ -46,7 +46,7 @@ public class AetherGenSkyroot extends WorldGenerator {
                 for(int i4 = k - i3; i4 <= k + i3; i4++) {
                     int j4 = i4 - k;
                     if((Math.abs(l3) != i3 || Math.abs(j4) != i3 || random.nextInt(2) != 0 && j2 != 0) && !Block.o[world.getTypeId(k3, k1, i4)])
-                        worldBukkit.getBlockAt(k3, k1, i4).setTypeId(BlockManager.SkyrootLeaves.id, false);
+                        worldBukkit.getBlockAt(k3, k1, i4).setTypeId(BlockManager.SkyrootLeaves.id, true);
                 }
 
             }
@@ -56,7 +56,7 @@ public class AetherGenSkyroot extends WorldGenerator {
         for(int l1 = 0; l1 < l; l1++) {
             int k2 = world.getTypeId(i, j + l1, k);
             if(k2 == 0 || k2 == BlockManager.SkyrootLeaves.id)
-                worldBukkit.getBlockAt(i, j + l1, k).setTypeIdAndData(BlockManager.Log.id, (byte)0, false);
+                worldBukkit.getBlockAt(i, j + l1, k).setTypeIdAndData(BlockManager.Log.id, (byte)0, true);
         }
 
         return true;

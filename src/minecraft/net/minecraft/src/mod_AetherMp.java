@@ -7,12 +7,6 @@ import java.util.Properties;
 import java.util.Random;
 
 import net.mine_diver.aethermp.Core;
-import net.mine_diver.aethermp.entity.EntityAerbunnyMp;
-import net.mine_diver.aethermp.entity.EntityFireMonsterMp;
-import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
-import net.mine_diver.aethermp.entity.EntityMoaMp;
-import net.mine_diver.aethermp.entity.EntityPhygMp;
-import net.mine_diver.aethermp.entity.EntityValkyrieMp;
 import net.minecraft.client.Minecraft;
 
 public class mod_AetherMp extends BaseModMp {
@@ -77,71 +71,8 @@ public class mod_AetherMp extends BaseModMp {
 	
 	@Override
 	public void HandlePacket(Packet230ModLoader packet) {
-		Minecraft game = ModLoader.getMinecraftInstance();
-		EntityPlayer player = game.thePlayer;
-		if(packet.packetType == 30 && player != null) {
-			if(!player.isRiding())
-				return;
-			Entity mount = player.ridingEntity;
-
-			if (mount instanceof EntityMoaMp) {
-				EntityMoaMp moa = (EntityMoaMp) mount;
-				moa.jrem = packet.dataInt[0];
-			} else if (mount instanceof EntityPhygMp) {
-				EntityPhygMp phyg = (EntityPhygMp) mount;
-				phyg.jrem = packet.dataInt[0];
-			} else if (mount instanceof EntityFlyingCowMp) {
-				EntityFlyingCowMp cow = (EntityFlyingCowMp) mount;
-				cow.jrem = packet.dataInt[0];
-			}
-		}
-		else if (packet.packetType == 31 && player != null) 
-			player.worldObj.spawnParticle(packet.dataString[0], packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4], packet.dataFloat[5]);
-		else if (packet.packetType == 32 && player != null) {
-			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
-			if(ent == null || !(ent instanceof EntityValkyrieMp))
-				return;
-			EntityValkyrieMp valk = (EntityValkyrieMp) ent;
-			valk.swingArm();
-		}
-		else if (packet.packetType == 33 && player != null) {
-			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
-			if (ent == null || (!(ent instanceof EntityValkyrieMp) && !(ent instanceof EntityFireMonsterMp)))
-				return;
-			if (ent instanceof EntityValkyrieMp) {
-				EntityValkyrieMp valk = (EntityValkyrieMp) ent;
-				valk.setBoss(true);
-				valk.bossName = packet.dataString[0];
-				valk.name = packet.dataString[0];
-			} else if (ent instanceof EntityFireMonsterMp) {
-				EntityFireMonsterMp fire = (EntityFireMonsterMp) ent;
-				fire.orgX = packet.dataInt[1];
-				fire.orgY = packet.dataInt[2];
-				fire.orgZ = packet.dataInt[3];
-				fire.name = packet.dataString[0];
-			}
-		}
-		else if (packet.packetType == 34 && player != null) {
-			Entity ent = ((WorldClient) player.worldObj).getEntityByID(packet.dataInt[0]);
-			if (ent == null || !(ent instanceof EntityAerbunnyMp) || (player.riddenByEntity != null && packet.dataInt[0] == player.riddenByEntity.entityId))
-				return;
-			EntityAerbunnyMp bunny = (EntityAerbunnyMp) ent;
-			bunny.puffiness = packet.dataFloat[0];
-		}
-		else if (packet.packetType == 35 && player != null)
-			player.worldObj.playSoundEffect(packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2], packet.dataString[0], packet.dataFloat[3], packet.dataFloat[4]);
-		else if (packet.packetType == 36 && player != null)
-			isFireDefeated = (packet.dataInt[0] & 1) != 0;
-		else
-			CORE.handlePacket(packet);
+		CORE.handlePacket(packet);
     }
-	
-	public static int boolToInt(boolean flag) {
-		if (flag)
-			return 1;
-		else 
-			return 0;
-	}
 	
 	public static boolean isFireDefeated;
 	public static final Core CORE = new Core();

@@ -18,7 +18,7 @@ public class AetherGenGoldenOak extends WorldGenerator {
             j += j1;
             k += k1;
             if(world.getTypeId(i, j, k) == BlockManager.GoldenOakLeaves.id)
-                worldBukkit.getBlockAt(i, j, k).setTypeIdAndData(BlockManager.Log.id, (byte)2 , false);
+                worldBukkit.getBlockAt(i, j, k).setTypeIdAndData(BlockManager.Log.id, (byte)2 , true);
         }
 
         return true;
@@ -34,12 +34,12 @@ public class AetherGenGoldenOak extends WorldGenerator {
             for(int k1 = j + 5; k1 < j + 12; k1++)
                 for(int l1 = k - 3; l1 < k + 4; l1++)
                     if((i1 - i) * (i1 - i) + (k1 - j - 8) * (k1 - j - 8) + (l1 - k) * (l1 - k) < 12 + random.nextInt(5) && world.getTypeId(i1, k1, l1) == 0)
-                        worldBukkit.getBlockAt(i1, k1, l1).setTypeId(BlockManager.GoldenOakLeaves.id, false);
+                    	worldBukkit.getBlockAt(i1, k1, l1).setTypeId(BlockManager.GoldenOakLeaves.id, true);
 
         for(int j1 = 0; j1 < l; j1++) {
             if(j1 > 4 && random.nextInt(3) > 0)
                 branch(world, random, i, j + j1, k, j1 / 4 - 1);
-            worldBukkit.getBlockAt(i, j + j1, k).setTypeIdAndData(BlockManager.Log.id, (byte)2, false);
+            worldBukkit.getBlockAt(i, j + j1, k).setTypeIdAndData(BlockManager.Log.id, (byte)2, true);
         }
 
         return true;

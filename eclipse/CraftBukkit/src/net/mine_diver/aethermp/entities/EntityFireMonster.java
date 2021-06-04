@@ -26,7 +26,6 @@ import net.minecraft.server.ItemStack;
 import net.minecraft.server.Material;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
@@ -128,11 +127,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
             double d = locX + a * b;
             double e = (boundingBox.b + b) - 0.5D;
             double f = locZ + c * b;
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 31;
-            packet.dataString = new String [] {"flame"};
-            packet.dataFloat = new float [] {(float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F};
-            PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+            PacketManager.spawnParticle("flame", (float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F, ((WorldServer)world).dimension, locX, locY, locZ);
             entCount++;
             if(entCount >= 3)
             {
@@ -283,19 +278,10 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 continue;
             }
             world.setTypeId(x, b, z, 0);
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 35;
-            packet.dataFloat = new float[] {(float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F};
-            packet.dataString = new String [] {"random.fizz"};
-            PacketManager.sendToViewDistance(packet, ((WorldServer)world).dimension, locX, locY, locZ);
+            PacketManager.makeSound((float)x + 0.5F, (float)b + 0.5F, (float)z + 0.5F, "random.fizz", 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F, ((WorldServer)world).dimension);
+            
             for(int l = 0; l < 8; l++)
-            {
-            	Packet230ModLoader smoke = new Packet230ModLoader();
-            	smoke.packetType = 31;
-            	smoke.dataString = new String [] {"largesmoke"};
-            	smoke.dataFloat = new float [] {(float) ((float)x + Math.random()), (float) ((float)b + 0.75D), (float) ((float)z + Math.random()), 0.0F, 0.0F, 0.0F};
-            	PacketManager.sendToViewDistance(smoke, ((WorldServer) world).dimension, locX, locY, locZ);
-            }
+            	PacketManager.spawnParticle("largesmoke", (float) ((float)x + Math.random()), (float) ((float)b + 0.75D), (float) ((float)z + Math.random()), 0.0F, 0.0F, 0.0F, ((WorldServer)world).dimension, locX, locY, locZ);
 
         }
 

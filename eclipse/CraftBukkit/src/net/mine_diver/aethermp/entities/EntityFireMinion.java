@@ -8,7 +8,6 @@ package net.mine_diver.aethermp.entities;
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.mine_diver.aethermp.network.PacketManager;
 import net.minecraft.server.EntityMonster;
-import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 
@@ -42,11 +41,7 @@ public class EntityFireMinion extends EntityMonster
                 double d = locX + a * b;
                 double e = (boundingBox.b + b) - 0.5D;
                 double f = locZ + c * b;
-                Packet230ModLoader packet = new Packet230ModLoader();
-                packet.packetType = 31;
-                packet.dataString = new String [] {"flame"};
-                packet.dataFloat = new float [] {(float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F};
-                PacketManager.sendToViewDistance(packet, ((WorldServer) world).dimension, locX, locY, locZ);
+                PacketManager.spawnParticle("flame", (float) d, (float) e, (float) f, 0.0F, -0.075000002980232239F, 0.0F, ((WorldServer)world).dimension, locX, locY, locZ);
             }
 
         }
