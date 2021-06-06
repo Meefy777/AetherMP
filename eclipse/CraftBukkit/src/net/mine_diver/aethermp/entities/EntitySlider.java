@@ -506,6 +506,11 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         openDoor();
         moveTimer = 0;
 	}
+	
+	@Override
+	public BossType getBossType() {
+		return BossType.BRONZE;
+	}
     
     @Override
     public org.bukkit.entity.Entity getBukkitEntity() {

@@ -15,4 +15,12 @@ public interface IAetherBoss {
     public String getBossTitle();
     
     public void stopFight();
+    
+    public BossType getBossType();
+    
+    public enum BossType {
+    	BRONZE,
+    	SILVER,
+    	GOLD
+    }
 }

@@ -34,7 +34,9 @@ public class EntityFireMonsterMp extends EntityFireMonster {
 	
 	@Override
 	public int getBossHP() {
-		health = dataWatcher.getWatchableObjectInt(16);
+		int hp = dataWatcher.getWatchableObjectInt(16);
+		if (hp != 1)
+			health = dataWatcher.getWatchableObjectInt(16);
 		return super.getBossHP();
 	}
 
@@ -54,9 +56,8 @@ public class EntityFireMonsterMp extends EntityFireMonster {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
 		setTexture();
-		if (ticks < 5)
+		if (ticks < 10)
 			ticks++;
 		else if (!constructed) {
 			constructed = true;

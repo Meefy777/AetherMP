@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
+import net.mine_diver.aethermp.bukkit.craftbukkit.listener.EntityListener;
 import net.mine_diver.aethermp.bukkit.craftbukkit.listener.PlayerListener;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.EntityPlayer;
@@ -27,11 +28,13 @@ public class Core extends JavaPlugin {
 		mod_AetherMp.CORE.LOGGER.info("Enabling plugin...");
 		PluginManager pm = getServer().getPluginManager();
 		PlayerListener pListener = new PlayerListener();
+		EntityListener eListener = new EntityListener();
 		pm.registerEvent(Type.PLAYER_QUIT, pListener, Priority.Monitor, this);
 		pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_TELEPORT, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_PORTAL, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_INTERACT_ENTITY, pListener, Priority.Highest, this);
+		pm.registerEvent(Type.ENTITY_DEATH, eListener, Priority.Highest, this);
 	}
 	
 	public void stopBossFights() {

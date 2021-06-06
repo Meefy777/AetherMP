@@ -129,6 +129,7 @@ public class PacketManager {
 				fire.orgX = packet.dataInt[1];
 				fire.orgY = packet.dataInt[2];
 				fire.orgZ = packet.dataInt[3];
+				fire.health = packet.dataInt[4];
 				fire.name = packet.dataString[0];
 			}
         });

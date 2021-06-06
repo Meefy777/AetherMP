@@ -196,6 +196,14 @@ public class mod_AetherMp extends BaseModMp {
 				return entityliving.moveStrafing;
 			}
 			
+			public static void setMoveForward(net.minecraft.src.EntityLiving entityliving, float f) {
+				entityliving.moveForward = f;
+			}
+			
+			public static void setMoveStrafing(net.minecraft.src.EntityLiving entityliving, float f) {
+				entityliving.moveStrafing = f;
+			}
+			
 		}
 		
 		public static class Item {

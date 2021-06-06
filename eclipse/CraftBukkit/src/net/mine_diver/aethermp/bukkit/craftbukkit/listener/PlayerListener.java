@@ -11,12 +11,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
+import net.mine_diver.aethermp.api.entities.IAetherBoss.BossType;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftAechorPlant;
+import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PlayerAPI;
+import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
 
 public class PlayerListener extends org.bukkit.event.player.PlayerListener {
@@ -24,13 +27,22 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	@Override
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (player instanceof CraftPlayer) {
-			IAetherBoss boss = PlayerManager.getCurrentBoss(((CraftPlayer) player).getHandle());
-			if (boss != null) {
-				boss.stopFight();
-				if (mod_AetherMp.punishQuittingDuringFight)
-					player.setHealth(0);
+		EntityPlayer entityplayer = ((CraftPlayer)player).getHandle();
+		IAetherBoss boss = PlayerManager.getCurrentBoss(entityplayer);
+		if (boss != null) {
+			if (mod_AetherMp.punishQuittingDuringFight)
+				player.setHealth(0);
+			if (mod_AetherMp.betterMPBossMechanics) {
+				PlayerManager.setCurrentBoss(entityplayer, null);
+				if (boss.getBossType() == BossType.GOLD) {
+					EntityFireMonster fire = (EntityFireMonster) ((WorldServer)entityplayer.world).getEntity(boss.getBossEntityID());
+					fire.targetList.remove(entityplayer);
+					if (fire.targetList.size() == 0)
+						boss.stopFight();
+				}
 			}
+			else
+				boss.stopFight();
 		}
 	}
 	

@@ -26,8 +26,8 @@ public class BiomeAether extends BiomeBase {
         s.clear();
         t.clear();
         u.clear();
-        if(mod_AetherMp.raritySwet != 0)
-            t.add(new BiomeMeta(EntitySwet.class, mod_AetherMp.raritySwet));
+        /*if(mod_AetherMp.raritySwet != 0)
+            t.add(new BiomeMeta(EntitySwet.class, mod_AetherMp.raritySwet));*/
         if(mod_AetherMp.rarityAechorPlant != 0)
             t.add(new BiomeMeta(EntityAechorPlant.class, mod_AetherMp.rarityAechorPlant));
         if(mod_AetherMp.rarityCockatrice != 0)

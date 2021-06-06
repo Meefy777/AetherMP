@@ -138,7 +138,7 @@ public class mod_AetherMp extends BaseModMp {
 				} else if (ent instanceof EntityFireMonster) {
 					EntityFireMonster fire = (EntityFireMonster) ent;
 					fire.setOrg();
-					info.dataInt = new int [] {fire.id, fire.orgX, fire.orgY, fire.orgZ};
+					info.dataInt = new int [] {fire.id, fire.orgX, fire.orgY, fire.orgZ, fire.health};
 					info.dataString = new String [] {fire.bossName};
 				}
 
@@ -178,7 +178,8 @@ public class mod_AetherMp extends BaseModMp {
 	preventTeleportDuringFight = true,
 	punishTeleportDuringFight = false,
 	bookOfLoreCoolDown = false,
-	clearFiroBallsAfterDeath = false;
+	clearFiroBallsAfterDeath = false,
+	betterMPBossMechanics;
 	
 	@MLProp
 	public static String

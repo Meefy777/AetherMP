@@ -776,6 +776,11 @@ public class EntityValkyrie extends EntityDungeonMob
     {
         return (new StringBuilder()).append(getName()).append(", the Valkyrie Queen").toString();
     }
+    
+	@Override
+	public BossType getBossType() {
+		return BossType.SILVER;
+	}
 
     public boolean isSwinging;
     public boolean duel;
