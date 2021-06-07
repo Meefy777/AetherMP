@@ -117,7 +117,8 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     {
     	if (dir == 0)
     		coordinate();
-    	
+    	if (targetfire == null && targetList.size() > 0)
+    		findNewTarget();
         super.m_();
         setHealth();
         if(health > 0)
@@ -246,7 +247,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         	}
             if (targetfire instanceof EntityPlayer) {
             	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
-                chatLine("\247cSuch is the fate of a being who opposes the might of the sun.", (EntityPlayer) targetfire);
+                chatLineDeath("\247cSuch is the fate of a being who opposes the might of the sun.", (EntityPlayer) targetfire);
                 if (mod_AetherMp.betterMPBossMechanics) {
 	                targetList.remove((EntityPlayer) targetfire);
 	                findNewTarget();
@@ -263,7 +264,11 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    private void chatLineDeath(String s, EntityPlayer player) {
+    	player.a(s);
+	}
+
+	@SuppressWarnings("rawtypes")
 	public void burnEntities()
     {
         List list = world.b(this, boundingBox.b(0.0D, 4D, 0.0D));
@@ -378,7 +383,20 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
 
     public void chatLine(String s, EntityHuman human)
     {
-        human.a(s);
+    	if(!mod_AetherMp.betterMPBossMechanics) {
+    		human.a(s);
+    		return;
+    	}
+    	List<Entity> list = getEntities();
+    	List<EntityPlayer> plist = new ArrayList<EntityPlayer>();
+    	for (int i = 0; i < list.size(); i++) {
+    		if (!(list.get(i) instanceof EntityPlayer))
+    			continue;
+    		plist.add((EntityPlayer) list.get(i));
+    	}
+    	
+    	for (int j = 0; j < plist.size(); j++)
+    		plist.get(j).a(s);
     }
 
     public boolean chatWithMe(EntityHuman human)
@@ -448,7 +466,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                     chatLine("\2476As you wish, your death will be slow and agonizing.", human);
                     chatLog = 10;
                     if (mod_AetherMp.betterMPBossMechanics)
-                    	setBossForPlayers((EntityPlayer) human);
+                    	setBossForPlayers();
                     else
                     	PlayerManager.setCurrentBoss((EntityPlayer)human, this);
                     return true;
@@ -464,7 +482,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         return false;
     }
 
-    private void setBossForPlayers(EntityPlayer player) {
+    private void setBossForPlayers() {
 		List<Entity> list = getEntities();
 		for (int i = 0; i < list.size(); i++) {
 			Entity ent = list.get(i);
@@ -476,7 +494,8 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
 		}
 	}
     
-    private void findNewTarget() {
+    @Override
+	public void findNewTarget() {
     	if (targetList.size() == 0) {
     		stopFight();
     		return;
@@ -536,7 +555,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 }
             	mod_AetherMp.CORE.dataHandler.setFireMonsterKilled(true);
                 setDoor(0, entranceDoor);
-                unlockTreasure(e);
+                unlockTreasure();
             }
         }
         return flag;
@@ -548,7 +567,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         a(new ItemStack(ItemManager.Key, 1, 2), 0.0F);
     }
 
-    private void unlockTreasure(Entity ent)
+    private void unlockTreasure()
     {
     	
     	setDoor(0, treasureDoor);
@@ -556,13 +575,13 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         
         EntityPlayer player;
         
-        if (ent instanceof EntityPlayer)
-        	player = (EntityPlayer) ent;
+        if (targetfire instanceof EntityPlayer)
+        	player = (EntityPlayer) targetfire;
         else
         	player = (EntityPlayer) world.findNearbyPlayer(this, 20D);
         	
         if (player != null)	
-        	Achievements.giveAchievement(Achievements.defeatGold, (EntityPlayer) ent);
+        	Achievements.giveAchievement(Achievements.defeatGold, (EntityPlayer) targetfire);
         
         for(int x = orgX - 20; x < orgX + 20; x++)
         {
@@ -705,8 +724,13 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         gotTarget = false;
         setDoor(0, entranceDoor);
         clearFiroBalls();
-        for (int i = 0; i < targetList.size(); i++)
-        	PlayerManager.setCurrentBoss(targetList.get(i), null);
+        
+        if(mod_AetherMp.betterMPBossMechanics) {
+	        for (int i = 0; i < targetList.size(); i++) {
+	        	PlayerManager.setCurrentBoss(targetList.get(i), null);
+	        	targetList.remove(i);
+	        }
+        }
 	}
 	
 	@Override
@@ -736,6 +760,21 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
 	public List<Entity> getEntities() {
     	return world.b(this, AxisAlignedBB.a(orgX-10, orgY-2, orgZ-10, orgX+11, orgY+5, orgZ+10));
     }
+    
+	@Override
+	public List<EntityPlayer> getTargetList() {
+		return targetList;
+	}
+
+	@Override
+	public void setTargetList(List<EntityPlayer> list) {
+		targetList = list;
+	}
+	
+	@Override
+	public EntityPlayer getCurrentTarget() {
+		return (EntityPlayer) targetfire;
+	}
 
     public int wideness;
     public int orgX;

@@ -169,6 +169,7 @@ public class mod_AetherMp extends BaseModMp {
 	private final Properties info = new Properties();
 	
 	private boolean firstTick = true;
+	public static boolean betterMPBossMechanics = false;
 	
 	@MLProp
 	public static boolean
@@ -178,8 +179,8 @@ public class mod_AetherMp extends BaseModMp {
 	preventTeleportDuringFight = true,
 	punishTeleportDuringFight = false,
 	bookOfLoreCoolDown = false,
-	clearFiroBallsAfterDeath = false,
-	betterMPBossMechanics;
+	clearFiroBallsAfterDeath = false;
+	//betterMPBossMechanics;
 	
 	@MLProp
 	public static String

@@ -1,5 +1,7 @@
 package net.mine_diver.aethermp.bukkit.craftbukkit.listener;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -11,15 +13,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
-import net.mine_diver.aethermp.api.entities.IAetherBoss.BossType;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftAechorPlant;
-import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PlayerAPI;
-import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
 
 public class PlayerListener extends org.bukkit.event.player.PlayerListener {
@@ -34,12 +33,13 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 				player.setHealth(0);
 			if (mod_AetherMp.betterMPBossMechanics) {
 				PlayerManager.setCurrentBoss(entityplayer, null);
-				if (boss.getBossType() == BossType.GOLD) {
-					EntityFireMonster fire = (EntityFireMonster) ((WorldServer)entityplayer.world).getEntity(boss.getBossEntityID());
-					fire.targetList.remove(entityplayer);
-					if (fire.targetList.size() == 0)
-						boss.stopFight();
-				}
+				List<EntityPlayer> list = boss.getTargetList();
+				list.remove(entityplayer);
+				boss.setTargetList(list);
+				if(boss.getCurrentTarget().name.equals(entityplayer.name))
+					boss.findNewTarget();
+				if(list.size() == 0)
+					boss.stopFight();
 			}
 			else
 				boss.stopFight();

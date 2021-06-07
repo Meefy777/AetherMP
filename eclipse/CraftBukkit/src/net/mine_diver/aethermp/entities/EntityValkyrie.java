@@ -1,5 +1,6 @@
 package net.mine_diver.aethermp.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -14,6 +15,7 @@ import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.mine_diver.aethermp.util.Achievements;
 import net.mine_diver.aethermp.util.NameGen;
+import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Block;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
@@ -28,6 +30,7 @@ import net.minecraft.server.NBTTagList;
 import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
+import net.minecraft.server.mod_AetherMp;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityDungeonMob, IAetherBoss, NameGen, World, 
@@ -114,10 +117,11 @@ public class EntityValkyrie extends EntityDungeonMob
     public void a(float f1)
     {
     }
+    
     @SuppressWarnings("unchecked")
 	@Override
     public void m_()
-    {
+    {	
     	setHealth(health);
         lastMotionY = motY;
         super.m_();
@@ -189,7 +193,7 @@ public class EntityValkyrie extends EntityDungeonMob
             	stopFight();
                 return;
             }
-        } else if(target == null || target.dead) {
+        } else if((target == null || target.dead) && (targetList.size() == 0 || !mod_AetherMp.betterMPBossMechanics)) {
          	stopFight();
             return;
         }
@@ -313,7 +317,7 @@ public class EntityValkyrie extends EntityDungeonMob
         } else
         if(duel)
         {
-            chatItUp("If you wish to challenge me, strike at any time.", entityplayer);
+            chatItToAll("If you wish to challenge me, strike at any time.", entityplayer);
         } else
         if(!duel)
         {
@@ -326,7 +330,7 @@ public class EntityValkyrie extends EntityDungeonMob
                     itemstack.a(entityplayer);
                     entityplayer.G();
                     chatTime = 0;
-                    chatItUp("Very well, attack me when you wish to begin.", entityplayer);
+                    chatItToAll("Very well, attack me when you wish to begin.", entityplayer);
                     duel = true;
                 }
             } else
@@ -413,7 +417,8 @@ public class EntityValkyrie extends EntityDungeonMob
         	target = null;
             if(isBoss())
             {
-                unlockDoor();
+            	if(targetList.size() == 0 || !mod_AetherMp.betterMPBossMechanics)
+            		unlockDoor();
                 PlayerManager.setCurrentBoss((EntityPlayer) target, null);
             }
             angerLevel = 0;
@@ -548,9 +553,12 @@ public class EntityValkyrie extends EntityDungeonMob
             {
                 if(target == null)
                 {
-                	PlayerManager.setCurrentBoss((EntityPlayer) entity, this);
+                	if(!mod_AetherMp.betterMPBossMechanics)
+                		PlayerManager.setCurrentBoss((EntityPlayer) entity, this);
+                	else
+                		setBossForPlayers();
                     chatTime = 0;
-                    chatItUp("This will be your final battle!", (EntityHuman) entity);
+                    chatItToAll("This will be your final battle!", (EntityHuman) entity);
                 } else
                 {
                     teleTimer += 60;
@@ -598,7 +606,7 @@ public class EntityValkyrie extends EntityDungeonMob
             	dead = false;
                 unlockDoor();
                 unlockTreasure((EntityPlayer) entity);
-                chatItUp("You are truly... a mighty warrior...", (EntityHuman) entity);
+                chatItToAll("You are truly... a mighty warrior...", (EntityHuman) entity);
                 PlayerManager.setCurrentBoss((EntityPlayer) target, null);
             } else
             if(pokey == 2)
@@ -638,8 +646,13 @@ public class EntityValkyrie extends EntityDungeonMob
                     if(isBoss())
                     {
                         chatItUp("As expected of a human.", (EntityHuman) entity);
-                        unlockDoor();
+                        if(!mod_AetherMp.betterMPBossMechanics || targetList.size() == 0)
+                        	unlockDoor();
                         PlayerManager.setCurrentBoss((EntityPlayer) entity, null);
+                        if(mod_AetherMp.betterMPBossMechanics) {
+                        	targetList.remove((EntityPlayer)entity);
+                        	findNewTarget();
+                        }
                     } else
                     if(pokey == 2)
                     {
@@ -659,7 +672,17 @@ public class EntityValkyrie extends EntityDungeonMob
         }
     }
 
-    private void becomeAngryAt(Entity entity)
+    @Override
+    public void findNewTarget() {
+    	if (targetList.size() == 0) {
+    		stopFight();
+    		return;
+    	}
+		target = targetList.get(0);
+		teleport(target.locX, target.locY, target.locZ, 7);
+	}
+
+	private void becomeAngryAt(Entity entity)
     {
     	if (target == null)
     		target = entity;
@@ -763,6 +786,13 @@ public class EntityValkyrie extends EntityDungeonMob
         target = null; 
         angerLevel = 0;
         unlockDoor();
+        
+        if(mod_AetherMp.betterMPBossMechanics) {
+	        for (int i = 0; i < targetList.size(); i++) {
+	        	PlayerManager.setCurrentBoss(targetList.get(i), null);
+	        	targetList.remove(i);
+	        }
+        }
 	}
 
 	@Override
@@ -780,6 +810,54 @@ public class EntityValkyrie extends EntityDungeonMob
 	@Override
 	public BossType getBossType() {
 		return BossType.SILVER;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Entity> getEntities() {
+		return world.b(this, AxisAlignedBB.a(dungeonX, dungeonY, dungeonZ, dungeonX + 24, dungeonY + 14, dungeonZ + 20));
+	}
+	
+	public void chatItToAll(String s, EntityHuman p) {
+		if(!mod_AetherMp.betterMPBossMechanics) {
+			this.chatItUp(s, p);
+			return;
+		}
+		List<Entity> list = getEntities();
+		List<EntityPlayer> plist = new ArrayList<EntityPlayer>();
+		for (int i = 0; i < list.size(); i++) {
+			if (!(list.get(i) instanceof EntityPlayer))
+				continue;
+			plist.add((EntityPlayer) list.get(i));
+		}
+		for (int j = 0; j < plist.size(); j++)
+			plist.get(j).a(s);
+	}
+	
+	public void setBossForPlayers() {
+		List<Entity> list = getEntities();
+		for (int i = 0; i < list.size(); i++) {
+			Entity ent = list.get(i);
+			if (!(ent instanceof EntityPlayer))
+				continue;
+			EntityPlayer p = (EntityPlayer) ent;
+			PlayerManager.setCurrentBoss(p, this);
+			targetList.add(p);
+		}
+	}
+	
+	@Override
+	public List<EntityPlayer> getTargetList() {
+		return targetList;
+	}
+
+	@Override
+	public void setTargetList(List<EntityPlayer> list) {
+		targetList = list;
+	}
+	
+	@Override
+	public EntityPlayer getCurrentTarget() {
+		return (EntityPlayer) target;
 	}
 
     public boolean isSwinging;
@@ -799,4 +877,5 @@ public class EntityValkyrie extends EntityDungeonMob
     public float sinage;
     public double lastMotionY;
     private String lastTarget;
+    public List<EntityPlayer> targetList = new ArrayList<EntityPlayer>();
 }

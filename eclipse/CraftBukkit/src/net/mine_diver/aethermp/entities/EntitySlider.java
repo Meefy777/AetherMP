@@ -1,5 +1,7 @@
 package net.mine_diver.aethermp.entities;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -533,4 +535,25 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     public int dungeonX;
     public int dungeonY;
     public int dungeonZ;
+	@Override
+	public List<EntityPlayer> getTargetList() {
+		return null;
+	}
+
+	@Override
+	public void setTargetList(List<EntityPlayer> list) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public EntityPlayer getCurrentTarget() {
+		return null;
+	}
+
+	@Override
+	public void findNewTarget() {
+		// TODO Auto-generated method stub
+		
+	}
 }

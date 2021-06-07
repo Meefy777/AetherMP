@@ -1,5 +1,7 @@
 package net.mine_diver.aethermp.api.entities;
 
+import java.util.List;
+
 import net.minecraft.server.EntityPlayer;
 
 public interface IAetherBoss {
@@ -23,4 +25,13 @@ public interface IAetherBoss {
     	SILVER,
     	GOLD
     }
+    
+    public List<EntityPlayer> getTargetList();
+    
+    public void setTargetList(List<EntityPlayer> list);
+    
+    public EntityPlayer getCurrentTarget();
+    
+    
+    public void findNewTarget();
 }
