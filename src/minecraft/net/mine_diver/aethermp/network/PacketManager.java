@@ -11,6 +11,7 @@ import net.mine_diver.aethermp.entity.EntityFlyingCowMp;
 import net.mine_diver.aethermp.entity.EntityManager;
 import net.mine_diver.aethermp.entity.EntityMoaMp;
 import net.mine_diver.aethermp.entity.EntityPhygMp;
+import net.mine_diver.aethermp.entity.EntitySliderMp;
 import net.mine_diver.aethermp.entity.EntityValkyrieMp;
 import net.mine_diver.aethermp.gui.GuiManager;
 import net.mine_diver.aethermp.player.PlayerBaseAetherMp;
@@ -117,7 +118,7 @@ public class PacketManager {
         });
         handlers.put(33, (packet) -> {
 			Entity ent = ((WorldClient) ModLoader.getMinecraftInstance().theWorld).getEntityByID(packet.dataInt[0]);
-			if (ent == null || (!(ent instanceof EntityValkyrieMp) && !(ent instanceof EntityFireMonsterMp)))
+			if (ent == null || (!(ent instanceof EntityValkyrieMp) && !(ent instanceof EntityFireMonsterMp) && !(ent instanceof EntitySliderMp)))
 				return;
 			if (ent instanceof EntityValkyrieMp) {
 				EntityValkyrieMp valk = (EntityValkyrieMp) ent;
@@ -131,6 +132,10 @@ public class PacketManager {
 				fire.orgZ = packet.dataInt[3];
 				fire.health = packet.dataInt[4];
 				fire.name = packet.dataString[0];
+			} else if (ent instanceof EntitySliderMp) {
+				EntitySliderMp slider = (EntitySliderMp) ent;
+				slider.name = packet.dataString[0];
+				slider.getDataWatcher().updateObject(16, packet.dataString[1]); 
 			}
         });
         handlers.put(34, (packet) -> {

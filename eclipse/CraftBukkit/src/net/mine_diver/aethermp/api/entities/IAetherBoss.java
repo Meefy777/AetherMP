@@ -30,8 +30,7 @@ public interface IAetherBoss {
     
     public void setTargetList(List<EntityPlayer> list);
     
-    public EntityPlayer getCurrentTarget();
-    
+    public EntityPlayer getCurrentTarget();   
     
     public void findNewTarget();
 }

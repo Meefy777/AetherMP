@@ -9,6 +9,7 @@ import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
+import net.mine_diver.aethermp.entities.EntitySlider;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.network.PacketManager;
 
@@ -125,7 +126,7 @@ public class mod_AetherMp extends BaseModMp {
 			}
 			case 70: {
 				Entity ent = ((WorldServer)player.world).getEntity(packet.dataInt[0]);
-				if (ent == null || (!(ent instanceof EntityValkyrie) && !(ent instanceof EntityFireMonster)))
+				if (ent == null || (!(ent instanceof EntityValkyrie) && !(ent instanceof EntityFireMonster) && !(ent instanceof EntitySlider)))
 					return;
 				Packet230ModLoader info = new Packet230ModLoader();
 				info.packetType = 33;
@@ -140,8 +141,11 @@ public class mod_AetherMp extends BaseModMp {
 					fire.setOrg();
 					info.dataInt = new int [] {fire.id, fire.orgX, fire.orgY, fire.orgZ, fire.health};
 					info.dataString = new String [] {fire.bossName};
+				} else if (ent instanceof EntitySlider) {
+					EntitySlider slider = (EntitySlider) ent;
+					info.dataInt = new int [] {slider.id};
+					info.dataString = new String [] {slider.datawatcher.c(18), slider.datawatcher.c(16)};
 				}
-
 				ModLoaderMp.SendPacketTo(this, player, info);
 				break;
 			}
@@ -169,7 +173,6 @@ public class mod_AetherMp extends BaseModMp {
 	private final Properties info = new Properties();
 	
 	private boolean firstTick = true;
-	public static boolean betterMPBossMechanics = false;
 	
 	@MLProp
 	public static boolean
@@ -179,8 +182,8 @@ public class mod_AetherMp extends BaseModMp {
 	preventTeleportDuringFight = true,
 	punishTeleportDuringFight = false,
 	bookOfLoreCoolDown = false,
-	clearFiroBallsAfterDeath = false;
-	//betterMPBossMechanics;
+	clearFiroBallsAfterDeath = false,
+	betterMPBossMechanics = false;
 	
 	@MLProp
 	public static String

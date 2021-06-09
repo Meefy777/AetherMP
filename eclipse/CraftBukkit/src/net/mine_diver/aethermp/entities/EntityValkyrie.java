@@ -607,7 +607,10 @@ public class EntityValkyrie extends EntityDungeonMob
                 unlockDoor();
                 unlockTreasure((EntityPlayer) entity);
                 chatItToAll("You are truly... a mighty warrior...", (EntityHuman) entity);
-                PlayerManager.setCurrentBoss((EntityPlayer) target, null);
+                if(!mod_AetherMp.betterMPBossMechanics)
+                	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
+                else
+                	clearTargets();
             } else
             if(pokey == 2)
             {
@@ -786,7 +789,10 @@ public class EntityValkyrie extends EntityDungeonMob
         target = null; 
         angerLevel = 0;
         unlockDoor();
-        
+        clearTargets();
+	}
+	
+	public void clearTargets() {
         if(mod_AetherMp.betterMPBossMechanics) {
 	        for (int i = 0; i < targetList.size(); i++) {
 	        	PlayerManager.setCurrentBoss(targetList.get(i), null);

@@ -1,5 +1,6 @@
 package net.mine_diver.aethermp.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ import net.mine_diver.aethermp.player.FakePlayer;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.mine_diver.aethermp.util.Achievements;
 import net.mine_diver.aethermp.util.NameGen;
+import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Block;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityCreature;
@@ -29,6 +31,7 @@ import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.Tool;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
+import net.minecraft.server.mod_AetherMp;
 
 public class EntitySlider extends EntityFlying implements IAetherBoss {
 
@@ -49,7 +52,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         locX = Math.floor(locX + 0.5D);
         locY = Math.floor(locY + 0.5D);
         locZ = Math.floor(locZ + 0.5D);
-        datawatcher.a(16, (byte) 0);
+        datawatcher.a(16, "/aether/mobs/sliderSleep.png");
         datawatcher.a(17, health);
         datawatcher.a(18, NameGen.gen());
     }
@@ -113,13 +116,11 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         }
         datawatcher.watch(18, nbttagcompound.getString("BossName"));
         if(awake) {
-            if(criticalCondition()) {
+            if(criticalCondition())
                 texture = "/aether/mobs/sliderAwake_red.png";
-                datawatcher.watch(16, (byte) 2);
-            } else {
+            else
                 texture = "/aether/mobs/sliderAwake.png";
-                datawatcher.watch(16, (byte) 1);
-            }
+            datawatcher.watch(16, texture);
         }
     }
 
@@ -134,11 +135,13 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         if(awake) {
             if(target != null && (target instanceof EntityLiving)) {
                 EntityLiving e1 = (EntityLiving)target;
-                if(e1.health <= 0) {
+                if(e1.health <= 0 && (!mod_AetherMp.betterMPBossMechanics || targetList.size() == 0)) {
                 	stopFight();
                     return;
                 }
-            } else if(target == null || target.dead) {
+            } else if (mod_AetherMp.betterMPBossMechanics && target == null && targetList.size() > 0)
+            	findNewTarget();
+            else if((target == null || target.dead) && (targetList.size() == 0 || !mod_AetherMp.betterMPBossMechanics)) {
              	stopFight();
                 return;
             }
@@ -366,7 +369,10 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 world.setRawTypeIdAndData(dungeonX + 8, dungeonY + 1, dungeonZ + 8, Block.TRAP_DOOR.id, 2);
                 if (target instanceof EntityPlayer) {
                 	Achievements.giveAchievement(Achievements.defeatBronze, (EntityPlayer) target);
-                	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
+                	if(!mod_AetherMp.betterMPBossMechanics)
+                		PlayerManager.setCurrentBoss((EntityPlayer) target, null);
+                	else
+                		clearTargets();
                 }
             } else
             if(!awake) {
@@ -374,13 +380,16 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 awake = true;
                 target = e1;
                 texture = "/aether/mobs/sliderAwake.png";
-                datawatcher.watch(16, (byte) 1);
+                datawatcher.watch(16, texture);
                 int x = dungeonX + 15;
                 for(int y = dungeonY + 1; y < dungeonY + 8; y++)
                     for(int z = dungeonZ + 5; z < dungeonZ + 11; z++)
                         world.setRawTypeId(x, y, z, BlockManager.LockedDungeonStone.id);
                 if (p1 instanceof EntityPlayer)
-                	PlayerManager.setCurrentBoss((EntityPlayer) p1, this);
+                	if (!mod_AetherMp.betterMPBossMechanics)
+                		PlayerManager.setCurrentBoss((EntityPlayer) p1, this);
+                	else
+                		setBossForPlayers();
             } else if(gotMovement)
                 speedy *= 0.75F;
             double a = Math.abs(locX - e1.locX);
@@ -397,13 +406,11 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                     rennis = -1;
             }
             harvey = 0.7F - (float)health / 875F;
-            if(criticalCondition()) {
+            if(criticalCondition())
                 texture = "/aether/mobs/sliderAwake_red.png";
-                datawatcher.watch(16, (byte) 2);
-            } else {
+            else
                 texture = "/aether/mobs/sliderAwake.png";
-                datawatcher.watch(16, (byte) 1);
-            }
+            datawatcher.watch(16, texture);
         }
         return flag;
     }
@@ -439,7 +446,8 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     public void blockCrush(int x, int y, int z) {
         int a = world.getTypeId(x, y, z);
         int b = world.getData(x, y, z);
-        if(a == 0 || a == BlockManager.LockedDungeonStone.id || a == BlockManager.LockedLightDungeonStone.id)
+        Block blocks = Block.byId[a];
+        if(a == 0 || a == BlockManager.LockedDungeonStone.id || a == BlockManager.LockedLightDungeonStone.id || blocks.j() < 0)
             return;
         org.bukkit.block.Block block = world.getWorld().getBlockAt(x, y, z);
         BlockBreakEvent event = new BlockBreakEvent(block, (Player) FakePlayer.get(world).getBukkitEntity());
@@ -503,15 +511,68 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
         target = null;
         texture = "/aether/mobs/sliderSleep.png";
-        datawatcher.watch(16, (byte) 0);
+        datawatcher.watch(16, texture);
         stop();
         openDoor();
         moveTimer = 0;
+        clearTargets();
 	}
 	
 	@Override
 	public BossType getBossType() {
 		return BossType.BRONZE;
+	}
+	
+	@Override
+	public List<EntityPlayer> getTargetList() {
+		return targetList;
+	}
+
+	@Override
+	public void setTargetList(List<EntityPlayer> list) {
+		targetList = list;
+		
+	}
+
+	@Override
+	public EntityPlayer getCurrentTarget() {
+		return (EntityPlayer)target;
+	}
+
+	@Override
+	public void findNewTarget() {
+		if (targetList.size() == 0) {
+			stopFight();
+			return;
+		}
+		
+		target = targetList.get(0);
+	}
+	
+	public void setBossForPlayers() {
+		List<Entity> list = getEntities();
+		for (int i = 0; i < list.size(); i++) {
+			Entity ent = list.get(i);
+			if (!(ent instanceof EntityPlayer))
+				continue;
+			EntityPlayer p = (EntityPlayer) ent;
+			PlayerManager.setCurrentBoss(p, this);
+			targetList.add(p);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Entity> getEntities() {
+		return world.b(this, AxisAlignedBB.a(dungeonX, dungeonY, dungeonZ, dungeonX + 15, dungeonY + 10, dungeonZ + 15));
+	}
+	
+	public void clearTargets() {
+        if(mod_AetherMp.betterMPBossMechanics) {
+	        for (int i = 0; i < targetList.size(); i++) {
+	        	PlayerManager.setCurrentBoss(targetList.get(i), null);
+	        	targetList.remove(i);
+	        }
+        }
 	}
     
     @Override
@@ -519,7 +580,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         if (this.bukkitEntity == null)
             this.bukkitEntity = CraftEntityAether.getEntity(this.world.getServer(), this);
         return this.bukkitEntity;
-    }
+    }	
 
     public int moveTimer;
     public int dennis;
@@ -535,25 +596,5 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     public int dungeonX;
     public int dungeonY;
     public int dungeonZ;
-	@Override
-	public List<EntityPlayer> getTargetList() {
-		return null;
-	}
-
-	@Override
-	public void setTargetList(List<EntityPlayer> list) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public EntityPlayer getCurrentTarget() {
-		return null;
-	}
-
-	@Override
-	public void findNewTarget() {
-		// TODO Auto-generated method stub
-		
-	}
+    public List<EntityPlayer> targetList = new ArrayList<EntityPlayer>();
 }

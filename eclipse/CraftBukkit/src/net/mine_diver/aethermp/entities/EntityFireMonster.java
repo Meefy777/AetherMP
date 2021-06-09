@@ -550,7 +550,10 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
             if(health <= 0)
             {
                 if (targetfire instanceof EntityPlayer) {
-                	PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
+                	if(mod_AetherMp.betterMPBossMechanics)
+                		PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
+                	else
+                		clearTargets();
                 	chatLine("\247bSuch bitter cold... is this the feeling... of pain?", (EntityPlayer) targetfire);
                 }
             	mod_AetherMp.CORE.dataHandler.setFireMonsterKilled(true);
@@ -724,7 +727,10 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         gotTarget = false;
         setDoor(0, entranceDoor);
         clearFiroBalls();
-        
+        clearTargets();
+	}
+	
+	public void clearTargets() {
         if(mod_AetherMp.betterMPBossMechanics) {
 	        for (int i = 0; i < targetList.size(); i++) {
 	        	PlayerManager.setCurrentBoss(targetList.get(i), null);

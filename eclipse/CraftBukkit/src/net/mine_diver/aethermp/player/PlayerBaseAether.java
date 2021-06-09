@@ -225,13 +225,14 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
         if(player.world.spawnMonsters == 0)
             player.fallDistance = -64F;
         if(!cloudPara) {
-            if(player.inventory.b(ItemManager.CloudParachute.id))
+            if(player.inventory.b(ItemManager.CloudParachute.id)) {
                 if(EntityCloudParachute.entityHasRoomForCloud(player.world, player)) {
                     for(int i = 0; i < 32; i++)
                         EntityCloudParachute.doCloudSmoke(player.world, player);
                     player.world.makeSound(player, "cloud", 1.0F, 1.0F / (player.world.random.nextFloat() * 0.1F + 0.95F));
                         player.world.addEntity(new EntityCloudParachute(player.world, player, false));
                 }
+            }
             else
                 for(int i = 0; i < player.inventory.getSize(); i++) {
                     ItemStack itemstack = player.inventory.getItem(i);

@@ -1,10 +1,10 @@
 package net.mine_diver.aethermp.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.src.EntitySlider;
+import net.minecraft.src.ModLoaderMp;
+import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.World;
+import net.minecraft.src.mod_AetherMp;
 
 public class EntitySliderMp extends EntitySlider {
 	
@@ -16,7 +16,7 @@ public class EntitySliderMp extends EntitySlider {
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataWatcher.addObject(16, (byte) 0);
+		dataWatcher.addObject(16, "/aether/mobs/sliderSleep.png");
 		dataWatcher.addObject(17, 1);
 		dataWatcher.addObject(18, "");
 	}
@@ -25,7 +25,13 @@ public class EntitySliderMp extends EntitySlider {
 	public void onUpdate() {
 		super.onUpdate();
 		chatTime = 1;
-		texture = TEXTURES.get(dataWatcher.getWatchableObjectByte(16));
+		texture = dataWatcher.getWatchableObjectString(16);
+		if (tick < 5)
+			tick++;
+		else if (!constructed) {
+			constructed = true;
+			updateSlider();
+		}
 	}
 	
 	@Override
@@ -36,14 +42,21 @@ public class EntitySliderMp extends EntitySlider {
 	
 	@Override
 	public String getBossTitle() {
-		bossName = dataWatcher.getWatchableObjectString(18);
+		if(name != null && !name.equals(""))
+			bossName = name;
+		else
+			bossName = dataWatcher.getWatchableObjectString(18);
 		return super.getBossTitle();
 	}
 	
-	public static final List<String> TEXTURES = new ArrayList<>();
-	static {
-		TEXTURES.add("/aether/mobs/sliderSleep.png");
-		TEXTURES.add("/aether/mobs/sliderAwake.png");
-		TEXTURES.add("/aether/mobs/sliderAwake_red.png");
+	private void updateSlider() {
+		Packet230ModLoader packet = new Packet230ModLoader();
+		packet.packetType = 70;
+		packet.dataInt = new int [] {entityId};
+		ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
 	}
+	
+	private boolean constructed;
+	private int tick;
+	public String name;
 }
