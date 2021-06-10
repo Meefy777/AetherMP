@@ -147,5 +147,6 @@ public class PacketManager {
 			bunny.puffiness = packet.dataFloat[0];
         });
         handlers.put(36, (packet) -> mod_AetherMp.isFireDefeated = (packet.dataInt[0] & 1) != 0);
+        handlers.put(37, (packet) -> mod_Aether.currentBoss = null);
 	}
 }

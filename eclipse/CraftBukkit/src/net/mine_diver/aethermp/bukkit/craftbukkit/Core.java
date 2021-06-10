@@ -35,6 +35,7 @@ public class Core extends JavaPlugin {
 		pm.registerEvent(Type.PLAYER_PORTAL, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.PLAYER_INTERACT_ENTITY, pListener, Priority.Highest, this);
 		pm.registerEvent(Type.ENTITY_DEATH, eListener, Priority.Highest, this);
+		pm.registerEvent(Type.PLAYER_JOIN, pListener, Priority.Monitor, this);
 	}
 	
 	public void stopBossFights() {

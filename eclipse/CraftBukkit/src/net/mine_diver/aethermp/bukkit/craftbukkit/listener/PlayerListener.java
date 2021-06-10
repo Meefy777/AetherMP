@@ -8,6 +8,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -18,6 +19,8 @@ import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftAechorPlant;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.ModLoaderMp;
+import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.PlayerAPI;
 import net.minecraft.server.mod_AetherMp;
 
@@ -47,7 +50,18 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	}
 	
 	@Override
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player p = event.getPlayer();
+		EntityPlayer player = ((CraftPlayer)p).getHandle();
+		Packet230ModLoader packet = new Packet230ModLoader();
+		packet.packetType = 37;
+		ModLoaderMp.SendPacketTo(ModLoaderMp.GetModInstance(mod_AetherMp.class), player, packet);
+	}
+	
+	@Override
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if (!mod_AetherMp.disableDungeonCommands)
+			return;
 		String command = event.getMessage();
 		for (String allowedCommand : mod_AetherMp.CORE.dungeonAllowedCommands)
 			if (command.equals(allowedCommand) || command.startsWith(allowedCommand + " "))

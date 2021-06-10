@@ -146,6 +146,10 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 return;
             }
             if(gotMovement) {
+            	if (mod_AetherMp.sliderFloorFix && direction == 1 && locY <= ((double)dungeonY) + 2.5D) {
+            		locY = dungeonY + 2.5D;
+            		stop();
+            	}
                 if(bd) {
                     double x = locX - 0.5D;
                     double y = boundingBox.b + 0.75D;
@@ -205,6 +209,11 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                     motX = 0.0D;
                     motY = 0.0D;
                     motZ = 0.0D;
+                    if (mod_AetherMp.betterMPBossMechanics && targetList.size() > 1) {
+                    	EntityPlayer p = (EntityPlayer) world.findNearbyPlayer(this, -1D);
+                    	if (targetList.contains(p))
+                    		target = p;
+                    }
                     if(direction == 0) {
                         motY = speedy;
                         if(boundingBox.b > target.boundingBox.b + 0.34999999999999998D) {
@@ -384,7 +393,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 int x = dungeonX + 15;
                 for(int y = dungeonY + 1; y < dungeonY + 8; y++)
                     for(int z = dungeonZ + 5; z < dungeonZ + 11; z++)
-                        world.setRawTypeId(x, y, z, BlockManager.LockedDungeonStone.id);
+                    	world.getWorld().getBlockAt(x, y, z).setTypeId(BlockManager.LockedDungeonStone.id);
                 if (p1 instanceof EntityPlayer)
                 	if (!mod_AetherMp.betterMPBossMechanics)
                 		PlayerManager.setCurrentBoss((EntityPlayer) p1, this);

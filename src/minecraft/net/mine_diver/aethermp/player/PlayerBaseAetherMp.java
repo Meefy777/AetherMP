@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.proxy.PrintStreamFilter;
 import net.mine_diver.aethermp.proxy.SaveHandlerProxy;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.ISaveHandler;
 import net.minecraft.src.PlayerBaseAether;
@@ -20,6 +21,11 @@ public class PlayerBaseAetherMp extends PlayerBaseAether {
 	
 	public PlayerBaseAetherMp(EntityPlayerSP player) {
 		super(checkIfMultiplayer(player));
+		if (mod_Aether.currentBoss != null) {
+			EntityLiving ent = ((EntityLiving)mod_Aether.currentBoss);
+			if (ent.isMultiplayerEntity && !ent.worldObj.multiplayerWorld)
+				mod_Aether.currentBoss = null;
+		}
 		if (restore) {
 			try {
 				saveHandlerField.set(player.worldObj, saveHandlerMp);
@@ -37,7 +43,6 @@ public class PlayerBaseAetherMp extends PlayerBaseAether {
 			fromMP = false;	
 		if (mod_Aether.currentBoss != null && player.worldObj.multiplayerWorld && !fromMP)
 			mod_Aether.currentBoss = null;
-		
 		
 		if (!player.worldObj.multiplayerWorld)
 			return super.onLivingUpdate();
