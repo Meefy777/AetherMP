@@ -3,6 +3,8 @@ package net.mine_diver.aethermp.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.event.entity.EntityDeathEvent;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
@@ -363,14 +365,20 @@ public class EntityValkyrie extends EntityDungeonMob
     @Override
     protected void q()
     {
+    	List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
         if(isBoss())
         {
+        	loot.add(new org.bukkit.inventory.ItemStack(ItemManager.Key.id, 1, (short) 1));
+        	loot.add(new org.bukkit.inventory.ItemStack(Item.GOLD_SWORD.id, 1));
             a(new ItemStack(ItemManager.Key, 1, 1), 0.0F);
             b(Item.GOLD_SWORD.id, 1);
         } else
         {
+        	loot.add(new org.bukkit.inventory.ItemStack(ItemManager.VictoryMedal.id, 1));
             b(ItemManager.VictoryMedal.id, 1);
         }
+        EntityDeathEvent event = new EntityDeathEvent(this.getBukkitEntity(), loot);
+        world.getServer().getPluginManager().callEvent(event);
     }
     @Override
     public void c_()

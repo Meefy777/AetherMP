@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
 import net.mine_diver.aethermp.blocks.BlockManager;
@@ -314,9 +315,17 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     
     @Override
     protected void q() {
-        for(int i = 0; i < 7 + random.nextInt(3); i++)
+    	int j = random.nextInt(3);
+    	
+        for(int i = 0; i < 7 + j; i++)
             b(BlockManager.DungeonStone.id, 1);
         a(new ItemStack(ItemManager.Key, 1, 0), 0.0F);
+        
+    	List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
+    	loot.add(new org.bukkit.inventory.ItemStack(ItemManager.Key.id, 1));
+    	loot.add(new org.bukkit.inventory.ItemStack(BlockManager.DungeonStone.id, 7+j));
+    	EntityDeathEvent event = new EntityDeathEvent(this.getBukkitEntity(), loot);
+    	world.getServer().getPluginManager().callEvent(event);
     }
     
     @Override

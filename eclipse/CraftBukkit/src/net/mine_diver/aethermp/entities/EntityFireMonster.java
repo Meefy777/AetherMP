@@ -8,6 +8,8 @@ package net.mine_diver.aethermp.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.event.entity.EntityDeathEvent;
+
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
@@ -567,6 +569,10 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     @Override
     protected void q()
     {
+    	List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
+    	loot.add(new org.bukkit.inventory.ItemStack(ItemManager.Key.id, 1, (short) 2));
+    	EntityDeathEvent event = new EntityDeathEvent(this.getBukkitEntity(), loot);
+    	world.getServer().getPluginManager().callEvent(event);
         a(new ItemStack(ItemManager.Key, 1, 2), 0.0F);
     }
 
