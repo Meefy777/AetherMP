@@ -89,5 +89,6 @@ public class WorkbenchManager {
         craftings.put(new ItemStack(ItemManager.ZanitePendant), new Object[] {"SSS", "S S", " C ", 'S', Item.STRING, 'C', ItemManager.Zanite});
         craftings.put(new ItemStack(ItemManager.DartShooter), new Object[] {"X", "X", "Y", 'X', BlockManager.Plank, 'Y', ItemManager.Zanite});
         craftings.put(new ItemStack(BlockManager.Incubator), new Object[] {"XXX", "XYX", "XXX", 'X', BlockManager.Holystone, 'Y', BlockManager.AmbrosiumTorch});
+        craftings.put(new ItemStack(ItemManager.NatureStaff), new Object [] {"Y", "X", 'X', ItemManager.Stick, 'Y', ItemManager.Zanite});
 	}
 }

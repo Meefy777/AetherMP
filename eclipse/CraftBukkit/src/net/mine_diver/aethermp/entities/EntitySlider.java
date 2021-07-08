@@ -311,6 +311,14 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 stop();
             }
         }
+            
+        if(entity instanceof EntityPlayer && ((EntityPlayer) entity).health <= 0) {
+        	EntityPlayer player = (EntityPlayer) entity;
+        	if (player.name.equals(((EntityPlayer)target).name)) {
+        		PlayerManager.setCurrentBoss(player, null);
+        		targetList.remove(player);
+        	}
+        }
     }
     
     @Override
