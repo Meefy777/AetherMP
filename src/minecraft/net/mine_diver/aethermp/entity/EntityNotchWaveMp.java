@@ -21,7 +21,7 @@ public class EntityNotchWaveMp extends EntityNotchWave implements ISpawnable {
 		Entity entity = EntityManager.getEntityByID(packet.dataInt[1]);
 		EntityLiving thrower = null;
 		try {
-			if (entity instanceof EntityLiving) {
+			if (entity instanceof EntityLiving && entity != null) {
 				ModLoader.setPrivateValue(EntityNotchWave.class, this, "thrower", entity);
 				thrower = (EntityLiving) entity;
 			}
@@ -36,8 +36,11 @@ public class EntityNotchWaveMp extends EntityNotchWave implements ISpawnable {
 			throw new RuntimeException(e);
 		}
         setSize(0.25F, 0.25F);
-        setLocationAndAngles(thrower.posX, thrower.posY + (double)thrower.getEyeHeight(), thrower.posZ, thrower.rotationYaw, thrower.rotationPitch);
-        posX -= MathHelper.cos((rotationYaw / 180F) * 3.141593F) * 0.16F;
+        if (thrower != null)
+        	setLocationAndAngles(thrower.posX, thrower.posY + (double)thrower.getEyeHeight(), thrower.posZ, thrower.rotationYaw, thrower.rotationPitch);
+        else
+        	setLocationAndAngles(packet.dataFloat[0], packet.dataFloat[1] + 0.12, packet.dataFloat[2], packet.dataFloat[3], packet.dataFloat[4]);
+    	posX -= MathHelper.cos((rotationYaw / 180F) * 3.141593F) * 0.16F;
         posY -= 0.10000000149011612D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * 3.141593F) * 0.16F;
         setPositionAndRotation(posX, posY, posZ, rotationYaw, rotationPitch);

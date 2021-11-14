@@ -23,7 +23,8 @@ public interface IAetherBoss {
     public enum BossType {
     	BRONZE,
     	SILVER,
-    	GOLD
+    	GOLD,
+    	OTHER
     }
     
     public List<EntityPlayer> getTargetList();

@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
 
 import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
@@ -484,6 +485,10 @@ public class mod_AetherMp extends BaseModMp {
 			
 			public static void setMoveStrafing(net.minecraft.server.EntityLiving living, float f) {
 				living.az = f;
+			}
+			
+			public static Random getRand(net.minecraft.server.EntityLiving living) {
+				return living.random;
 			}
 		}
 	}

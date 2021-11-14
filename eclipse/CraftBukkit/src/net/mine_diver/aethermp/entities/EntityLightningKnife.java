@@ -2,11 +2,17 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.craftbukkit.block.CraftBlockState;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.AxisAlignedBB;
+import net.minecraft.server.Block;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
@@ -157,9 +163,13 @@ public class EntityLightningKnife extends Entity implements ISpawnable {
                 int x = MathHelper.floor(movingobjectposition.entity.boundingBox.a);
                 int y = MathHelper.floor(movingobjectposition.entity.boundingBox.b);
                 int z = MathHelper.floor(movingobjectposition.entity.boundingBox.c);
-                BlockIgniteEvent event = new BlockIgniteEvent(world.getWorld().getBlockAt((int) locX, (int) locY, (int) locZ), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) thrower.getBukkitEntity());
+                ProjectileHitEvent ev = new ProjectileHitEvent((Projectile)getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(ev);
+                BlockIgniteEvent event = new BlockIgniteEvent(world.getWorld().getBlockAt(x, y, z), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) thrower.getBukkitEntity());
                 world.getServer().getPluginManager().callEvent(event);
-                if(!event.isCancelled()) {
+                final CraftBlockState blockState = CraftBlockState.getBlockState(world, x, y, z);
+                BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(world, (EntityHuman) thrower, blockState, x, y, z, Block.FIRE);
+                if(!event.isCancelled() && !placeEvent.isCancelled() && placeEvent.canBuild()) {
                 	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, x, y, z);
                 	entitylightningbolt.setLocation(x, y, z, yaw, 0.0F);
                 	world.strikeLightning(entitylightningbolt);
@@ -168,9 +178,13 @@ public class EntityLightningKnife extends Entity implements ISpawnable {
                 int i = MathHelper.floor(locX);
                 int j = MathHelper.floor(locY);
                 int k = MathHelper.floor(locZ);
+                ProjectileHitEvent ev = new ProjectileHitEvent((Projectile)getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(ev);
                 BlockIgniteEvent event = new BlockIgniteEvent(world.getWorld().getBlockAt(i, j, k), BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player) thrower.getBukkitEntity());
                 world.getServer().getPluginManager().callEvent(event);
-                if(!event.isCancelled()) {
+                final CraftBlockState blockState = CraftBlockState.getBlockState(world, i, j, k);
+                BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(world, (EntityHuman) thrower, blockState, i, j, k, Block.FIRE);
+                if(!event.isCancelled() && !placeEvent.isCancelled() && placeEvent.canBuild()) {
                 	EntityWeatherStorm entitylightningbolt = new EntityWeatherStorm(world, locX, locY, locZ);
                 	entitylightningbolt.setLocation(i, j, k, yaw, 0.0F);
                 	world.strikeLightning(entitylightningbolt);

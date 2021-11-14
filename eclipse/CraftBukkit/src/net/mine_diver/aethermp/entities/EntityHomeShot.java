@@ -7,6 +7,8 @@ package net.mine_diver.aethermp.entities;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.Entity;
@@ -158,11 +160,13 @@ public class EntityHomeShot extends EntityFlying implements ISpawnable
         super.collide(entity);
         if(entity != null && target != null && entity == target)
         {
-            boolean flag = entity.damageEntity(this, 1);
-            if(flag)
-            {
-                moveIt(entity, -0.10000000000000001D);
-            }
+        	EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(getBukkitEntity(), entity.getBukkitEntity(), DamageCause.PROJECTILE, 1);
+        	world.getServer().getPluginManager().callEvent(event);
+        	if (!event.isCancelled()) {
+	            boolean flag = entity.damageEntity(this, 1);
+	            if(flag)
+	                moveIt(entity, -0.10000000000000001D);
+        	}
         }
     }
 

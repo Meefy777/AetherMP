@@ -17,8 +17,10 @@ import net.minecraft.server.Packet230ModLoader;
 import net.minecraft.server.Vec3D;
 import net.minecraft.server.World;
 
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 public class EntityNotchWave extends Entity implements ISpawnable {
 
@@ -124,6 +126,8 @@ public class EntityNotchWave extends Entity implements ISpawnable {
                 continue;
             float f4 = 0.3F;
             if(entity1 != thrower) {
+                ProjectileHitEvent event2 = new ProjectileHitEvent((Projectile)getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(event2);
             	EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), entity1.getBukkitEntity(), EntityDamageEvent.DamageCause.PROJECTILE, 5);
                 world.getServer().getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
@@ -144,11 +148,13 @@ public class EntityNotchWave extends Entity implements ISpawnable {
         if(entity != null)
             movingobjectposition = new MovingObjectPosition(entity);
         if(movingobjectposition != null) {
-            if(movingobjectposition.entity != null && movingobjectposition.entity != thrower/* && movingobjectposition.entityHit != slider*/) {
+            if(movingobjectposition.entity != null && movingobjectposition.entity != thrower && !(movingobjectposition.entity instanceof EntitySlider)) {
                 if(movingobjectposition.entity.damageEntity(thrower, 0));
                 movingobjectposition.entity.motX += motX;
                 movingobjectposition.entity.motY += 0.59999999999999998D;
                 movingobjectposition.entity.motZ += motZ;
+                ProjectileHitEvent event = new ProjectileHitEvent((Projectile)getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(event);
             }
 
             die();
@@ -231,6 +237,5 @@ public class EntityNotchWave extends Entity implements ISpawnable {
     private boolean inGroundSnowball;
     public int shakeSnowball;
     private EntityLiving thrower;
-    //private EntitySlider slider;
     private int ticksInAirSnowball;
 }

@@ -802,10 +802,9 @@ public class EntityValkyrie extends EntityDungeonMob
 	
 	public void clearTargets() {
         if(mod_AetherMp.betterMPBossMechanics) {
-	        for (int i = 0; i < targetList.size(); i++) {
+	        for (int i = 0; i < targetList.size(); i++)
 	        	PlayerManager.setCurrentBoss(targetList.get(i), null);
-	        	targetList.remove(i);
-	        }
+	        targetList.clear();
         }
 	}
 

@@ -1,5 +1,8 @@
 package net.mine_diver.aethermp.entities;
 
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityFlying;
@@ -146,10 +149,12 @@ public class EntityFiroBall extends EntityFlying implements ISpawnable {
     public void collide(Entity entity) {
         super.collide(entity);
         boolean flag = false;
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(getBukkitEntity(), entity.getBukkitEntity(), DamageCause.PROJECTILE, 5);
+        world.getServer().getPluginManager().callEvent(event);
         if(entity != null && (entity instanceof EntityLiving) && !(entity instanceof EntityFiroBall)) {
-            if(frosty && (!(entity instanceof EntityFireMonster) || smacked && !fromCloud) && !(entity instanceof EntityFireMinion))
+            if(frosty && !event.isCancelled() && (!(entity instanceof EntityFireMonster) || smacked && !fromCloud) && !(entity instanceof EntityFireMinion))
                 flag = entity.damageEntity(this, 5);
-            else if(!frosty && !(entity instanceof EntityFireMonster) && !(entity instanceof EntityFireMinion)) {
+            else if(!frosty && !event.isCancelled() && !(entity instanceof EntityFireMonster) && !(entity instanceof EntityFireMinion)) {
                 flag = entity.damageEntity(this, 5);
                 if(flag)
                     entity.fireTicks = 100;

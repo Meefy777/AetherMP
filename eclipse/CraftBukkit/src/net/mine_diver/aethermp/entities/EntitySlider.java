@@ -140,7 +140,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 	stopFight();
                     return;
                 }
-            } else if (mod_AetherMp.betterMPBossMechanics && target == null && targetList.size() > 0)
+            } else if (mod_AetherMp.betterMPBossMechanics && (target == null || target.dead) && targetList.size() > 0)
             	findNewTarget();
             else if((target == null || target.dead) && (targetList.size() == 0 || !mod_AetherMp.betterMPBossMechanics)) {
              	stopFight();
@@ -297,6 +297,9 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
     
     @Override
     public void collide(Entity entity) {
+    	if (entity == null)
+    		return;
+    	
         if(awake && gotMovement) {
             boolean flag = entity.damageEntity(this, 6);
             if(flag && (entity instanceof EntityLiving)) {
@@ -318,6 +321,7 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         		PlayerManager.setCurrentBoss(player, null);
         		targetList.remove(player);
         	}
+        	findNewTarget();
         }
     }
     
@@ -594,10 +598,9 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
 	
 	public void clearTargets() {
         if(mod_AetherMp.betterMPBossMechanics) {
-	        for (int i = 0; i < targetList.size(); i++) {
+	        for (int i = 0; i < targetList.size(); i++)
 	        	PlayerManager.setCurrentBoss(targetList.get(i), null);
-	        	targetList.remove(i);
-	        }
+	        targetList.clear();
         }
 	}
     

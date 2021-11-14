@@ -2,10 +2,16 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.entity.CraftItem;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
@@ -177,6 +183,8 @@ public class EntityFlamingArrow extends Entity implements ISpawnable {
             movingobjectposition = new MovingObjectPosition(entity);
         if(movingobjectposition != null) {
             if(movingobjectposition.entity != null) {
+            	ProjectileHitEvent ev = new ProjectileHitEvent((Projectile)getBukkitEntity());
+            	world.getServer().getPluginManager().callEvent(ev);
             	EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), entity.getBukkitEntity(), EntityDamageEvent.DamageCause.PROJECTILE, 4);
             	world.getServer().getPluginManager().callEvent(event);
             	if (event.isCancelled()) {
@@ -187,7 +195,16 @@ public class EntityFlamingArrow extends Entity implements ISpawnable {
                     int x = MathHelper.floor(movingobjectposition.entity.boundingBox.a);
                     int y = MathHelper.floor(movingobjectposition.entity.boundingBox.b);
                     int z = MathHelper.floor(movingobjectposition.entity.boundingBox.c);
-                    world.setTypeId(x, y, z, 51);
+                    org.bukkit.block.Block block = world.getWorld().getBlockAt(x, y, z);
+                    if (block != null && owner != null) {
+	                    final BlockIgniteEvent event2 = new BlockIgniteEvent(block, BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player)owner.getBukkitEntity());
+	                    world.getServer().getPluginManager().callEvent(event2);
+	                    final CraftBlockState blockState = CraftBlockState.getBlockState(world, x, y, z);
+	                    BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(world, (EntityHuman) owner, blockState, x, y, z, Block.FIRE);
+	                    if (!event2.isCancelled() && !placeEvent.isCancelled() && placeEvent.canBuild())
+	                    	world.setTypeId(x, y, z, 51);
+                    } else if (block == null)
+                    	world.setTypeId(x, y, z, 51);
                     die();
                 } else {
                     motX *= -0.10000000149011612D;
@@ -213,7 +230,18 @@ public class EntityFlamingArrow extends Entity implements ISpawnable {
                 int xPos = MathHelper.floor(locX);
                 int yPos = MathHelper.floor(locY);
                 int zPos = MathHelper.floor(locZ);
-                world.setTypeId(xPos, yPos, zPos, 51);
+                
+                org.bukkit.block.Block block = world.getWorld().getBlockAt(xPos, yPos, zPos);
+                if(block != null && owner != null) {
+	                final BlockIgniteEvent event = new BlockIgniteEvent(block, BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, (Player)owner.getBukkitEntity());
+	                world.getServer().getPluginManager().callEvent(event);
+	                final CraftBlockState blockState = CraftBlockState.getBlockState(world, xPos, yPos, zPos);
+	                BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(world, (EntityHuman) owner, blockState, xPos, yPos, zPos, Block.FIRE);
+	                if (!event.isCancelled() && !placeEvent.isCancelled() && placeEvent.canBuild())
+	                	world.setTypeId(xPos, yPos, zPos, 51);
+                } else if (block == null)
+                	 world.setTypeId(xPos, yPos, zPos, 51);
+                
                 inGround = true;
                 arrowShake = 7;
             }

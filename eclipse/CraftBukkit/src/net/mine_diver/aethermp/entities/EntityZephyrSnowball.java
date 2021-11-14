@@ -2,6 +2,9 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.ProjectileHitEvent;
+
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
 import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Entity;
@@ -121,6 +124,8 @@ public class EntityZephyrSnowball extends Entity {
                 movingobjectposition.entity.motY += 0.20000000000000001D;
                 movingobjectposition.entity.motZ += motZ;
                 movingobjectposition.entity.velocityChanged = true;
+                ProjectileHitEvent event = new ProjectileHitEvent((Projectile)getBukkitEntity());
+                world.getServer().getPluginManager().callEvent(event);
             }
             die();
         }

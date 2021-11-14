@@ -4,10 +4,13 @@ import java.util.*;
 import org.bukkit.event.block.LeavesDecayEvent;
 
 import net.minecraft.server.BlockLeavesBase;
+import net.minecraft.server.EntityHuman;
 import net.minecraft.server.Item;
 import net.minecraft.server.Loc;
 import net.minecraft.server.Material;
+import net.minecraft.server.StatisticList;
 import net.minecraft.server.World;
+import net.minecraft.server.ItemStack;
 
 public class BlockAetherLeaves extends BlockLeavesBase {
 
@@ -107,5 +110,16 @@ public class BlockAetherLeaves extends BlockLeavesBase {
     @Override
     public boolean a() {
         return false;
+    }
+    
+    @Override
+    public void a(World world, EntityHuman entityplayer, int i, int j, int k, int l)
+    {
+        if(entityplayer.G() != null && entityplayer.G().id == Item.SHEARS.id)
+        {
+            entityplayer.a(StatisticList.C[id], 1);
+            a(world, i, j, k, new ItemStack(id, 1, l & 3));
+        } else
+            super.a(world, entityplayer, i, j, k, l);
     }
 }
