@@ -17,14 +17,14 @@ import static net.minecraft.src.mod_AetherAPI.PackageAccess;
 
 public class BlockManager implements net.mine_diver.aetherapi.api.block.BlockManager {
 	
-	public static void registerBlocks(BaseMod aetherInstance) {
+	public void registerBlocks(BaseMod instance) {
 		try {
 			for (BlockType block : aetherBlocks) {
 				Block targetBlock = (Block) block.getTargetField().get(null);
 				String longName = "";
 				String ID = "";
 				if (IDResolverResolver.IDResolverInstalled) {
-					longName = "BlockID." + IDResolverResolver.TrimMCPMethod.invoke(null, targetBlock.getClass().getName()) + "|" + aetherInstance.getClass().getSimpleName() + "|" + block.getOriginalID();
+					longName = "BlockID." + IDResolverResolver.TrimMCPMethod.invoke(null, targetBlock.getClass().getName()) + "|" + instance.getClass().getSimpleName() + "|" + block.getOriginalID();
 					Properties knownIDs = (Properties) ModLoader.getPrivateValue(IDResolver.class, null, "knownIDs");
 					ID = knownIDs.getProperty(longName);
 					knownIDs.remove(longName);
@@ -65,5 +65,6 @@ public class BlockManager implements net.mine_diver.aetherapi.api.block.BlockMan
 		aetherBlocks[aetherBlocks.length - 1] = block;
 	}
 	
-	private static BlockType[] aetherBlocks = new BlockType[0];
+	public static final BlockManager aetherBlockManager = new BlockManager();
+	private BlockType[] aetherBlocks = new BlockType[0];
 }

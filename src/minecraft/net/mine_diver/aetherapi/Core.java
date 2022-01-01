@@ -13,8 +13,8 @@ import net.minecraft.src.mod_Aether;
 public class Core {
 	
 	public void preInit() {
-		net.mine_diver.aetherapi.api.block.BlockManager.INSTANCE.setHandler(new BlockManager());
-		net.mine_diver.aetherapi.api.item.ItemManager.INSTANCE.setHandler(new ItemManager());
+		net.mine_diver.aetherapi.api.block.BlockManager.INSTANCE.setHandler(BlockManager.aetherBlockManager);
+		net.mine_diver.aetherapi.api.item.ItemManager.INSTANCE.setHandler(ItemManager.aetherItemManager);
 	}
 
 	public void init() {
@@ -33,7 +33,7 @@ public class Core {
 	}
 	
 	public void postInit(BaseMod aetherInstance) {
-		BlockManager.registerBlocks(aetherInstance);
-		ItemManager.registerItems(aetherInstance);
+		BlockManager.aetherBlockManager.registerBlocks(aetherInstance);
+		ItemManager.aetherItemManager.registerItems(aetherInstance);
 	}
 }

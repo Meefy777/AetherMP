@@ -15,14 +15,14 @@ import static net.minecraft.src.mod_AetherAPI.PackageAccess;
 
 public class ItemManager implements net.mine_diver.aetherapi.api.item.ItemManager {
 	
-	public static void registerItems(BaseMod aetherInstance) {
+	public void registerItems(BaseMod instance) {
 		try {
 			for (ItemType item : aetherItems) {
 				Item targetItem = (Item) item.getTargetField().get(null);
 				String longName = "";
 				String ID = "";
 				if (IDResolverResolver.IDResolverInstalled) {
-					longName = "ItemID." + IDResolverResolver.TrimMCPMethod.invoke(null, targetItem.getClass().getName()) + "|" + aetherInstance.getClass().getSimpleName() + "|" + (item.getOriginalID() + Block.blocksList.length);
+					longName = "ItemID." + IDResolverResolver.TrimMCPMethod.invoke(null, targetItem.getClass().getName()) + "|" + instance.getClass().getSimpleName() + "|" + (item.getOriginalID() + Block.blocksList.length);
 					Properties knownIDs = (Properties) ModLoader.getPrivateValue(IDResolver.class, null, "knownIDs");
 					ID = knownIDs.getProperty(longName);
 					knownIDs.remove(longName);
@@ -56,5 +56,6 @@ public class ItemManager implements net.mine_diver.aetherapi.api.item.ItemManage
 		aetherItems[aetherItems.length - 1] = item;
 	}
 	
-	private static ItemType[] aetherItems = new ItemType[0];
+	public static final ItemManager aetherItemManager = new ItemManager();
+	private ItemType[] aetherItems = new ItemType[0];
 }
