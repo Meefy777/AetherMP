@@ -74,7 +74,7 @@ public class PacketManager {
             }
 		});
         handlers.put(6, (packet) -> mod_Aether.getPlayer().maxHealth = packet.dataInt[0]);
-        handlers.put(7, (packet) -> AetherPoisonMp.afflictPoison());
+        handlers.put(7, (packet) -> AetherPoisonMp.afflictPoison(packet.dataInt[0]));
         handlers.put(8, (packet) -> AetherPoisonMp.curePoison());
         handlers.put(9, (packet) -> {
         	Entity entity = EntityManager.getEntityByID(packet.dataInt[0]);

@@ -96,6 +96,9 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	public void writeCustomData(NBTTagCompound customData) {
         customData.a("MaxHealth", (byte) maxHealth);
         customData.a("Inventory", inv.writeToNBT(new NBTTagList()));
+        
+        if(mod_AetherMp.poisonFix)
+        	customData.a("poison", poisonTime);
     }
 	
 	@Override
@@ -105,6 +108,9 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
             maxHealth = 20;
         NBTTagList nbttaglist = customData.l("Inventory");
         inv.readFromNBT(nbttaglist);
+        
+        if(mod_AetherMp.poisonFix)
+        	poisonTime = customData.e("poison");
     }
 	
 	@Override
@@ -137,15 +143,20 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	
 	@Override
 	public void updatePoison() {
-		if(poisonWorld != player.world || player.dead || player.health <= 0) {
+		if(!constructed) {
+			constructed = true;
+        	if(poisonTime > 0)
+        		poisonPlayer(poisonTime);
+		}
+		if(player.dead || player.health <= 0) {
             poisonWorld = player.world;
             poisonTime = 0;
             return;
         }
-        if(poisonWorld == null)
-            return;
         if(poisonTime < 0) {
             poisonTime++;
+            if(poisonTime >= -480)
+            	poisonTime = 0;
             return;
         }
         if(poisonTime == 0)
@@ -168,9 +179,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
         else {
             poisonTime = 500;
             poisonWorld = player.world;
-            Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 7;
-            ModLoaderMp.SendPacketTo(ModLoaderMp.GetModInstance(mod_AetherMp.class), player, packet);
+            poisonPlayer(poisonTime);
             return true;
         }
     }
@@ -415,6 +424,13 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 		return currentBoss;
 	}
 	
+	private void poisonPlayer(int i) {
+        Packet230ModLoader packet = new Packet230ModLoader();
+        packet.packetType = 7;
+        packet.dataInt = new int[] {i};
+        ModLoaderMp.SendPacketTo(ModLoaderMp.GetModInstance(mod_AetherMp.class), player, packet);
+	}
+	
     public static ItemStack[] entranceBonus = new ItemStack[] {new ItemStack(ItemManager.LoreBook, 1, 2), new ItemStack(ItemManager.CloudParachute, 1)};
 	
     public int maxHealth = 20;
@@ -430,4 +446,5 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
     public boolean canReceiveLore = false;
     public int loreTick = 0;
     public IAetherBoss currentBoss;
+    private boolean constructed = false;
 }

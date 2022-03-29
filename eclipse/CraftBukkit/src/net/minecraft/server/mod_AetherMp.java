@@ -182,7 +182,8 @@ public class mod_AetherMp extends BaseModMp {
 	clearFiroBallsAfterDeath = false,
 	betterMPBossMechanics = false,
 	sliderFloorFix = false,
-	disableDungeonCommands = false;
+	disableDungeonCommands = false,
+	poisonFix = true;
 	
 	@MLProp
 	public static String

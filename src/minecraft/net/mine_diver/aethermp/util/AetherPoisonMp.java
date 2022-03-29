@@ -38,4 +38,17 @@ public class AetherPoisonMp extends AetherPoison {
         }
         displayPoisonEffect(mod);
     }
+	
+    public static boolean afflictPoison(int i)
+    {
+        if(poisonTime < 0)
+        {
+            return false;
+        } else
+        {
+            poisonTime = i;
+            world = mc.theWorld;
+            return true;
+        }
+    }
 }

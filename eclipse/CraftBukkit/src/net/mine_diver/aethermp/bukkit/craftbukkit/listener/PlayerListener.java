@@ -88,14 +88,27 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
 		if (player instanceof CraftPlayer) {
-			IAetherBoss boss = PlayerManager.getCurrentBoss(((CraftPlayer) player).getHandle());
+			EntityPlayer entityplayer = ((CraftPlayer)player).getHandle();
+			IAetherBoss boss = PlayerManager.getCurrentBoss(entityplayer);
 			if (boss != null) {
 				if (mod_AetherMp.preventTeleportDuringFight)
 					event.setCancelled(true);
 				if (mod_AetherMp.punishTeleportDuringFight)
 					player.setHealth(0);
-				if (!event.isCancelled())
-					boss.stopFight();
+				if (!event.isCancelled()) {
+					if (mod_AetherMp.betterMPBossMechanics) {
+						PlayerManager.setCurrentBoss(entityplayer, null);
+						List<EntityPlayer> list = boss.getTargetList();
+						list.remove(entityplayer);
+						boss.setTargetList(list);
+						if(boss.getCurrentTarget().name.equals(entityplayer.name))
+							boss.findNewTarget();
+						if(list.size() == 0)
+							boss.stopFight();
+					}
+					else
+						boss.stopFight();
+				}
 			}
 		}
 	}

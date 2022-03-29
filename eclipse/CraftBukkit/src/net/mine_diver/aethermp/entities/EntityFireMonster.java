@@ -590,7 +590,7 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
         	player = (EntityPlayer) world.findNearbyPlayer(this, 20D);
         	
         if (player != null)	
-        	Achievements.giveAchievement(Achievements.defeatGold, (EntityPlayer) targetfire);
+        	Achievements.giveAchievement(Achievements.defeatGold, player);
         
         for(int x = orgX - 20; x < orgX + 20; x++)
         {
