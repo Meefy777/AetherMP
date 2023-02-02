@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
+import net.mine_diver.aetherapi.api.entity.BossManager;
 import net.mine_diver.aetherapi.api.event.dimension.world.generation.dungeon.DungeonLoot;
 import net.mine_diver.aetherapi.api.util.LootType;
 import net.minecraft.src.AetherBlocks;
@@ -42,6 +43,7 @@ public class AetherGenDungeonBronzeProxy extends AetherGenDungeonBronze {
         EntitySlider slider = new EntitySlider(world);
         slider.setPosition(i + 8, j + 2, k + 8);
         slider.setDungeon(i, j, k);
+        slider = (EntitySlider) BossManager.getBoss(slider);
         world.entityJoinedWorld(slider);
         int x = i + 7 + random.nextInt(2);
         int y = j - 1;

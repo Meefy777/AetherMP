@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
+import net.mine_diver.aetherapi.api.entity.BossManager;
 import net.mine_diver.aetherapi.api.event.dimension.world.generation.dungeon.DungeonLoot;
 import net.mine_diver.aetherapi.api.util.LootType;
 import net.minecraft.src.AetherBlocks;
@@ -147,6 +148,7 @@ public class AetherGenDungeonProxy extends AetherGenDungeon {
             i++;
         } while(true);
         EntityFireMonster boss = new EntityFireMonster(world, x, y - 1, z, wid, direction);
+        boss = (EntityFireMonster) BossManager.getBoss(boss);
         world.entityJoinedWorld(boss);
         return true;
     }

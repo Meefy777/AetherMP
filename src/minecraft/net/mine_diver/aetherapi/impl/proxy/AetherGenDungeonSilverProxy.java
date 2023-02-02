@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
+import net.mine_diver.aetherapi.api.entity.BossManager;
 import net.mine_diver.aetherapi.api.event.dimension.world.generation.dungeon.DungeonLoot;
 import net.mine_diver.aetherapi.api.util.LootType;
 import net.minecraft.src.AetherBlocks;
@@ -239,6 +240,7 @@ public class AetherGenDungeonSilverProxy extends AetherGenDungeonSilver {
         EntityValkyrie entityvalkyrie = new EntityValkyrie(world, (double)i + 40D, (double)j + 1.5D, (double)k + 15D, true);
         entityvalkyrie.setPosition(i + 40, j + 2, k + 15);
         entityvalkyrie.setDungeon(i + 26, j, k + 5);
+        entityvalkyrie = (EntityValkyrie) BossManager.getBoss(entityvalkyrie);
         world.entityJoinedWorld(entityvalkyrie);
         setBlocks(lockedBlockID1Field.getInt(this), lockedBlockID1Field.getInt(this), 1);
         setMetadata(1, 1);
