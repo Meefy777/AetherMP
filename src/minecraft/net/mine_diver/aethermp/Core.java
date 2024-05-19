@@ -2,6 +2,7 @@ package net.mine_diver.aethermp;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
@@ -23,6 +24,7 @@ import net.mine_diver.aethermp.proxy.GuiIngameAetherMp;
 import net.mine_diver.aethermp.render.RenderManager;
 import net.mine_diver.aethermp.util.AchievementHandler;
 import net.mine_diver.aethermp.util.AetherPoisonMp;
+import net.mine_diver.aethermp.util.BlockPlacementHandlerMP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.AetherAchievements;
 import net.minecraft.src.AetherItems;
@@ -38,6 +40,7 @@ import net.minecraft.src.GuiInventory;
 import net.minecraft.src.GuiInventoryMoreSlots;
 import net.minecraft.src.GuiMainMenu;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.IInterceptBlockSet;
 import net.minecraft.src.InventoryAether;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
@@ -48,6 +51,7 @@ import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.PlayerAPI;
 import net.minecraft.src.PlayerBaseAether;
 import net.minecraft.src.Render;
+import net.minecraft.src.SAPI;
 import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.StatBase;
 import net.minecraft.src.StatFileWriter;
@@ -78,6 +82,9 @@ public class Core {
 			key_loreGain = (KeyBinding) ModLoader.getPrivateValue(mod_Aether.class, aetherInstance, "key_loreGain");
 			ModLoader.RegisterKey(mod, key_loreGain, keyList.get(key_loreGain)[0]);
 			keyList.remove(key_loreGain);
+			List<IInterceptBlockSet> set = ((List<IInterceptBlockSet>)(ModLoader.getPrivateValue(SAPI.class, null, "setIntercepts")));
+			set.removeIf(e -> e instanceof mod_Aether);
+			set.add(new BlockPlacementHandlerMP());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -70,6 +70,7 @@ public class PlayerBaseAetherMp extends PlayerBaseAether {
 	private static boolean restore = false;
 	private static final Field saveHandlerField;
 	public static boolean fromMP;
+	public boolean distract = true;
 	
 	static {
 		Field field = null;

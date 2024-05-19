@@ -190,7 +190,7 @@ public class EntityFlyingCowMp extends EntityFlyingCow {
             setSaddled(true);
             return true;
         }
-        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
+        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer) && !this.isRiding())
         {
             entityplayer.mountEntity(this);
             return true;

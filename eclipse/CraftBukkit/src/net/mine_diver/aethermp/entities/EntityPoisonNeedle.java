@@ -2,6 +2,12 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.AbstractAetherPoisonEvent.PoisonSource;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.entity.EntityPoisonEvent;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.mine_diver.aethermp.util.AetherPoison;
 import net.minecraft.server.Entity;
@@ -40,7 +46,7 @@ public class EntityPoisonNeedle extends EntityProjectileBase {
         if(!(entity instanceof EntityLiving) || !AetherPoison.canPoison(entity))
             return super.onHitTarget(entity);
         EntityLiving ent = (EntityLiving)entity;
-        if(ent instanceof EntityPlayer) {
+        if(ent instanceof EntityPlayer && !CraftAetherEventFactory.callPoisonEvent(500, this.shooter, ent, this, PoisonSource.MOB).isCancelled()) {
         	PlayerManager.afflictPoison((EntityPlayer) ent);
             return super.onHitTarget(entity);
         }
@@ -52,15 +58,24 @@ public class EntityPoisonNeedle extends EntityProjectileBase {
                 continue;
             EntityPoisonNeedle arr = (EntityPoisonNeedle)lr2;
             if(arr.victim == ent) {
-                arr.poisonTime = 500;
-                arr.dead = false;
+            	EntityPoisonEvent event = CraftAetherEventFactory.callPoisonEvent(500, this.shooter, arr.victim, arr, PoisonSource.MOB);
+            	if (!event.isCancelled()) {
+            		arr.poisonTime = 500;
+                	arr.dead = false;
+            	}
                 die();
                 return false;
             }
         }
         victim = ent;
-        ent.damageEntity(shooter, dmg);
-        poisonTime = 500;
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), this.victim.getBukkitEntity(), DamageCause.PROJECTILE, dmg);
+        this.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled())
+        	ent.damageEntity(shooter, event.getDamage());
+        
+        EntityPoisonEvent event2 = CraftAetherEventFactory.callPoisonEvent(500, this.shooter, this.victim, this, PoisonSource.MOB);
+        if (!event2.isCancelled())
+        	poisonTime = 500;
         return false;
     }
     
@@ -95,7 +110,7 @@ public class EntityPoisonNeedle extends EntityProjectileBase {
             locX = victim.locX;
             locY = victim.boundingBox.b + (double)victim.height * 0.80000000000000004D;
             locZ = victim.locZ;
-            AetherPoison.distractEntity(victim);
+            AetherPoison.distractEntity(victim, CraftAetherEventFactory.callPoisonDistractEvent(poisonTime, this.shooter, this.victim, this, PoisonSource.MOB));
             poisonTime--;
         }
     }

@@ -30,6 +30,8 @@ import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.NBTTagDouble;
 import net.minecraft.server.NBTTagList;
 import net.minecraft.server.Packet230ModLoader;
+import net.minecraft.server.TileEntity;
+import net.minecraft.server.TileEntityChest;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
@@ -612,13 +614,25 @@ public class EntityValkyrie extends EntityDungeonMob
             if(isBoss())
             {
             	dead = false;
+            	
+            	
+                if(!mod_AetherMp.betterMPBossMechanics)
+                	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
+                else {                	
+                	for (int xOff = 0; xOff < 2; xOff++)
+                		for (int zOff = 0; zOff < 2; zOff++) {
+                			TileEntity tile = world.getTileEntity(dungeonX + 16 + xOff, dungeonY - 1, dungeonZ + 9 + zOff);
+                			if (tile instanceof TileEntityChest) {
+                				this.populatePerPlayerLootPool((TileEntityChest)tile);
+                				break;
+                			}
+                		}
+                	clearTargets();
+                }
+            	
                 unlockDoor();
                 unlockTreasure((EntityPlayer) entity);
                 chatItToAll("You are truly... a mighty warrior...", (EntityHuman) entity);
-                if(!mod_AetherMp.betterMPBossMechanics)
-                	PlayerManager.setCurrentBoss((EntityPlayer) target, null);
-                else
-                	clearTargets();
             } else
             if(pokey == 2)
             {

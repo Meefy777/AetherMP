@@ -118,7 +118,7 @@ public class EntityMoaMp extends EntityMoa
             if(riddenByEntity != null && riddenByEntity instanceof EntityPlayer) {
 	            jrem = MoaColour.getColour(getColor()).jumps;
 	            Packet230ModLoader packet = new Packet230ModLoader();
-	            packet.packetType = 60;
+	            packet.packetType = 61;
 	            packet.dataInt = new int [] {jrem};
 	            ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
             }
@@ -230,7 +230,7 @@ public class EntityMoaMp extends EntityMoa
             float strafing = mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving);
             boolean jump = mod_AetherMp.PackageAccess.EntityLiving.getIsJumping(entityliving);
             Packet230ModLoader packet = new Packet230ModLoader();
-            packet.packetType = 60;
+            packet.packetType = 61;
             if(forward > 0.1F)
             {
                 float f2 = entityliving.rotationYaw * f1;
@@ -353,13 +353,13 @@ public class EntityMoaMp extends EntityMoa
             texture = MoaColour.getColour(getColor()).getTexture(getSaddled());
             return true;
         }
-        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
+        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer) && !this.isRiding())
         {
             entityplayer.mountEntity(this);
             entityplayer.prevRotationYaw = entityplayer.rotationYaw = rotationYaw;
             return true;
         }
-        if(getSaddled() && (entityplayer instanceof EntityOtherPlayerMP) && (riddenByEntity == null || riddenByEntity == entityplayer))
+        if(getSaddled() && (entityplayer instanceof EntityOtherPlayerMP) && (riddenByEntity == null || riddenByEntity == entityplayer) && !this.isRiding())
         {
             entityplayer.mountEntity(this);
             return true;

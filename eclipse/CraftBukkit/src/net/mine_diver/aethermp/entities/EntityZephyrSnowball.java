@@ -6,6 +6,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftEntityAether;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
 import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityLiving;
@@ -118,14 +119,14 @@ public class EntityZephyrSnowball extends Entity {
         if (entity != null)
             movingobjectposition = new MovingObjectPosition(entity);
         if (movingobjectposition != null) {
-            if (movingobjectposition.entity != null) {
+            if (movingobjectposition.entity != null && !CraftAetherEventFactory.callEntityZephyrPushEntityEvent(movingobjectposition.entity, this).isCancelled()) {
                 if (movingobjectposition.entity.damageEntity(field_9397_j, 0));
-                movingobjectposition.entity.motX += motX;
-                movingobjectposition.entity.motY += 0.20000000000000001D;
-                movingobjectposition.entity.motZ += motZ;
-                movingobjectposition.entity.velocityChanged = true;
-                ProjectileHitEvent event = new ProjectileHitEvent((Projectile)getBukkitEntity());
-                world.getServer().getPluginManager().callEvent(event);
+            	movingobjectposition.entity.motX += motX;
+            	movingobjectposition.entity.motY += 0.20000000000000001D;
+            	movingobjectposition.entity.motZ += motZ;
+            	movingobjectposition.entity.velocityChanged = true;
+            	ProjectileHitEvent event = new ProjectileHitEvent((Projectile)getBukkitEntity());
+            	world.getServer().getPluginManager().callEvent(event);
             }
             die();
         }

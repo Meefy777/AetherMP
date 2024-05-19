@@ -11,6 +11,7 @@ import java.util.List;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import net.mine_diver.aethermp.api.entities.IMountable;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
@@ -28,7 +29,7 @@ import net.minecraft.server.mod_AetherMp;
 //            EntityLiving, Entity, EntityPlayer, InventoryPlayer, 
 //            ItemStack, Item, mod_Aether
 
-public class EntityFlyingCow extends EntityAetherAnimal
+public class EntityFlyingCow extends EntityAetherAnimal implements IMountable
 {
 
     public EntityFlyingCow(World world)
@@ -154,7 +155,7 @@ public class EntityFlyingCow extends EntityAetherAnimal
             texture = "/aether/mobs/Mob_FlyingCowSaddle.png";
             return true;
         }
-        if(getSaddled() && (passenger == null || passenger == entityplayer))
+        if(getSaddled() && (passenger == null || passenger == entityplayer) && this.vehicle == null)
         {
             entityplayer.mount(this);
             Packet230ModLoader packet = new Packet230ModLoader();

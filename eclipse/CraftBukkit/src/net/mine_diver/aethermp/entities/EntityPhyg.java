@@ -11,7 +11,7 @@ import java.util.List;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import net.mine_diver.aethermp.entities.EntityAetherAnimal;
+import net.mine_diver.aethermp.api.entities.IMountable;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.util.Achievements;
 import net.minecraft.server.Entity;
@@ -30,7 +30,7 @@ import net.minecraft.server.mod_AetherMp;
 //            EntityLiving, Entity, EntityPlayer, InventoryPlayer, 
 //            ItemStack, Item, AetherAchievements, mod_Aether
 
-public class EntityPhyg extends EntityAetherAnimal
+public class EntityPhyg extends EntityAetherAnimal implements IMountable
 {
 
     public EntityPhyg(World world)
@@ -158,7 +158,7 @@ public class EntityPhyg extends EntityAetherAnimal
             texture = "/aether/mobs/Mob_FlyingPigSaddle.png";
             return true;
         }
-        if(getSaddled() && (passenger == null || passenger == entityplayer))
+        if(getSaddled() && (passenger == null || passenger == entityplayer) && this.vehicle == null)
         {
             entityplayer.mount(this);
             Achievements.giveAchievement(Achievements.flyingPig, (EntityPlayer) entityplayer);

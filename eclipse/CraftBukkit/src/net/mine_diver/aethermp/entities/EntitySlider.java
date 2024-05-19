@@ -29,6 +29,8 @@ import net.minecraft.server.ItemStack;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet230ModLoader;
+import net.minecraft.server.TileEntity;
+import net.minecraft.server.TileEntityChest;
 import net.minecraft.server.Tool;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
@@ -373,18 +375,13 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
         ItemStack stack = p1.G();
         if(stack == null || stack.getItem() == null)
             return false;
-        if(stack.getItem() instanceof Tool) {
-            Tool tool = (Tool)stack.getItem();
-            if(!tool.canHarvest(Block.STONE)) {
-            	if (p1 instanceof EntityPlayer)
-            		chatItUp((EntityPlayer) p1, "Hmm. Perhaps I need to attack it with a Pickaxe?");
-                return false;
-            }
-        } else {
+        boolean attack = mod_AetherMp.sliderConfigurableWeapons ? mod_AetherMp.sliderWeapons.contains(stack.id) : (stack.getItem() instanceof Tool && ((Tool)stack.getItem()).canHarvest(Block.STONE));
+        if (!attack) {
         	if (p1 instanceof EntityPlayer)
         		chatItUp((EntityPlayer) p1, "Hmm. Perhaps I need to attack it with a Pickaxe?");
             return false;
         }
+        
         boolean flag = super.damageEntity(e1, Math.max(0, i));
         if(flag) {
         	datawatcher.watch(17, health);
@@ -401,8 +398,17 @@ public class EntitySlider extends EntityFlying implements IAetherBoss {
                 	Achievements.giveAchievement(Achievements.defeatBronze, (EntityPlayer) target);
                 	if(!mod_AetherMp.betterMPBossMechanics)
                 		PlayerManager.setCurrentBoss((EntityPlayer) target, null);
-                	else
+                	else {
+                        for (int xOff = 0; xOff < 2; xOff++)
+                        	for (int zOff = 0; zOff < 2; zOff++) {
+                        		TileEntity tile = world.getTileEntity(this.dungeonX + 7 + xOff, this.dungeonY - 1, this.dungeonZ + 7 + zOff);
+                    			if (tile instanceof TileEntityChest) {
+                    				this.populatePerPlayerLootPool((TileEntityChest)tile);
+                    				break;
+                    			}
+                        	}
                 		clearTargets();
+                	}
                 }
             } else
             if(!awake) {

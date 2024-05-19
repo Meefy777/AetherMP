@@ -1,10 +1,16 @@
 package net.mine_diver.aethermp.items;
 
+import java.util.Optional;
+
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.AbstractAetherPoisonEvent.PoisonSource;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.entity.EntityPoisonEvent;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.player.PlayerCurePoisonEvent;
 import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
@@ -59,6 +65,14 @@ public class ItemSkyrootBucket extends Item {
         	 final PlayerBucketEmptyEvent event3 = CraftAetherEventFactory.callPlayerBucketEmptyEvent(entityhuman, MathHelper.floor(entityhuman.locX), MathHelper.floor(entityhuman.locY), MathHelper.floor(entityhuman.locZ), 0, itemstack);
             if (event3.isCancelled())
                 return itemstack;
+            
+            //Custom event start
+            EntityPoisonEvent event = new EntityPoisonEvent(500, Optional.empty(), (LivingEntity) entityhuman.getBukkitEntity(), Optional.empty(), PoisonSource.POISON_BUCKET);
+            entityhuman.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled())
+            	return itemstack;
+            //Custom event end
+            
             final CraftItemStack itemInHand2 = (CraftItemStack)event3.getItemStack();
             final byte data2 = (byte) (((entityhuman instanceof EntityPlayer ? PlayerManager.afflictPoison((EntityPlayer) entityhuman) : (true)) || itemInHand2.getData() == null) ? 0 : itemInHand2.getData().getData());
             return new ItemStack(itemInHand2.getTypeId(), itemInHand2.getAmount(), data2);
@@ -66,6 +80,14 @@ public class ItemSkyrootBucket extends Item {
             final PlayerBucketEmptyEvent event3 = CraftAetherEventFactory.callPlayerBucketEmptyEvent(entityhuman, MathHelper.floor(entityhuman.locX), MathHelper.floor(entityhuman.locY), MathHelper.floor(entityhuman.locZ), 0, itemstack);
             if (event3.isCancelled())
                 return itemstack;
+            
+            //Custom event start
+            PlayerCurePoisonEvent event4 = new PlayerCurePoisonEvent((LivingEntity) entityhuman.getBukkitEntity());
+            entityhuman.getBukkitEntity().getServer().getPluginManager().callEvent(event4);
+            if(event4.isCancelled())
+            	return itemstack;
+            //Custom event end
+        
             final CraftItemStack itemInHand2 = (CraftItemStack)event3.getItemStack();
             final byte data2 = (byte) (((entityhuman instanceof EntityPlayer ? PlayerManager.curePoison((EntityPlayer) entityhuman) : (true)) || itemInHand2.getData() == null) ? 0 : itemInHand2.getData().getData());
             return new ItemStack(itemInHand2.getTypeId(), itemInHand2.getAmount(), data2);

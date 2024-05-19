@@ -78,10 +78,11 @@ public class EntityManager {
 			new EntityType(EntityValkyrieMp.class, mod_AetherMp.idEntityValkyrie, RegType.SECONDARY),
 			new EntityType(WhirlyMp.class, mod_AetherMp.idEntityWhirlwind, RegType.SECONDARY),
 			new EntityType(EntityCockatrice.class, mod_AetherMp.idEntityCockatrice, RegType.MAIN),
-			//new EntityType(EntitySwetMp.class, mod_AetherMp.idEntitySwet, RegType.MAIN),
+			new EntityType(EntitySwetMp.class, mod_AetherMp.idEntitySwet, RegType.MAIN),
 			new EntityType(EntityFireMonsterMp.class, mod_AetherMp.idEntityFireMonster, RegType.MAIN),
 			new EntityType(EntityFireMonsterMp.class, mod_AetherMp.idEntityFireMonster, RegType.SECONDARY),
 			new EntityType(EntityFireMinionMp.class, mod_AetherMp.idEntityFireMinion, RegType.SECONDARY),
 			new EntityType(EntityFireMinionMp.class, mod_AetherMp.idEntityFireMinion, RegType.MAIN),
+			new EntityType(EntityAerwhaleMp.class, mod_AetherMp.idEntityAerwhale, RegType.MAIN),
 	};
 }

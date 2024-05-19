@@ -12,6 +12,7 @@ import static net.minecraft.server.mod_AetherMp.PackageAccess;
 
 import java.util.Arrays;
 
+import net.mine_diver.aethermp.blocks.tileentities.TileEntityAetherMPTreasureChest;
 import net.mine_diver.aethermp.blocks.tileentities.TileEntityEnchanter;
 import net.mine_diver.aethermp.blocks.tileentities.TileEntityFreezer;
 import net.mine_diver.aethermp.blocks.tileentities.TileEntityIncubator;
@@ -105,7 +106,7 @@ public class BlockManager {
 			new BlockInfo(Enchanter).setHardness(2).setTileEntity(TileEntityEnchanter.class),
 			new BlockInfo(Trap).setHardness(-1).setResistance(1000000),
 			new BlockInfo(ChestMimic).setHardness(2),
-			new BlockInfo(TreasureChest).setHardness(-1),
+			new BlockInfo(TreasureChest).setHardness(-1).setTileEntity(TileEntityAetherMPTreasureChest.class),
 			new BlockInfo(DungeonStone).setHardness(0.5F).setBlockItem(ItemDungeonBlock.class),
 			new BlockInfo(LightDungeonStone).setHardness(0.5F).setLightValue(0.75F).setBlockItem(ItemDungeonBlock.class),
 			new BlockInfo(LockedDungeonStone).setHardness(-1).setResistance(1000000),

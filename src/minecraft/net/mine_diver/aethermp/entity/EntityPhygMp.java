@@ -195,7 +195,7 @@ public class EntityPhygMp extends EntityPhyg {
             setSaddled(true);
             return true;
         }
-        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
+        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer) && !this.isRiding())
         {
             entityplayer.mountEntity(this);
             mod_Aether.giveAchievement(AetherAchievements.flyingPig, entityplayer);

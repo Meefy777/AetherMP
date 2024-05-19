@@ -6,11 +6,14 @@ import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 
 import net.mine_diver.aethermp.player.OtherPlayerMPAPI;
+import net.mine_diver.aethermp.proxy.GuiIngameAetherMp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityOtherPlayerMP;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetClientHandler;
 import net.minecraft.src.NetworkManager;
+import net.minecraft.src.Packet3Chat;
 import net.minecraft.src.Packet5PlayerInventory;
 
 public class NetClientHandlerAether extends NetClientHandler {
@@ -31,6 +34,14 @@ public class NetClientHandlerAether extends NetClientHandler {
 			super.handlePlayerInventory(packet5playerinventory);
     }
 	
+	@Override
+    public void handleChat(Packet3Chat packet3chat) {
+		Minecraft mc = ModLoader.getMinecraftInstance();
+		if (!(mc.ingameGUI instanceof GuiIngameAetherMp))
+			mc.ingameGUI = new GuiIngameAetherMp(mc);
+        super.handleChat(packet3chat);
+    }
+
 	private static final Method getEntityByIDMethod;
 	private static final Field netHandlerField;
 	

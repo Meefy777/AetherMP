@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import net.mine_diver.aethermp.api.entities.IMountable;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.network.PacketManager;
@@ -25,7 +28,6 @@ import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
-import net.minecraft.server.mod_AetherMp;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityAetherAnimal, World, Entity, AxisAlignedBB, 
@@ -33,7 +35,7 @@ import net.minecraft.server.mod_AetherMp;
 //            EntityMob, ItemStack, AetherBlocks, Block, 
 //            mod_Aether
 
-public class EntitySwet extends EntityAetherAnimal
+public class EntitySwet extends EntityAetherAnimal implements IMountable
 {
 
     public EntitySwet(World world)
@@ -63,8 +65,8 @@ public class EntitySwet extends EntityAetherAnimal
         }
         b(0.8F, 0.8F);
         setPosition(locX, locY, locZ);
-        setHops(0);
-        setIsRidden(false);
+        hops = 0;
+        gotrider = false;
         flutter = 0;
         ticker = 0;
     }
@@ -73,19 +75,13 @@ public class EntitySwet extends EntityAetherAnimal
     public void E()
     {
         super.E();
-        if (getTexture() == 1)
-        	aE = 1.5F;
-        else
-        	aE = 3F;
-        
         if(passenger != null && kickoff)
         {
             passenger.mount(this);
-            setIsRidden(passenger != null);
-            if (getIsRidden()) {
-            	this.setWidth(passenger.width);
-            	this.setHeight(passenger.height);
-            }
+            setWidth(0.8F);
+            setHeight(0.8F);
+            setRidden(false);
+            setPosition(locX, locY + 1, locZ);
             kickoff = false;
         }
     }
@@ -95,29 +91,17 @@ public class EntitySwet extends EntityAetherAnimal
     	datawatcher.a(14, (byte) 0); //texture
     	datawatcher.a(15, String.valueOf(0.1f)); //width 
     	datawatcher.a(16, String.valueOf(0.1f)); //height
-    	datawatcher.a(17, (byte) 0); //is ridden
-    	datawatcher.a(18, String.valueOf(0.0D)); //motY
+    	datawatcher.a(17, String.valueOf(false));//isRidden
+    	datawatcher.a(18, String.valueOf(0.0D));//motY
     	datawatcher.a(19, (byte) 0); //isTamed
-    	datawatcher.a(20, (String)""); //ridenName
-    	datawatcher.a(21, (byte) 0); //hops
     }
     
-    public void setHops(int i) {
-    	datawatcher.watch(21, Byte.valueOf((byte)i));
+    public void setMotY() {
+    	datawatcher.watch(18, String.valueOf(motY));
     }
     
-    public int getHops() {
-    	return datawatcher.a(21);
-    }
-    
-    public String getPlayer()
-    {
-    	return datawatcher.c(20);
-    }
-    
-    public void setPlayer(String value)
-    {
-    	datawatcher.watch(20, String.valueOf(value));
+    public void setRidden(boolean flag) {
+    	datawatcher.watch(17, String.valueOf(flag));
     }
     
     public boolean getTamed() {
@@ -125,10 +109,7 @@ public class EntitySwet extends EntityAetherAnimal
     }
     
     public void setTamed(boolean flag) {
-        if(flag)
-            datawatcher.watch(19, Byte.valueOf((byte)1));
-        else
-            datawatcher.watch(19, Byte.valueOf((byte)0));
+    	datawatcher.watch(19, Byte.valueOf((byte) (flag ? 1 : 0)));
     }
     
     public void setTexture(int i) {
@@ -140,54 +121,37 @@ public class EntitySwet extends EntityAetherAnimal
     }
     
     public void setWidth(float f) {
+    	this.length = f;
     	datawatcher.watch(15, String.valueOf(f));
     }
     
     public void setHeight(float f) {
+    	this.width = f;
     	datawatcher.watch(16, String.valueOf(f));
-    }
-    
-    public void setMotY() {
-    	datawatcher.watch(18, String.valueOf(motY));
-    }
-    
-    public boolean getIsRidden()
-    {
-        return (datawatcher.a(17) & 1) != 0;
-    }
-
-    public void setIsRidden(boolean flag)
-    {
-        if(flag)
-            datawatcher.watch(17, Byte.valueOf((byte)1));
-        else
-            datawatcher.watch(17, Byte.valueOf((byte)0));
     }
 
     @Override
-    public void f()
-    {
+    public void f() {
         passenger.setPosition(locX, (boundingBox.b - 0.30000001192092896D) + (double)passenger.height, locZ);
     }
 
     @SuppressWarnings("rawtypes")
 	@Override
-    public void m_()
-    {
+    public void m_() {
     	setMotY();
         if(target != null)
         {
             for(int i = 0; i < 3; i++)
             {
                 double d = (float)locX + (random.nextFloat() - random.nextFloat()) * 0.3F;
-                double d1 = (float)locY + height;
+                double d1 = (float)locY + width;
                 double d2 = (float)locZ + (random.nextFloat() - random.nextFloat()) * 0.3F;
                 PacketManager.spawnParticle("splash", (float) d, (float) (d1 - 0.25D), (float) d2, (float) 0.0D, (float) 0.0D, (float) 0.0D, ((WorldServer)world).dimension, locX, locY, locZ);
             }
 
         }
         super.m_();
-        if(getIsRidden())
+        if(gotrider)
         {
             if(passenger != null)
                 return;
@@ -198,45 +162,33 @@ public class EntitySwet extends EntityAetherAnimal
                 Entity entity = (Entity)list.get(j);
                 capturePrey(entity);
             }
-            setIsRidden(false);
+            gotrider = false;
         }
         if(f_())
-            dissolve();
+        	dissolve();
     }
 
     @Override
-    protected boolean h_()
-    {
+    protected boolean h_() {
         return true;
     }
 
     @Override
-    public void a(float f)
-    {
+    public void a(float f) {
         if(getTamed())
-        {
             return;
-        }
         super.a(f);
-        if(getHops() >= 3 && health > 0)
-        {
+        if(hops >= 3 && health > 0)
             dissolve();
-        }
     }
 
     @Override
     public void a(Entity entity, int i, double d, double d1)
     {
-        if(passenger != null && entity == passenger)
-        {
-            return;
-        } else
-        {
-            super.a(entity, i, d, d1);
-            return;
-        }
+    	if (passenger == null || passenger != entity)
+    		super.a(entity, i, d, d1);
     }
-
+    
     public void dissolve()
     {
         for(int i = 0; i < 50; i++)
@@ -247,16 +199,13 @@ public class EntitySwet extends EntityAetherAnimal
             float f3 = MathHelper.cos(f) * f1;
             PacketManager.spawnParticle("splash", (float) (locX + (double)f2), (float) (boundingBox.b + 1.25D), (float) (locZ + (double)f3), (float) ((double)f2 * 1.5D + motX), (float) 4D, (float) ((double)f3 * 1.5D + motZ), ((WorldServer)world).dimension, locX, locY, locZ);
         }
-
         if(passenger != null)
         {
         	passenger.locY += passenger.height - 0.3F;
             passenger.mount(this);
-            setIsRidden(passenger != null);
-            if (getIsRidden()) {
-            	this.setWidth(passenger.width);
-            	this.setHeight(passenger.height);
-            }
+            setRidden(false);
+            setWidth(0.8F);
+            setHeight(0.8F);
         }
         die();
     }
@@ -272,13 +221,16 @@ public class EntitySwet extends EntityAetherAnimal
         motX = entity.motX;
         motY = entity.motY;
         motZ = entity.motZ;
-        b(entity.width, entity.height);
-        setPosition(locX, locY, locZ);
+        b(entity.length, entity.width);
+        setWidth(entity.length);
+        setHeight(entity.width);
         entity.mount(this);
-        setIsRidden(passenger != null);
-        if (getIsRidden()) {
-        	this.setWidth(passenger.width);
-        	this.setHeight(passenger.height);
+        setPosition(locX, locY + 1, locZ);
+        boolean flag = passenger == null;
+        setRidden(!flag);
+        if (flag) {
+            setWidth(0.8F);
+            setHeight(0.8F);
         }
         yaw = random.nextFloat() * 360F;
     }
@@ -286,7 +238,7 @@ public class EntitySwet extends EntityAetherAnimal
     @Override
     public boolean damageEntity(Entity entity, int i)
     {
-        if(getHops() == 3 && entity == null && health > 1)
+        if(hops == 3 && entity == null && health > 1)
         {
             health = 1;
         }
@@ -301,7 +253,10 @@ public class EntitySwet extends EntityAetherAnimal
                 }
             } else
             {
-            	passenger.damageEntity((Entity)null, i); //here
+            	EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), this.passenger.getBukkitEntity(), DamageCause.CUSTOM, i);
+            	this.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+            	if (!event.isCancelled())
+            		passenger.damageEntity((Entity)null, event.getDamage());
                 if(health <= 0)
                 {
                     kickoff = true;
@@ -329,140 +284,13 @@ public class EntitySwet extends EntityAetherAnimal
         return flag;
     }
 
-    public void d_2()
-    {
-        if(passenger != null && (passenger instanceof EntityLiving))
-        {
-        	aA = 0.0F;
-            az = 0.0F;
-            aC = false;
-            passenger.fallDistance = 0.0F;
-            lastYaw = yaw = passenger.yaw;
-            lastPitch = pitch = 0.0F;
-            EntityLiving entityliving = (EntityLiving)passenger;
-            float f = 3.141593F;
-            float f1 = f / 180F;
-            float f2 = entityliving.yaw * f1;
-            if(onGround)
-            {
-            	boolean jump = mod_AetherMp.PackageAccess.EntityLiving.getJumping(entityliving);
-            	float forward = mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving);
-            	float strafing = mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving);
-                if(jump)
-                {
-                    if(getHops() == 0)
-                    {
-                        onGround = false;
-                        motY = 0.85000002384185791D;
-                        setHops(1);
-                        flutter = 5;
-                    } else
-                    if(getHops() == 1)
-                    {
-                        onGround = false;
-                        motY = 1.0499999523162842D;
-                        setHops(2);
-                        flutter = 5;
-                    } else
-                    if(getHops() == 2)
-                    {
-                        onGround = false;
-                        motY = 1.25D;
-                        flutter = 5;
-                    }
-                } else
-                if(forward > 0.125F || forward < -0.125F || strafing > 0.125F || strafing < -0.125F)
-                {
-                	
-                    onGround = false;
-                    motY = 0.34999999403953552D;
-                    setHops(0);
-                    flutter = 0;
-                } else
-                if(getHops() > 0)
-                {
-                    setHops(0);
-                }
-                mod_AetherMp.PackageAccess.EntityLiving.setMoveForward(entityliving, 0.0f);
-                mod_AetherMp.PackageAccess.EntityLiving.setMoveStrafing(entityliving, 0.0f);
-            } else
-            {
-            	float forward = mod_AetherMp.PackageAccess.EntityLiving.getMoveForward(entityliving);
-                if(forward > 0.1F)
-                {
-                    if(getTexture() == 1)
-                    {
-                        motX += (double)forward * -Math.sin(f2) * 0.125D;
-                        motZ += (double)forward * Math.cos(f2) * 0.125D;
-                    } else
-                    {
-                        motX += (double)forward * -Math.sin(f2) * 0.32500000000000001D;
-                        motZ += (double)forward * Math.cos(f2) * 0.125D;
-                    }
-                } else
-                if(forward < -0.1F)
-                {
-                    if(getTexture() == 1)
-                    {
-                        motX += (double)forward * -Math.sin(f2) * 0.125D;
-                        motZ += (double)forward * Math.cos(f2) * 0.125D;
-                    } else
-                    {
-                        motX += (double)forward * -Math.sin(f2) * 0.32500000000000001D;
-                        motZ += (double)forward * Math.cos(f2) * 0.125D;
-                    }
-                }
-                float strafing = mod_AetherMp.PackageAccess.EntityLiving.getMoveStrafing(entityliving);
-                if(strafing > 0.1F)
-                {
-                    if(getTexture() == 1)
-                    {
-                        motX += (double)strafing * Math.cos(f2) * 0.125D;
-                        motZ += (double)strafing * Math.sin(f2) * 0.125D;
-                    } else
-                    {
-                        motX += (double)strafing * Math.cos(f2) * 0.32500000000000001D;
-                        motZ += (double)strafing * Math.sin(f2) * 0.125D;
-                    }
-                } else
-                if(strafing < -0.1F)
-                {
-                    if(getTexture() == 1)
-                    {
-                        motX += (double)strafing * Math.cos(f2) * 0.125D;
-                        motZ += (double)strafing * Math.sin(f2) * 0.125D;
-                    } else
-                    {
-                        motX += (double)strafing * Math.cos(f2) * 0.32500000000000001D;
-                        motZ += (double)strafing * Math.sin(f2) * 0.125D;
-                    }
-                }
-                if(motY < 0.05000000074505806D && flutter > 0 && mod_AetherMp.PackageAccess.EntityLiving.getJumping(entityliving))
-                {
-                    motY += 0.070000000298023224D;
-                    flutter--;
-                }
-            }
-            double d = Math.abs(Math.sqrt(motX * motX + motZ * motZ));
-            if(d > 0.27500000596046448D)
-            {
-                double d1 = 0.27500000000000002D / d;
-                motX = motX * d1;
-                motZ = motZ * d1;
-            }
-        }
-    }
-
     @Override
     public void c_()
     {
         ay++;
         U();
         if(getTamed() && passenger != null)
-        {
-            d_2();
             return;
-        }
         if(!onGround && aC)
         {
         	aC = false;
@@ -495,9 +323,9 @@ public class EntitySwet extends EntityAetherAnimal
             ticker++;
         } else
         {
-            if(onGround && passenger == null && getHops() != 0 && getHops() != 3)
+            if(onGround && passenger == null && hops != 0 && hops != 3)
             {
-                setHops(0);
+                hops = 0;
             }
             if(target == null && passenger == null)
             {
@@ -528,40 +356,40 @@ public class EntitySwet extends EntityAetherAnimal
             } else
             if(passenger != null && onGround)
             {
-                if(getHops() == 0)
+                if(hops == 0)
                 {
                     splotch();
                     onGround = false;
                     motY = 0.34999999403953552D;
                     aA = 0.8F;
-                    setHops(1);
+                    hops = 1;
                     flutter = 5;
                     yaw += 20F * (random.nextFloat() - random.nextFloat());
                 } else
-                if(getHops() == 1)
+                if(hops == 1)
                 {
                     splotch();
                     onGround = false;
                     motY = 0.44999998807907104D;
                     aA = 0.9F;
-                    setHops(2);
+                    hops = 2;
                     flutter = 5;
                     yaw += 20F * (random.nextFloat() - random.nextFloat());
                 } else
-                if(getHops() == 2)
+                if(hops == 2)
                 {
                     splotch();
                     onGround = false;
                     motY = 1.25D;
                     aA = 1.25F;
-                    setHops(3);
+                    hops = 3;
                     flutter = 5;
                     yaw += 20F * (random.nextFloat() - random.nextFloat());
                 }
             }
             ticker = 0;
         }
-        if(onGround && getHops() >= 3)
+        if(onGround && hops >= 3)
         {
             dissolve();
         }
@@ -571,13 +399,13 @@ public class EntitySwet extends EntityAetherAnimal
     public void b(NBTTagCompound nbttagcompound)
     {
         super.b(nbttagcompound);
-        nbttagcompound.a("Hops", (short)getHops());
+        nbttagcompound.a("Hops", (short)hops);
         nbttagcompound.a("Flutter", (short)flutter);
         if(passenger != null)
         {
-            setIsRidden(true);
+            gotrider = true;
         }
-        nbttagcompound.a("GotRider", getIsRidden());
+        nbttagcompound.a("GotRider", gotrider);
         nbttagcompound.a("Friendly", getTamed());
         nbttagcompound.a("textureSet", textureSet);
         nbttagcompound.a("textureNum", (short)getTexture());
@@ -587,9 +415,9 @@ public class EntitySwet extends EntityAetherAnimal
     public void a(NBTTagCompound nbttagcompound)
     {
         super.a(nbttagcompound);
-        setHops(nbttagcompound.d("Hops"));
+        hops = nbttagcompound.d("Hops");
         flutter = nbttagcompound.d("Flutter");
-        setIsRidden(nbttagcompound.m("GotRider"));
+        gotrider = nbttagcompound.m("GotRider");
         setTamed(nbttagcompound.m("Friendly"));
         textureSet = nbttagcompound.m("textureSet");
         setTexture(nbttagcompound.d("textureNum"));
@@ -617,16 +445,14 @@ public class EntitySwet extends EntityAetherAnimal
     @Override
     public void collide(Entity entity)
     {
-        if(getHops() == 0 && passenger == null && target != null && entity != null && entity == target && (entity.vehicle == null || !(entity.vehicle instanceof EntitySwet)))
+        if(hops == 0 && passenger == null && target != null && entity != null && entity == target && (entity.vehicle == null || !(entity.vehicle instanceof EntitySwet)))
         {
             if(entity.passenger != null)
             {
                 entity.passenger.mount(entity);
-                setIsRidden(passenger != null);
-                if (getIsRidden()) {
-                	this.setWidth(passenger.width);
-                	this.setHeight(passenger.height);
-                }
+                setWidth(entity.length);
+                setHeight(entity.width);
+                setRidden(true);
             }
             capturePrey(entity);
         }
@@ -656,7 +482,7 @@ public class EntitySwet extends EntityAetherAnimal
         for(int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity)list.get(i);
-            if((entity instanceof EntityLiving) && !(entity instanceof EntitySwet) && (getTamed() ? !(entity instanceof EntityPlayer) : !(entity instanceof EntityMonster)))
+            if((entity instanceof EntityLiving) && !(entity instanceof EntitySwet) && (getTamed() ? !(entity instanceof EntityHuman) : !(entity instanceof EntityMonster)))
             {
                 return entity;
             }
@@ -670,12 +496,15 @@ public class EntitySwet extends EntityAetherAnimal
         ItemStack stack = new ItemStack(getTexture() != 1 ? Block.GLOWSTONE.id : BlockManager.Aercloud.id, 3, getTexture() != 1 ? 0 : 1);
         List<org.bukkit.inventory.ItemStack> loot = new ArrayList<org.bukkit.inventory.ItemStack>();
         int count = stack.count * (human != null && ItemManager.equippedSkyrootSword(human) ? 2 : 1);
-        loot.add(new org.bukkit.inventory.ItemStack(stack.id, count));
+        loot.add(new org.bukkit.inventory.ItemStack(stack.id, count, (short) stack.getData()));
         CraftEntity entity = (CraftEntity)this.getBukkitEntity();
         EntityDeathEvent event = new EntityDeathEvent(entity, loot);
         this.world.getServer().getPluginManager().callEvent(event);
-        for (org.bukkit.inventory.ItemStack itemstack : event.getDrops())
+        /*for (org.bukkit.inventory.ItemStack itemstack : event.getDrops()) {
             b(itemstack.getTypeId(), itemstack.getAmount());
+        }*/
+        for (org.bukkit.inventory.ItemStack itemstack : event.getDrops())
+            this.world.getWorld().dropItemNaturally(entity.getLocation(), itemstack);
     }
     
     @Override
@@ -702,4 +531,6 @@ public class EntitySwet extends EntityAetherAnimal
     public int flutter;
     public boolean textureSet;
     public boolean kickoff;
+    public int hops;
+    public boolean gotrider;
 }

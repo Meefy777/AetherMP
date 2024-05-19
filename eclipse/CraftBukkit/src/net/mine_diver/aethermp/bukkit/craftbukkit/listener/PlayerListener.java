@@ -14,8 +14,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
+import net.mine_diver.aethermp.api.entities.IMountable;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.bukkit.craftbukkit.entity.CraftAechorPlant;
+import net.mine_diver.aethermp.entities.EntitySwet;
+import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.player.PlayerBaseAether;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.minecraft.server.EntityPlayer;
@@ -46,6 +49,13 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 			}
 			else
 				boss.stopFight();
+		}
+		if (entityplayer.vehicle instanceof EntitySwet) {
+            EntitySwet swet = (EntitySwet)entityplayer.vehicle;
+            swet.setWidth(0.8F);
+            swet.setHeight(0.8F);
+            swet.setRidden(false);
+            swet.setPosition(swet.locX, swet.locY + 1, swet.locZ);
 		}
 	}
 	
@@ -110,6 +120,16 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 						boss.stopFight();
 				}
 			}
+			
+			if (!event.isCancelled() && entityplayer.vehicle instanceof IMountable && ((IMountable)entityplayer.vehicle).canTeleport(event)) {
+				float deltaX = (float) (entityplayer.locX - entityplayer.vehicle.locX);
+				float deltaY = (float) entityplayer.vehicle.height;
+				float deltaZ = (float) (entityplayer.locZ - entityplayer.vehicle.locZ);
+				
+				entityplayer.vehicle.setPosition(event.getTo().getX() - deltaX, event.getTo().getY() - deltaY, event.getTo().getZ() - deltaZ);
+				entityplayer.vehicle.positionChanged = true;
+				PacketManager.sendMountTeleport(event, deltaX, deltaY, deltaZ);
+			}
 		}
 	}
 	
@@ -127,4 +147,5 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 		PlayerBaseAether playerBase = (PlayerBaseAether)PlayerAPI.getPlayerBase(player, PlayerBaseAether.class);
 		playerBase.isLookingAtAechor = true;
 	}
+	
 }

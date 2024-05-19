@@ -7,6 +7,7 @@ import net.mine_diver.aethermp.api.util.LootType;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.entities.EntitySlider;
 import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.util.IDungeonLootGenerator;
 import net.minecraft.server.Block;
 import net.minecraft.server.Item;
 import net.minecraft.server.TileEntityChest;
@@ -301,34 +302,11 @@ public class AetherGenDungeonBronze extends AetherGenBuildings {
     }
     
     public ItemStack getBronzeLoot(Random random) {
-    	return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultBronzeLoot(random), LootType.BRONZE, random);
+    	return SINGLETON_BRONZE_LOOT.getLoot(random);
     }
 
     public ItemStack getDefaultBronzeLoot(Random random) {
-        int i = random.nextInt(7);
-        switch(i) {
-        case 0:
-            return new ItemStack(ItemManager.GummieSwet, random.nextInt(8), random.nextInt(2));
-
-        case 1:
-            return new ItemStack(ItemManager.PhoenixBow);
-
-        case 2:
-            return new ItemStack(ItemManager.SwordFire);
-
-        case 3:
-            return new ItemStack(ItemManager.HammerNotch);
-
-        case 4:
-            return new ItemStack(ItemManager.LightningKnife, random.nextInt(16), 1);
-
-        case 5:
-            return new ItemStack(ItemManager.Lance);
-
-        case 6:
-            return new ItemStack(ItemManager.AgilityCape);
-        }
-        return new ItemStack(ItemManager.Stick);
+    	return SINGLETON_BRONZE_LOOT.getDefaultLoot(random);
     }
 
     private int corridorMeta1;
@@ -342,4 +320,40 @@ public class AetherGenDungeonBronze extends AetherGenBuildings {
     private int numRooms;
     private int n;
     private boolean finished;
+    public static final IDungeonLootGenerator SINGLETON_BRONZE_LOOT = new IDungeonLootGenerator() {
+    	
+		@Override
+		public ItemStack getLoot(Random random) {
+			return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultLoot(random), LootType.BRONZE, random);
+		}
+
+		@Override
+	    public ItemStack getDefaultLoot(Random random) {
+	        int i = random.nextInt(7);
+	        switch(i) {
+	        case 0:
+	            return new ItemStack(ItemManager.GummieSwet, random.nextInt(8), random.nextInt(2));
+
+	        case 1:
+	            return new ItemStack(ItemManager.PhoenixBow);
+
+	        case 2:
+	            return new ItemStack(ItemManager.SwordFire);
+
+	        case 3:
+	            return new ItemStack(ItemManager.HammerNotch);
+
+	        case 4:
+	            return new ItemStack(ItemManager.LightningKnife, random.nextInt(16), 1);
+
+	        case 5:
+	            return new ItemStack(ItemManager.Lance);
+
+	        case 6:
+	            return new ItemStack(ItemManager.AgilityCape);
+	        }
+	        return new ItemStack(ItemManager.Stick);
+	    }
+    	
+    };
 }

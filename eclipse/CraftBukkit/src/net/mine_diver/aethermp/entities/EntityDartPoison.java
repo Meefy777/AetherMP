@@ -2,6 +2,13 @@ package net.mine_diver.aethermp.entities;
 
 import java.util.List;
 
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.AbstractAetherPoisonEvent.PoisonSource;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.entity.EntityPoisonDamageEvent;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.entity.EntityPoisonEvent;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.player.PlayerManager;
 import net.mine_diver.aethermp.util.AetherPoison;
@@ -37,7 +44,9 @@ public class EntityDartPoison extends EntityDartGolden {
         if(!(entity instanceof EntityLiving) || !AetherPoison.canPoison(entity))
             return super.onHitTarget(entity);
         EntityLiving ent = (EntityLiving)entity;
-        if(ent instanceof EntityPlayer) {
+        
+        //Custom event here
+        if(ent instanceof EntityPlayer && !CraftAetherEventFactory.callPoisonEvent(500, this.shooter, ent, this, PoisonSource.POISON_DART).isCancelled()) {
         	PlayerManager.afflictPoison((EntityPlayer) ent);
             return super.onHitTarget(entity);
         }
@@ -49,17 +58,29 @@ public class EntityDartPoison extends EntityDartGolden {
                 continue;
             EntityDartPoison arr = (EntityDartPoison)lr2;
             if(arr.victim == ent) {
-                arr.poisonTime = 500;
-                arr.dead = false;
-                ent.damageEntity(shooter, dmg);
+            	EntityPoisonEvent event = CraftAetherEventFactory.callPoisonEvent(500, this.shooter, arr.victim, arr, PoisonSource.POISON_DART);
+            	if (!event.isCancelled()) {
+            		arr.poisonTime = 50;
+                	arr.dead = false;
+            	}
+            	EntityDamageByEntityEvent event2 = new EntityDamageByEntityEvent(this.getBukkitEntity(), ent.getBukkitEntity(), DamageCause.PROJECTILE, dmg);
+            	this.getBukkitEntity().getServer().getPluginManager().callEvent(event2);
+            	if (!event2.isCancelled())
+            		ent.damageEntity(shooter, event2.getDamage());
                 die();
                 return false;
             }
         }
 
         victim = ent;
-        ent.damageEntity(shooter, dmg);
-        poisonTime = 500;
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), this.victim.getBukkitEntity(), DamageCause.PROJECTILE, dmg);
+        this.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled())
+        	ent.damageEntity(shooter, event.getDamage());
+        
+        EntityPoisonEvent event2 = CraftAetherEventFactory.callPoisonEvent(500, this.shooter, this.victim, this, PoisonSource.POISON_DART);
+        if (!event2.isCancelled())
+        	poisonTime = 500;
         return false;
     }
     
@@ -78,10 +99,15 @@ public class EntityDartPoison extends EntityDartGolden {
             locX = victim.locX;
             locY = victim.boundingBox.b + (double)victim.height * 0.80000000000000004D;
             locZ = victim.locZ;
-            AetherPoison.distractEntity(victim);
+            AetherPoison.distractEntity(victim, CraftAetherEventFactory.callPoisonDistractEvent(poisonTime, this.shooter, this.victim, this, PoisonSource.POISON_DART));
             poisonTime--;
-            if(poisonTime % 50 == 0)
-                victim.damageEntity(shooter, 1);
+            EntityPoisonDamageEvent event2 = CraftAetherEventFactory.callPoisonDamageEvent(1, poisonTime, this.shooter, victim, this, PoisonSource.POISON_DART);
+            if(poisonTime % 50 == 0 && !event2.isCancelled()) {
+            	EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), this.victim.getBukkitEntity(), DamageCause.PROJECTILE, 1);
+                this.getBukkitEntity().getServer().getPluginManager().callEvent(event);
+                if (!event.isCancelled())
+                	victim.damageEntity(shooter, event2.getDamage());
+            }
         }
     }
 

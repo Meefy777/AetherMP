@@ -7,6 +7,7 @@ import net.mine_diver.aethermp.api.util.LootType;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.util.IDungeonLootGenerator;
 import net.minecraft.server.Block;
 import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
@@ -405,58 +406,11 @@ public class AetherGenDungeonSilver extends AetherGenBuildings {
     }
     
     public ItemStack getSilverLoot(Random random) {
-    	return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultSilverLoot(random), LootType.SILVER, random);
+    	return SINGLETON_SILVER_LOOT.getLoot(random);
     }
 
     public ItemStack getDefaultSilverLoot(Random random) {
-        int i = random.nextInt(9);
-        switch(i) {
-        default:
-            break;
-
-        case 0:
-            return new ItemStack(ItemManager.GummieSwet, random.nextInt(16));
-
-        case 1:
-            return new ItemStack(ItemManager.SwordLightning);
-
-        case 2:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.AxeValkyrie);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.ShovelValkyrie);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.PickValkyrie);
-            break;
-
-        case 3:
-            return new ItemStack(ItemManager.SwordHoly);
-
-        case 4:
-            return new ItemStack(ItemManager.GoldenFeather);
-
-        case 5:
-            return new ItemStack(ItemManager.RegenerationStone);
-
-        case 6:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.NeptuneHelmet);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.NeptuneLeggings);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.NeptuneChestplate);
-            break;
-
-        case 7:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.NeptuneBoots);
-            else
-                return new ItemStack(ItemManager.NeptuneGlove);
-
-        case 8:
-            return new ItemStack(ItemManager.InvisibilityCloak);
-        }
-        return new ItemStack(ItemManager.ZanitePendant);
+    	return SINGLETON_SILVER_LOOT.getDefaultLoot(random);
     }
     
     private int baseMeta1;
@@ -469,4 +423,64 @@ public class AetherGenDungeonSilver extends AetherGenBuildings {
     private int baseID2;
     private int columnID;
     private int rooms[][][];
+    public static final IDungeonLootGenerator SINGLETON_SILVER_LOOT = new IDungeonLootGenerator() {
+    	
+		@Override
+		public ItemStack getLoot(Random random) {
+			return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultLoot(random), LootType.SILVER, random);
+		}
+
+		@Override
+	    public ItemStack getDefaultLoot(Random random) {
+			int i = random.nextInt(9);
+	        switch(i) {
+	        default:
+	            break;
+
+	        case 0:
+	            return new ItemStack(ItemManager.GummieSwet, random.nextInt(16));
+
+	        case 1:
+	            return new ItemStack(ItemManager.SwordLightning);
+
+	        case 2:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.AxeValkyrie);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.ShovelValkyrie);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.PickValkyrie);
+	            break;
+
+	        case 3:
+	            return new ItemStack(ItemManager.SwordHoly);
+
+	        case 4:
+	            return new ItemStack(ItemManager.GoldenFeather);
+
+	        case 5:
+	            return new ItemStack(ItemManager.RegenerationStone);
+
+	        case 6:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.NeptuneHelmet);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.NeptuneLeggings);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.NeptuneChestplate);
+	            break;
+
+	        case 7:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.NeptuneBoots);
+	            else
+	                return new ItemStack(ItemManager.NeptuneGlove);
+
+	        case 8:
+	            return new ItemStack(ItemManager.InvisibilityCloak);
+	        }
+	        return new ItemStack(ItemManager.ZanitePendant);
+	    }
+    	
+    };
 }

@@ -1,8 +1,12 @@
 package net.minecraft.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+
+import org.bukkit.World.Environment;
 
 import net.mine_diver.aethermp.Core;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
@@ -11,6 +15,7 @@ import net.mine_diver.aethermp.entities.EntityFlyingCow;
 import net.mine_diver.aethermp.entities.EntityMoa;
 import net.mine_diver.aethermp.entities.EntityPhyg;
 import net.mine_diver.aethermp.entities.EntitySlider;
+import net.mine_diver.aethermp.entities.EntitySwet;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.network.PacketManager;
 
@@ -59,38 +64,36 @@ public class mod_AetherMp extends BaseModMp {
 			CORE.postInit(this, game);
 			firstTick = false;
 		}
+		if (!bedFix || !bedMobSpawnNegate)
+			return;
+		
+		for(World world : sleepWorlds)
+			world.allowMonsters = true;
+		sleepWorlds.clear();
+		
+		for (World world : game.worlds)
+			if (world.getWorld().getEnvironment() == Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase()) && world.everyoneDeeplySleeping() && world.allowMonsters) {
+				world.allowMonsters = false;
+				sleepWorlds.add(world);
+			}
 	}
 
 	@Override
 	public void HandlePacket(Packet230ModLoader packet, EntityPlayer player) {
 		switch(packet.packetType) {
-			case 60: {
-				if (player.vehicle != null && player.vehicle instanceof EntityMoa)
-					((EntityMoa)player.vehicle).jrem = packet.dataInt[0];
-				break;
-			}
-		
 			case 61: {
-				if (player.vehicle != null) {
-					if (player.vehicle instanceof EntityPhyg) {
-						EntityPhyg mount = (EntityPhyg)player.vehicle;
-						if (packet.dataInt[0] == 1)
-							mount.hasJumped = true;
-						else
-							mount.hasJumped = false;
-	
-						mount.jrem = packet.dataInt[1];
-					}
-					if (player.vehicle instanceof EntityFlyingCow) {
-						EntityFlyingCow mount = (EntityFlyingCow)player.vehicle;
-						if (packet.dataInt[0] == 1)
-							mount.hasJumped = true;
-						else 
-							mount.hasJumped = false;
-						
-						mount.jrem = packet.dataInt[1];
-					}
+				if (player.vehicle instanceof EntityPhyg) {
+					EntityPhyg mount = (EntityPhyg)player.vehicle;
+					mount.hasJumped = packet.dataInt[0] == 1;
+					mount.jrem = packet.dataInt[1];
 				}
+				else if (player.vehicle instanceof EntityFlyingCow) {
+					EntityFlyingCow mount = (EntityFlyingCow)player.vehicle;
+					mount.hasJumped = packet.dataInt[0] == 1;
+					mount.jrem = packet.dataInt[1];
+				} 
+				else if (player.vehicle instanceof EntityMoa)
+					((EntityMoa)player.vehicle).jrem = packet.dataInt[0];
 				break;
 			}
 			case 69: {
@@ -115,7 +118,7 @@ public class mod_AetherMp extends BaseModMp {
 					player.pitch = packet.dataFloat[7];
 				}
 				
-				if (player.passenger != null && player.passenger instanceof EntityAerbunny) {
+				if (player.passenger != null && player.passenger instanceof EntityAerbunny && packet.dataFloat.length >= 9) {
 					Packet230ModLoader puffy = new Packet230ModLoader();
 					puffy.packetType = 34;
 					puffy.dataInt = new int [] {player.passenger.id};
@@ -127,8 +130,6 @@ public class mod_AetherMp extends BaseModMp {
 			}
 			case 70: {
 				Entity ent = ((WorldServer)player.world).getEntity(packet.dataInt[0]);
-				if (ent == null || (!(ent instanceof EntityValkyrie) && !(ent instanceof EntityFireMonster) && !(ent instanceof EntitySlider)))
-					return;
 				Packet230ModLoader info = new Packet230ModLoader();
 				info.packetType = 33;
 				if (ent instanceof EntityValkyrie) {
@@ -158,6 +159,11 @@ public class mod_AetherMp extends BaseModMp {
 	            PacketManager.sendToViewDistance(info, ((WorldServer) player.world).dimension, packet.dataFloat[6], packet.dataFloat[7], packet.dataFloat[8]);
 				break;
 			}
+			case 72: {
+				EntitySwet swet = (EntitySwet)((WorldServer)player.world).getEntity(packet.dataInt[0]);
+				if (swet != null)
+					swet.dissolve();
+			}
 		}
 	}
 	
@@ -168,6 +174,8 @@ public class mod_AetherMp extends BaseModMp {
 	
 	public static final Core CORE = new Core();
 	private final Properties info = new Properties();
+	public static List<Integer> sliderWeapons = new ArrayList<>();
+	private static final List<World> sleepWorlds = new ArrayList<>();
 	
 	private boolean firstTick = true;
 	
@@ -183,14 +191,21 @@ public class mod_AetherMp extends BaseModMp {
 	betterMPBossMechanics = false,
 	sliderFloorFix = false,
 	disableDungeonCommands = false,
-	poisonFix = true;
+	poisonFix = true,
+	sliderConfigurableWeapons = true,
+	perPlayerBossLoot = false,
+	bedFix = true,
+	bedMobSpawnNegate = true,
+	bedPoisonFix = true;
 	
 	@MLProp
 	public static String
 	
 	nameDimensionAether = "Aether",
 	
-	dungeonAllowedCommands = "/tell;/msg;/help";
+	dungeonAllowedCommands = "/tell;/msg;/help",
+	
+	sliderWeaponList = "";
 	
 	@MLProp
 	public static int
@@ -233,6 +248,7 @@ public class mod_AetherMp extends BaseModMp {
 	idEntitySwet = 121,
 	idEntityFireMonster = 122,
 	idEntityFireMinion = 123,
+	idEntityAerwhale = 124,
 			
 	rarityAechorPlant = 8,
 	rarityZephyr = 5,
@@ -244,6 +260,7 @@ public class mod_AetherMp extends BaseModMp {
 	rarityWhirlwind = 8,
 	rarityCockatrice = 3,
 	raritySwet = 8,
+	rarityAerwhale = 8,
 	
     idBlockAetherPortal = 165,
     idBlockAetherDirt = 166,
@@ -460,6 +477,10 @@ public class mod_AetherMp extends BaseModMp {
 			public static MinecraftServer getMCServer(net.minecraft.server.EntityPlayer entityplayer) {
 				return entityplayer.b;
 			}
+			
+			public static void resetHeight(net.minecraft.server.EntityPlayer entityplayer) {
+				entityplayer.s();
+			}
 		}
 		
 		public static class EntityLiving extends Entity {
@@ -490,6 +511,10 @@ public class mod_AetherMp extends BaseModMp {
 			
 			public static Random getRand(net.minecraft.server.EntityLiving living) {
 				return living.random;
+			}
+			
+			public static void setSize(net.minecraft.server.EntityLiving living, float f, float f2) {
+				living.b(f, f2);
 			}
 		}
 	}

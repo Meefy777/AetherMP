@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
@@ -17,6 +18,7 @@ import com.earth2me.essentials.Mob;
 import com.earth2me.essentials.Mob.Enemies;
 
 import net.mine_diver.aethermp.blocks.BlockManager;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
 import net.mine_diver.aethermp.crafting.WorkbenchManager;
 import net.mine_diver.aethermp.dimension.DimensionManager;
 import net.mine_diver.aethermp.entities.EntityManager;
@@ -29,6 +31,7 @@ import net.mine_diver.aethermp.util.BlockPlacementHandler;
 import net.minecraft.server.BaseMod;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ModLoader;
@@ -47,6 +50,26 @@ public class Core {
 		LOGGER.info("Pre initialization...");
 		MinecraftServer.log.addHandler(new MinecraftLoggerProxy());
 		ModLoader.SetInGameHook(mod, true, false);
+		
+		if (mod_AetherMp.sliderConfigurableWeapons) {
+			String[] weapons = mod_AetherMp.sliderWeaponList.contains(",") ? mod_AetherMp.sliderWeaponList.split(",") : new String[]{};
+			for (int i = 0; i < weapons.length; i++) 
+				addSliderWeapon(Integer.valueOf(weapons[i]));
+			addSliderWeapon(Item.WOOD_PICKAXE.id);
+			addSliderWeapon(Item.STONE_PICKAXE.id);
+			addSliderWeapon(Item.IRON_PICKAXE.id);
+			addSliderWeapon(Item.GOLD_PICKAXE.id);
+			addSliderWeapon(Item.DIAMOND_PICKAXE.id);
+			addSliderWeapon(ItemManager.PickSkyroot.id);
+			addSliderWeapon(ItemManager.PickHolystone.id);
+			addSliderWeapon(ItemManager.PickZanite.id);
+			addSliderWeapon(ItemManager.PickGravitite.id);
+			addSliderWeapon(ItemManager.PickValkyrie.id);
+		}	
+	}
+	
+	private void addSliderWeapon(Integer ID) {
+		mod_AetherMp.sliderWeapons.add(ID);
 	}
 	
 	public void init() {
@@ -88,23 +111,14 @@ public class Core {
 		PlayerBaseAether playerBase = (PlayerBaseAether)PlayerAPI.getPlayerBase(entityplayer, PlayerBaseAether.class);
 		if (key == 0) {
 			Environment env = entityplayer.getBukkitEntity().getWorld().getEnvironment();
-			if (mod_AetherMp.bookOfLoreCoolDown) {
-					if (playerBase.canReceiveLore) {
-					if (env.equals(Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase())))
-		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 2));
-		            else if(env.equals(Environment.NORMAL))
-		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 0));
-		            else if(env.equals(Environment.NETHER))
-		                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 1));
-					playerBase.canReceiveLore = false;
-				}
-			} else {
+			if (((mod_AetherMp.bookOfLoreCoolDown && playerBase.canReceiveLore) || (!mod_AetherMp.bookOfLoreCoolDown)) && !CraftAetherEventFactory.callPlayerGetLoreEvent((Player)entityplayer.getBukkitEntity()).isCancelled()) {
 				if (env.equals(Environment.valueOf(mod_AetherMp.nameDimensionAether.toUpperCase())))
 	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 2));
 	            else if(env.equals(Environment.NORMAL))
 	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 0));
 	            else if(env.equals(Environment.NETHER))
 	                entityplayer.inventory.pickup(new ItemStack(ItemManager.LoreBook, 1, 1));
+				playerBase.canReceiveLore = false;
 			}
 		}
 	}

@@ -5,6 +5,9 @@ import java.util.List;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntitySwet;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.ModLoaderMp;
+import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.World;
 import net.minecraft.src.mod_AetherMp;
 
@@ -19,23 +22,9 @@ public class EntitySwetMp extends EntitySwet {
 		dataWatcher.addObject(14, (byte)0); //texture
 		dataWatcher.addObject(15, String.valueOf(0.1f)); //width 
 		dataWatcher.addObject(16, String.valueOf(0.1f)); //height
-		dataWatcher.addObject(17, (byte) 0); //isRidden
-		dataWatcher.addObject(18, String.valueOf(0.0D)); //motY
+		dataWatcher.addObject(17, String.valueOf(false));//isMounted
+		dataWatcher.addObject(18, String.valueOf(0.0D));
 		dataWatcher.addObject(19, (byte) 0); //isTamed
-		dataWatcher.addObject(20, (String) ""); //rideName
-		dataWatcher.addObject(21, (byte) 0); //hops
-	}
-	
-    public void setHops(int i) {
-    	dataWatcher.updateObject(21, Byte.valueOf((byte)i));
-    }
-    
-    public int getHops() {
-    	return dataWatcher.getWatchableObjectByte(21);
-    }
-	
-	public String getRiderName() {
-		return dataWatcher.getWatchableObjectString(20);
 	}
 	
     public byte getTexture() {
@@ -54,13 +43,16 @@ public class EntitySwetMp extends EntitySwet {
     	return Float.valueOf(dataWatcher.getWatchableObjectString(16));
     }
     
-    public double getMotY() {
-    	return Double.valueOf(dataWatcher.getWatchableObjectString(18));
+    public boolean isMounted() {
+    	return Boolean.valueOf(dataWatcher.getWatchableObjectString(17));
     }
     
-    public boolean getIsRidden() {
-    	return (dataWatcher.getWatchableObjectByte(17) & 1) != 0;
+    @Override
+    public void updateRiderPosition() {
+    	if (ModLoader.getMinecraftInstance().thePlayer == riddenByEntity)
+    		riddenByEntity.setPosition(posX, (boundingBox.minY - 0.30000001192092896D) + (double)riddenByEntity.yOffset, posZ);
     }
+
     
     @Override
     public void capturePrey(Entity entity)
@@ -382,7 +374,47 @@ public class EntitySwetMp extends EntitySwet {
                 motionX = motionX * d1;
                 motionZ = motionZ * d1;
             }
+        
+    	   Packet230ModLoader packetMove = new Packet230ModLoader();
+       	   packetMove.packetType = 69;
+       	   packetMove.dataFloat = new float[] {(float) this.motionX, (float) this.motionY, (float) this.motionZ, (float) this.posX, (float) this.posY, (float) this.posZ, this.rotationYaw, this.rotationPitch};
+       	   ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packetMove);
         }
     }
+    
+    @Override
+    protected void dropFewItems() {}
+    
+    @Override
+    public void dissolve() {
+    	if(!handleWaterMovement() || riddenByEntity == null)
+    		return;
+    	Packet230ModLoader packet = new Packet230ModLoader();
+    	packet.packetType = 72;
+    	packet.dataInt = new int[] {entityId};
+    	ModLoaderMp.SendPacket(ModLoaderMp.GetModInstance(mod_AetherMp.class), packet);
+    }
+    
+    /*
+     *     public void dissolve()
+    {
+        for(int i = 0; i < 50; i++)
+        {
+            float f = rand.nextFloat() * 3.141593F * 2.0F;
+            float f1 = rand.nextFloat() * 0.5F + 0.25F;
+            float f2 = MathHelper.sin(f) * f1;
+            float f3 = MathHelper.cos(f) * f1;
+            worldObj.spawnParticle("splash", posX + (double)f2, boundingBox.minY + 1.25D, posZ + (double)f3, (double)f2 * 1.5D + motionX, 4D, (double)f3 * 1.5D + motionZ);
+        }
+
+        if(riddenByEntity != null)
+        {
+            riddenByEntity.posY += riddenByEntity.yOffset - 0.3F;
+            riddenByEntity.mountEntity(this);
+        }
+        setEntityDead();
+    }
+     * 
+     */
 
 }

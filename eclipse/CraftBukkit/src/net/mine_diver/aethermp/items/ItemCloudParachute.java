@@ -1,5 +1,8 @@
 package net.mine_diver.aethermp.items;
 
+import org.bukkit.entity.Player;
+
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
 import net.mine_diver.aethermp.entities.EntityCloudParachute;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.Item;
@@ -17,7 +20,7 @@ public class ItemCloudParachute extends Item {
     
     @Override
     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
-        if(EntityCloudParachute.entityHasRoomForCloud(world, entityhuman)) {
+        if(EntityCloudParachute.entityHasRoomForCloud(world, entityhuman) && !CraftAetherEventFactory.callPlayerParachuteDeployEvent((Player) entityhuman.getBukkitEntity(), false).isCancelled()) {
         	for(int i = 0; i < 32; i++)
                 EntityCloudParachute.doCloudSmoke(world, entityhuman);
             if(id == ItemManager.CloudParachuteGold.id)

@@ -51,7 +51,8 @@ public class ItemManager {
 						return new ItemSwordHolystoneMp(targetItem.shiftedIndex - Block.blocksList.length, EnumToolMaterial.STONE);
 					}),
 					new ItemType(ItemLightningKnifeMp.class, AetherItems.class.getDeclaredField("LightningKnife"), mod_Aether.idItemLightningKnife),
-					new ItemType(ItemVampireBladeMp.class, AetherItems.class.getDeclaredField("VampireBlade"), mod_Aether.idItemVampireBlade)
+					new ItemType(ItemVampireBladeMp.class, AetherItems.class.getDeclaredField("VampireBlade"), mod_Aether.idItemVampireBlade),
+					new ItemType(ItemSkyrootBucketMp.class, AetherItems.class.getDeclaredField("Bucket"), mod_Aether.idItemBucket)
 			};
 		} catch (Exception e) {
 			throw new RuntimeException(e);

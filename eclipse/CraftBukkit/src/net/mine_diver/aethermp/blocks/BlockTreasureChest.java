@@ -2,8 +2,10 @@ package net.mine_diver.aethermp.blocks;
 
 import java.util.Random;
 
+import net.mine_diver.aethermp.blocks.tileentities.TileEntityAetherMPTreasureChest;
 import net.mine_diver.aethermp.gui.GuiManager;
 import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.util.IInventoryPlayerProxy;
 import net.minecraft.server.BlockContainer;
 import net.minecraft.server.ContainerChest;
 import net.minecraft.server.EntityHuman;
@@ -35,7 +37,16 @@ public class BlockTreasureChest extends BlockContainer {
         int l = world.getData(i, j, k);
         TileEntityChest tileentitychest = (TileEntityChest) world.getTileEntity(i, j, k);
         if (l % 2 == 1) {
-            GuiManager.OpenGUIWithMeta(entityhuman, mod_AetherMp.idGuiTreasureChest, tileentitychest, new ContainerChest(entityhuman.inventory, tileentitychest), l);
+        	if (tileentitychest instanceof TileEntityAetherMPTreasureChest && mod_AetherMp.betterMPBossMechanics && mod_AetherMp.perPlayerBossLoot) {
+        		TileEntityAetherMPTreasureChest chest = (TileEntityAetherMPTreasureChest) tileentitychest;
+        		if (chest.playerChestLootItems.containsKey(entityhuman.name) && !chestEmptyCheck(chest, entityhuman.name)) {
+    				IInventoryPlayerProxy proxyInventory = new IInventoryPlayerProxy(chest, chest.playerChestLootItems.get(entityhuman.name));
+    				GuiManager.OpenGUIWithMeta(entityhuman, mod_AetherMp.idGuiTreasureChest, proxyInventory, new ContainerChest(entityhuman.inventory, proxyInventory), l);
+        		} else
+        			GuiManager.OpenGUIWithMeta(entityhuman, mod_AetherMp.idGuiTreasureChest, tileentitychest, new ContainerChest(entityhuman.inventory, tileentitychest), l);
+        	}
+        	else
+        		GuiManager.OpenGUIWithMeta(entityhuman, mod_AetherMp.idGuiTreasureChest, tileentitychest, new ContainerChest(entityhuman.inventory, tileentitychest), l);
             return true;
         }
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
@@ -62,6 +73,18 @@ public class BlockTreasureChest extends BlockContainer {
     
     @Override
     protected TileEntity a_() {
-        return new TileEntityChest();
+        return new TileEntityAetherMPTreasureChest();
+    }
+    
+    private boolean chestEmptyCheck(TileEntityAetherMPTreasureChest chest, String name) {
+    	boolean empty = true;
+		for (ItemStack stack : (chest.playerChestLootItems.get(name)))
+			if (stack != null && stack.id > 0) {
+				empty = false;
+				break;
+			}
+		if (empty)
+			chest.playerChestLootItems.remove(name);        				
+		return empty;
     }
 }

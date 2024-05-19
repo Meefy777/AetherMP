@@ -5,6 +5,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 
 import net.mine_diver.aethermp.entities.EntityAechorPlant;
 import net.mine_diver.aethermp.entities.EntityAerbunny;
+import net.mine_diver.aethermp.entities.EntityAerwhale;
 import net.mine_diver.aethermp.entities.EntityAetherAnimal;
 import net.mine_diver.aethermp.entities.EntityAetherLightning;
 import net.mine_diver.aethermp.entities.EntityCloudParachute;
@@ -31,6 +32,7 @@ import net.mine_diver.aethermp.entities.EntityProjectileBase;
 import net.mine_diver.aethermp.entities.EntitySentry;
 import net.mine_diver.aethermp.entities.EntitySheepuff;
 import net.mine_diver.aethermp.entities.EntitySlider;
+import net.mine_diver.aethermp.entities.EntitySwet;
 import net.mine_diver.aethermp.entities.EntityValkyrie;
 import net.mine_diver.aethermp.entities.EntityZephyr;
 import net.mine_diver.aethermp.entities.EntityZephyrSnowball;
@@ -76,6 +78,8 @@ public class CraftEntityAether extends CraftEntity {
 							return new CraftWhirly(server, (Whirly) entity);
 						if (entity instanceof EntityAechorPlant)
 							return new CraftAechorPlant(server, (EntityAechorPlant) entity);
+						if (entity instanceof EntitySwet)
+							return new CraftSwet(server, (EntitySwet)entity);
 					}
 				} else if (entity instanceof EntityMonster) {
 					if (entity instanceof EntityCockatrice)
@@ -94,8 +98,10 @@ public class CraftEntityAether extends CraftEntity {
 					return new CraftSlider(server, (EntitySlider) entity);
 				if (entity instanceof EntityHomeShot)
 					return new CraftHomeShot(server, (EntityHomeShot) entity);
-				 if (entity instanceof EntityFireMonster)
-					 return new CraftFireMonster(server, (EntityFireMonster) entity);
+				if (entity instanceof EntityFireMonster)
+					return new CraftFireMonster(server, (EntityFireMonster) entity);
+				if (entity instanceof EntityAerwhale)
+					return new CraftAerwhale(server, (EntityAerwhale)entity);
 			}
 		} else {
 			if (entity instanceof EntityProjectileBase) {

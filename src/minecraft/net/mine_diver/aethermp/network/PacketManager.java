@@ -2,6 +2,7 @@ package net.mine_diver.aethermp.network;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import net.mine_diver.aethermp.entity.EntityAerbunnyMp;
@@ -29,6 +30,7 @@ import net.minecraft.src.GuiScreen;
 import net.minecraft.src.IAetherBoss;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Packet230ModLoader;
+import net.minecraft.src.PlayerAPI;
 import net.minecraft.src.StatList;
 import net.minecraft.src.WorldClient;
 import net.minecraft.src.mod_Aether;
@@ -74,7 +76,10 @@ public class PacketManager {
             }
 		});
         handlers.put(6, (packet) -> mod_Aether.getPlayer().maxHealth = packet.dataInt[0]);
-        handlers.put(7, (packet) -> AetherPoisonMp.afflictPoison(packet.dataInt[0]));
+        handlers.put(7, (packet) -> {
+        	AetherPoisonMp.afflictPoison(packet.dataInt[0]);
+        	((PlayerBaseAetherMp)PlayerAPI.getPlayerBase(ModLoader.getMinecraftInstance().thePlayer, PlayerBaseAetherMp.class)).distract = packet.dataInt[1] == 1;
+        });
         handlers.put(8, (packet) -> AetherPoisonMp.curePoison());
         handlers.put(9, (packet) -> {
         	Entity entity = EntityManager.getEntityByID(packet.dataInt[0]);
@@ -118,8 +123,6 @@ public class PacketManager {
         });
         handlers.put(33, (packet) -> {
 			Entity ent = ((WorldClient) ModLoader.getMinecraftInstance().theWorld).getEntityByID(packet.dataInt[0]);
-			if (ent == null || (!(ent instanceof EntityValkyrieMp) && !(ent instanceof EntityFireMonsterMp) && !(ent instanceof EntitySliderMp)))
-				return;
 			if (ent instanceof EntityValkyrieMp) {
 				EntityValkyrieMp valk = (EntityValkyrieMp) ent;
 				valk.setBoss(true);
@@ -148,5 +151,12 @@ public class PacketManager {
         });
         handlers.put(36, (packet) -> mod_AetherMp.isFireDefeated = (packet.dataInt[0] & 1) != 0);
         handlers.put(37, (packet) -> mod_Aether.currentBoss = null);
+        handlers.put(42, (packet) -> ModLoader.getMinecraftInstance().thePlayer.ridingEntity.setPosition(packet.dataFloat[0], packet.dataFloat[1], packet.dataFloat[2]));
+        handlers.put(43, packet -> {
+        	Random rand = new Random();
+        	for(int n = 0; n < 10; n++)
+        		ModLoader.getMinecraftInstance().theWorld.spawnParticle("smoke", packet.dataInt[0] + 0.5D + rand.nextGaussian() * 0.10000000000000001D, packet.dataInt[1] + 0.5D + rand.nextGaussian() * 0.10000000000000001D, packet.dataInt[2] + 0.5D + rand.nextGaussian() * 0.01D, rand.nextGaussian() * 0.01D, rand.nextGaussian() * 0.01D, rand.nextGaussian() * 0.10000000000000001D);
+        });
+        handlers.put(44, packet -> ((PlayerBaseAetherMp)PlayerAPI.getPlayerBase(ModLoader.getMinecraftInstance().thePlayer, PlayerBaseAetherMp.class)).distract ^= true);
 	}
 }

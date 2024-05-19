@@ -1,17 +1,25 @@
 package net.mine_diver.aethermp.player;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import net.mine_diver.aethermp.api.entities.IAetherBoss;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.AbstractAetherPoisonEvent.PoisonSource;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.entity.EntityPoisonDamageEvent;
+import net.mine_diver.aethermp.bukkit.craftbukkit.event.CraftAetherEventFactory;
 import net.mine_diver.aethermp.entities.EntityCloudParachute;
 import net.mine_diver.aethermp.inventory.ContainerAether;
 import net.mine_diver.aethermp.inventory.InventoryAether;
 import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.util.AetherPoison;
 import net.minecraft.server.Block;
 import net.minecraft.server.DimensionBase;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.EnumBedError;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.ModLoaderMp;
@@ -96,7 +104,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	public void writeCustomData(NBTTagCompound customData) {
         customData.a("MaxHealth", (byte) maxHealth);
         customData.a("Inventory", inv.writeToNBT(new NBTTagList()));
-        
+        customData.a("Distraction", this.distracted);
         if(mod_AetherMp.poisonFix)
         	customData.a("poison", poisonTime);
     }
@@ -104,6 +112,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	@Override
 	public void readCustomData(NBTTagCompound customData) {
         maxHealth = customData.c("MaxHealth");
+        this.distracted = customData.m("Distraction");
         if(maxHealth < 20)
             maxHealth = 20;
         NBTTagList nbttaglist = customData.l("Inventory");
@@ -146,7 +155,7 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 		if(!constructed) {
 			constructed = true;
         	if(poisonTime > 0)
-        		poisonPlayer(poisonTime);
+        		PacketManager.poisonPlayer(player, poisonTime, this.distracted);
 		}
 		if(player.dead || player.health <= 0) {
             poisonWorld = player.world;
@@ -164,9 +173,12 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
         long time = player.world.getTime();
         int mod = poisonTime % 50;
         if(clock != time) {
-            AetherPoison.distractEntity(player);
-            if(mod == 0)
-                player.damageEntity(null, 1);
+            AetherPoison.distractEntity(player, CraftAetherEventFactory.callPoisonDistractEvent(this.poisonTime, null, player, null, PoisonSource.OTHER));
+            EntityPoisonDamageEvent event = CraftAetherEventFactory.callPoisonDamageEvent(1, poisonTime, null, player, null, PoisonSource.OTHER);
+            EntityDamageEvent event2 = new EntityDamageEvent(player.getBukkitEntity(), DamageCause.CUSTOM, event.getDamage());
+            player.getBukkitEntity().getServer().getPluginManager().callEvent(event2);
+            if(mod == 0 && !event.isCancelled() && !event2.isCancelled())
+                player.damageEntity(null, event.getDamage());
             poisonTime--;
             clock = time;
         }
@@ -177,9 +189,10 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
         if(poisonTime < 0)
             return false;
         else {
+        	this.distracted = true;
             poisonTime = 500;
             poisonWorld = player.world;
-            poisonPlayer(poisonTime);
+            PacketManager.poisonPlayer(player, poisonTime, this.distracted);
             return true;
         }
     }
@@ -233,7 +246,9 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
         }
         if(player.world.spawnMonsters == 0)
             player.fallDistance = -64F;
-        if(!cloudPara) {
+        
+        
+        if(!cloudPara && !CraftAetherEventFactory.callPlayerParachuteDeployEvent((Player) player.getBukkitEntity(), true).isCancelled()) {
             if(player.inventory.b(ItemManager.CloudParachute.id)) {
                 if(EntityCloudParachute.entityHasRoomForCloud(player.world, player)) {
                     for(int i = 0; i < 32; i++)
@@ -263,9 +278,9 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 	
 	@Override
 	public void doLoreTick() {
-		if (!canReceiveLore && loreTick < 20 * mod_AetherMp.secondsBetweenLoreBooks) {
+		if (!canReceiveLore && loreTick < 20 * mod_AetherMp.secondsBetweenLoreBooks)
 			loreTick++;
-		} else {
+		else {
 			loreTick = 0;
 			canReceiveLore = true;
 		}
@@ -424,13 +439,18 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
 		return currentBoss;
 	}
 	
-	private void poisonPlayer(int i) {
-        Packet230ModLoader packet = new Packet230ModLoader();
-        packet.packetType = 7;
-        packet.dataInt = new int[] {i};
-        ModLoaderMp.SendPacketTo(ModLoaderMp.GetModInstance(mod_AetherMp.class), player, packet);
-	}
+	@Override
+    public EnumBedError sleepInBedAt(final int var1, final int var2, final int var3, final EnumBedError var4) {
+		return poisonTime > 0 && mod_AetherMp.bedPoisonFix && mod_AetherMp.bedFix ? EnumBedError.OTHER_PROBLEM : var4;
+    }
 	
+	@Override
+	public boolean onUpdate() {
+		if (mod_AetherMp.bedFix && mod_AetherMp.bedPoisonFix && player.isSleeping() && this.poisonTime > 0)
+			player.a(true, false, false);
+		return super.onUpdate();
+	}
+
     public static ItemStack[] entranceBonus = new ItemStack[] {new ItemStack(ItemManager.LoreBook, 1, 2), new ItemStack(ItemManager.CloudParachute, 1)};
 	
     public int maxHealth = 20;
@@ -447,4 +467,5 @@ public class PlayerBaseAether extends PlayerBaseAetherImpl {
     public int loreTick = 0;
     public IAetherBoss currentBoss;
     private boolean constructed = false;
+    public boolean distracted = true;
 }

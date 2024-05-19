@@ -11,6 +11,7 @@ import java.util.List;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import net.mine_diver.aethermp.api.entities.IMountable;
 import net.mine_diver.aethermp.items.ItemManager;
 import net.mine_diver.aethermp.network.PacketManager;
 import net.mine_diver.aethermp.util.MoaColour;
@@ -32,7 +33,7 @@ import net.minecraft.server.mod_AetherMp;
 //            EntityPlayer, InventoryPlayer, Item, mod_Aether, 
 //            ModLoader
 
-public class EntityMoa extends EntityAetherAnimal
+public class EntityMoa extends EntityAetherAnimal implements IMountable
 {
 
     public EntityMoa(World world)
@@ -247,7 +248,7 @@ public class EntityMoa extends EntityAetherAnimal
             texture = MoaColour.getColour(getColor()).getTexture(getSaddled());
             return true;
         }
-        if(getSaddled() && (passenger == null || passenger == entityplayer))
+        if(getSaddled() && (passenger == null || passenger == entityplayer) && this.vehicle == null)
         {
             entityplayer.mount(this);
             entityplayer.lastYaw = entityplayer.yaw = yaw;

@@ -7,6 +7,7 @@ import net.mine_diver.aethermp.api.util.LootType;
 import net.mine_diver.aethermp.blocks.BlockManager;
 import net.mine_diver.aethermp.entities.EntityFireMonster;
 import net.mine_diver.aethermp.items.ItemManager;
+import net.mine_diver.aethermp.util.IDungeonLootGenerator;
 import net.minecraft.server.Block;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.TileEntityChest;
@@ -181,58 +182,11 @@ public class AetherGenDungeon extends WorldGenerator {
     }
     
     public ItemStack getGoldLoot(Random random) {
-    	return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultGoldLoot(random), LootType.GOLD, random);
+    	return SINGLETON_GOLD_LOOT.getLoot(random);
     }
 
     public ItemStack getDefaultGoldLoot(Random random) {
-        int i = random.nextInt(8);
-        switch(i) {
-        default:
-            break;
-
-        case 0:
-            return new ItemStack(ItemManager.IronBubble);
-
-        case 1:
-            return new ItemStack(ItemManager.VampireBlade);
-
-        case 2:
-            return new ItemStack(ItemManager.PigSlayer);
-
-        case 3:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.PhoenixHelm);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.PhoenixLegs);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.PhoenixBody);
-            break;
-
-        case 4:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.PhoenixBoots);
-            else
-                return new ItemStack(ItemManager.PhoenixGlove);
-
-        case 5:
-            return new ItemStack(ItemManager.LifeShard);
-
-        case 6:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.GravititeHelmet);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.GravititePlatelegs);
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.GravititeBodyplate);
-            break;
-
-        case 7:
-            if(random.nextBoolean())
-                return new ItemStack(ItemManager.GravititeBoots);
-            else
-                return new ItemStack(ItemManager.GravititeGlove);
-        }
-        return new ItemStack(ItemManager.ObsidianBody);
+    	return SINGLETON_GOLD_LOOT.getDefaultLoot(random);
     }
 
     public int xoff;
@@ -240,4 +194,64 @@ public class AetherGenDungeon extends WorldGenerator {
     public int zoff;
     public int rad;
     public int truey;
+    public static final IDungeonLootGenerator SINGLETON_GOLD_LOOT = new IDungeonLootGenerator() {
+    	
+		@Override
+		public ItemStack getLoot(Random random) {
+			return DungeonLoot.EVENT.getInvoker().getLoot(getDefaultLoot(random), LootType.GOLD, random);
+		}
+
+		@Override
+	    public ItemStack getDefaultLoot(Random random) {
+	        int i = random.nextInt(8);
+	        switch(i) {
+	        default:
+	            break;
+
+	        case 0:
+	            return new ItemStack(ItemManager.IronBubble);
+
+	        case 1:
+	            return new ItemStack(ItemManager.VampireBlade);
+
+	        case 2:
+	            return new ItemStack(ItemManager.PigSlayer);
+
+	        case 3:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.PhoenixHelm);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.PhoenixLegs);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.PhoenixBody);
+	            break;
+
+	        case 4:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.PhoenixBoots);
+	            else
+	                return new ItemStack(ItemManager.PhoenixGlove);
+
+	        case 5:
+	            return new ItemStack(ItemManager.LifeShard);
+
+	        case 6:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.GravititeHelmet);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.GravititePlatelegs);
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.GravititeBodyplate);
+	            break;
+
+	        case 7:
+	            if(random.nextBoolean())
+	                return new ItemStack(ItemManager.GravititeBoots);
+	            else
+	                return new ItemStack(ItemManager.GravititeGlove);
+	        }
+	        return new ItemStack(ItemManager.ObsidianBody);
+	    }
+    	
+    };
 }

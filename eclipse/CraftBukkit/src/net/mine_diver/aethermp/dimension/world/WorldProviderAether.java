@@ -52,6 +52,6 @@ public class WorldProviderAether extends WorldProvider {
     
     @Override
     public boolean d() {
-        return false;
+        return mod_AetherMp.bedFix;
     }
 }

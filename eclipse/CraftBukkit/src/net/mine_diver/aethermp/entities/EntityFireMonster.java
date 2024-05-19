@@ -29,6 +29,7 @@ import net.minecraft.server.ItemStack;
 import net.minecraft.server.Material;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.TileEntityChest;
 import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 import net.minecraft.server.mod_AetherMp;
@@ -554,8 +555,12 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
                 if (targetfire instanceof EntityPlayer) {
                 	if(!mod_AetherMp.betterMPBossMechanics)
                 		PlayerManager.setCurrentBoss((EntityPlayer) targetfire, null);
-                	else
+                	else {
+                		int xOffset = dir == 1 ? 15 : dir == 2 ? -15 : 0;
+                		int zOffset = dir == 3 ? 15 : dir == 4 ? -15 : 0;
+                		this.populatePerPlayerLootPool((TileEntityChest) world.getTileEntity(orgX + xOffset, orgY - 1, orgZ + zOffset));
                 		clearTargets();
+                	}
                 	chatLine("\247bSuch bitter cold... is this the feeling... of pain?", (EntityPlayer) targetfire);
                 }
             	mod_AetherMp.CORE.dataHandler.setFireMonsterKilled(true);
@@ -617,26 +622,14 @@ public class EntityFireMonster extends EntityFlying implements IAetherBoss {
     
     private void findDirection() {
     	int tresid = BlockManager.TreasureChest.id;
-    	
-    	int i = world.getTypeId(orgX + 15, orgY - 1, orgZ);
-    	if (i == tresid) {
+    	if (world.getTypeId(orgX + 15, orgY - 1, orgZ) == tresid)
     		dir = 1;
-    	}
-    	
-    	int j = world.getTypeId(orgX - 15, orgY - 1, orgZ);
-    	if (j == tresid) {
+    	else if (world.getTypeId(orgX - 15, orgY - 1, orgZ) == tresid)
     		dir = 2;
-    	}
-    	
-    	int k = world.getTypeId(orgX, orgY - 1, orgZ + 15);
-    	if (k == tresid) {
+    	else if (world.getTypeId(orgX, orgY - 1, orgZ + 15) == tresid)
     		dir = 3;
-    	}
-    	
-    	int l = world.getTypeId(orgX, orgY - 1, orgZ - 15);
-    	if (l == tresid) {
+    	else if (world.getTypeId(orgX, orgY - 1, orgZ - 15) == tresid)
     		dir = 4;
-    	}
     }
     
     private void findDoors() {
